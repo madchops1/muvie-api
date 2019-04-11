@@ -9,7 +9,6 @@
     "lint": "ng lint",
     "e2e": "ng e2e",
     "heroku-postbuild": "ng build --prod"
-
   },
   "private": true,
   "engines": {
@@ -18,9 +17,9 @@
   },
   "dependencies": {
     "@angular/animations": "~7.2.0",
+    "@angular/cli": "^7.3.8",
     "@angular/common": "~7.2.0",
     "@angular/compiler": "~7.2.0",
-    "@angular/cli": "^7.3.8",
     "@angular/compiler-cli": "^7.2.12",
     "@angular/core": "~7.2.0",
     "@angular/forms": "~7.2.0",
@@ -28,10 +27,12 @@
     "@angular/platform-browser-dynamic": "~7.2.0",
     "@angular/router": "~7.2.0",
     "core-js": "^2.5.4",
+    "express": "^4.16.4",
+    "path": "^0.12.7",
     "rxjs": "~6.3.3",
     "tslib": "^1.9.0",
-    "zone.js": "~0.8.26",
-    "typescript": "~3.2.2"
+    "typescript": "~3.2.2",
+    "zone.js": "~0.8.26"
   },
   "devDependencies": {
     "@angular-devkit/build-angular": "~0.13.0",
