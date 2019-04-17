@@ -44,7 +44,7 @@ export class TestComponent implements OnInit {
     console.log('vid1', this.vid1e.nativeElement.readyState);
     console.log('vid2', this.vid2e.nativeElement.readyState);
 
-    if(this.vid1e.nativeElement.readyState)
+    //if(this.vid1e.nativeElement.readyState)
 
     this.initSeriously();
     /*this.vid1 = this.seriously.source('#testvid');
