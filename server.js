@@ -38,3 +38,7 @@ app.listen(process.env.PORT || 8080);
 app.get("/api/make", function(req, res) {
     res.status(200).json();
 });
+
+app.get('/*', function(req,res) {
+    res.sendFile(path.join(__dirname+'/dist/muvie/index.html'));
+});
