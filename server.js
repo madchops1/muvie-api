@@ -5,7 +5,7 @@ const bodyParser = require("body-parser");
 
 
 const app = express();
-app.use(bodyParser.json());
+//app.use(bodyParser.json());
 
 // Create link to Angular build directory
 var distDir = __dirname + "/dist/";
