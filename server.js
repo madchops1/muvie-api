@@ -10,9 +10,6 @@ app.use(bodyParser.json());
 // Create link to Angular build directory
 app.use(express.static(__dirname + '/dist/muvie'));
 
-app.get('/*', function(req,res) {
-    res.sendFile(path.join(__dirname+'/dist/muvie/index.html'));
-});
 
 // Initialize the app.
 var server = app.listen(process.env.PORT || 8080, function () {
@@ -41,3 +38,4 @@ app.listen(process.env.PORT || 8080);
 app.get("/api/make", function(req, res) {
     res.status(200).json();
 });
+
