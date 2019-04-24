@@ -1,0 +1,47 @@
+<h1>Create Your Music Video In 3 Steps!</h1>
+<div class="wrapper">
+    <mat-card>
+        <h2>1) Upload Music</h2>
+        <button mat-raised-button (click)="uploader.click()">Select File &amp; Upload</button>
+        <input hidden type="file" #uploader (change)="uploadAudioFile($event)" />
+        <div [hidden]="!uploadingAudio">
+            <mat-spinner></mat-spinner>
+        </div>
+        <div [hidden]="!msbapAudioUrl">
+            <mat-basic-audio-player [audioUrl]="msbapAudioUrl" [title]="msbapTitle" [displayTitle]="msbapDisplayTitle">
+            </mat-basic-audio-player>
+        </div>
+
+        <!-- waveform here -->
+    </mat-card>
+
+    <mat-card>
+        <h2>2) Add Clips</h2>
+        <button mat-raised-button (click)="uploadervideo.click()">Browse &amp; Add Clips</button>
+        <input hidden type="file" #uploadervideo (change)="uploadVideoFile($event)" />
+        <div [hidden]="!uploadingVideo">
+            <mat-spinner></mat-spinner>
+        </div>
+        <div [hidden]="!clips.length">
+            <div cdkDropList cdkDropListOrientation="horizontal" class="example-list"
+                (cdkDropListDropped)="drop($event)">
+                <div class="example-box" *ngFor="let clip of clips" cdkDrag>
+                    <video src="{{clip}}"></video>
+                </div>
+            </div>
+        </div>
+
+    </mat-card>
+
+    <!--
+<mat-card>
+    <h2>Select Style</h2>
+    <mat-radio-group aria-label="Select an option">
+        <mat-radio-button value="1">Option 1</mat-radio-button>
+        <mat-radio-button value="2">Option 2</mat-radio-button>
+    </mat-radio-group>
+</mat-card>
+-->
+
+    <button mat-raised-button class="filterButton" (click)="make(event)">3) Add Effects &amp; Filters</button>
+</div>
