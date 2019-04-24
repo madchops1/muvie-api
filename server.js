@@ -20,6 +20,7 @@ app.use(formidableMiddleware());
 
 // Create link to Angular build directory
 app.use(express.static(__dirname + '/dist/muvie'));
+app.use(express.static(__dirname + '/src/assets'));
 
 // Initialize the app.
 var server = app.listen(process.env.PORT || 8080, function () {
