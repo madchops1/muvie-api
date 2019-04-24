@@ -33,9 +33,11 @@ export class FilterComponent implements OnInit {
     ngOnInit() {
         console.log('vid', this.projectService.video);
         //this.video = this.projectService.video;
-        if (!this.projectService.video) {
-            this.video = "/assets/watermark_audio_final_merged_SampleVideo_1280x720_5mb.mp4_1.mp4";
-        }
+        //if (!this.projectService.video) {
+        //    this.video = "/assets/watermark_audio_final_merged_SampleVideo_1280x720_5mb.mp4_1.mp4";
+        //} else {
+            this.video = this.projectService.video;
+        //}
         setTimeout(() => {
             this.initSeriously();
         }, 2000);
