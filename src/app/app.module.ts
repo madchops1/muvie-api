@@ -16,7 +16,7 @@ import { DragDropModule } from '@angular/cdk/drag-drop';
 import { SocketIoModule, SocketIoConfig } from 'ngx-socket-io';
 import { environment } from '../environments/environment';
 import { FilterComponent } from './filter/filter.component';
-const config: SocketIoConfig = { url: 'http://localhost:' + environment.ioPort, options: {} };
+const config: SocketIoConfig = { url: environment.ioUrl, options: {} };
 
 @NgModule({
     declarations: [
