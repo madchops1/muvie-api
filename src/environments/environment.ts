@@ -4,7 +4,7 @@
 
 export const environment = {
     production: false,
-    ioPort: 5000
+    ioUrl: 'http://localhost:5000'
 };
 
 /*

@@ -1,4 +1,4 @@
 export const environment = {
     production: true,
-    ioUrl: 'https://muvie-video.herokuapp.com/:8080'
+    ioUrl: 'https://muvie-video.herokuapp.com'
 };
