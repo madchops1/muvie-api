@@ -339,7 +339,7 @@ let Make = function (req) {
                         video: brokenClips,
                         mergedVideoName: mergedVideoName,
                         withAudioVideoName: withAudioVideoName,
-                        withWatermark: '/assets/' + withWatermark,
+                        withWatermark: '/' + withWatermark,
                         remoteWithWatermark: remoteWithWatermark
                     }
                     resolve(response);
