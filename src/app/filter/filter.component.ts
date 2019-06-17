@@ -16,6 +16,7 @@ export class FilterComponent implements OnInit {
     @ViewChild('vid') vide: ElementRef;
 
     constructor(private projectService: ProjectService) { }
+
     opened: boolean;
     seriously: any;
     target: any;
@@ -36,7 +37,9 @@ export class FilterComponent implements OnInit {
         //if (!this.projectService.video) {
         //    this.video = "/assets/watermark_audio_final_merged_SampleVideo_1280x720_5mb.mp4_1.mp4";
         //} else {
-            this.video = this.projectService.video;
+        //this.video = this.projectService.video;
+        this.video = "/watermark_audio_final_merged_SampleVideo_1280x720_5mb.mp4_1.mp4";
+
         //}
         setTimeout(() => {
             this.initSeriously();

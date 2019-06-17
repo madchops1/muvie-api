@@ -1,6 +1,9 @@
-# Muvie
+# Muvie / Visualz Website
 
 This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 7.3.6.
+
+## Note
+This is a Heroku project
 
 ## Development server
 

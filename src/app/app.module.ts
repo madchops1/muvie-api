@@ -2,7 +2,7 @@ import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { MatButtonModule, MatSidenavModule, MatRadioModule, MatCheckboxModule, MatSliderModule, MatCardModule, MatGridListModule, MatProgressSpinnerModule } from '@angular/material';
+import { MatSlideToggleModule, MatIconModule, MatButtonModule, MatSidenavModule, MatRadioModule, MatCheckboxModule, MatSliderModule, MatCardModule, MatGridListModule, MatProgressSpinnerModule } from '@angular/material';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -16,6 +16,13 @@ import { DragDropModule } from '@angular/cdk/drag-drop';
 import { SocketIoModule, SocketIoConfig } from 'ngx-socket-io';
 import { environment } from '../environments/environment';
 import { FilterComponent } from './filter/filter.component';
+import { VisualzComponent } from './visualz/visualz.component';
+import { SupportComponent } from './support/support.component';
+import { BuyComponent } from './buy/buy.component';
+import { SuccessComponent } from './success/success.component';
+import { CanceledComponent } from './canceled/canceled.component';
+import { DownloadComponent } from './download/download.component';
+import { HowComponent } from './how/how.component';
 const config: SocketIoConfig = { url: environment.ioUrl, options: {} };
 
 @NgModule({
@@ -24,7 +31,14 @@ const config: SocketIoConfig = { url: environment.ioUrl, options: {} };
         UploadComponent,
         TestComponent,
         NewMovieComponent,
-        FilterComponent
+        FilterComponent,
+        VisualzComponent,
+        SupportComponent,
+        BuyComponent,
+        SuccessComponent,
+        CanceledComponent,
+        DownloadComponent,
+        HowComponent
     ],
     imports: [
         BrowserModule,
@@ -38,6 +52,8 @@ const config: SocketIoConfig = { url: environment.ioUrl, options: {} };
         MatProgressSpinnerModule,
         MatRadioModule,
         MatSidenavModule,
+        MatIconModule,
+        MatSlideToggleModule,
         HttpClientModule,
         FontAwesomeModule,
         NgxAudioPlayerModule,

@@ -45,6 +45,7 @@
         "hammerjs": "^2.0.8",
         "mongodb": "^3.2.3",
         "ngx-audio-player": "^7.1.3",
+        "ngx-disqus": "^2.4.3",
         "ngx-socket-io": "^2.1.1",
         "path": "^0.12.7",
         "rxjs": "~6.3.3",
