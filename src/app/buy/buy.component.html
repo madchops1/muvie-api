@@ -1,0 +1,134 @@
+<div class="content-wrapper dark">
+    <h1 class="center">Prices</h1>
+    <div class="slider">
+        <mat-slide-toggle class="example-margin" (change)="onChange($event)" [color]="primary" [checked]="yearly"
+            [disabled]="false">
+            Yearly
+        </mat-slide-toggle>
+    </div>
+    <div class="clearfix"></div>
+
+    <div class="price_card alpha">
+        <div class="header">
+            <span class="price">$0</span>
+            <span class="name">FREE</span>
+        </div>
+        <ul class="features">
+            <li>Watermark</li>
+            <li>Desktop app for Mac/Windows</li>
+            <li>Audio-Responsive visuals</li>
+            <li>Real-time beat detection</li>
+            <li>Compose visuals for your tracks and set</li>
+            <li>Line In / Mic</li>
+            <li>HDMI out to projector</li>
+            <li>Drag &amp; Drop images, videos, gifs, colors, webcam, text, and all other effects</li>
+            <li>Oscilloscope effect</li>
+            <li>Bubbles effect</li>
+        </ul>
+        <button routerLink="/download" class="blue" mat-raised-button>
+            DOWNLOAD FREE
+        </button>
+        <span class="tip">* Great for beginners!</span>
+    </div>
+
+    <div class="price_card bravo">
+        <div class="header">
+            <span class="price" [hidden]="yearly">$4/monthly</span>
+            <span class="price" [hidden]="!yearly">$44/yearly</span>
+            <span class="name">BASIC</span>
+        </div>
+        <ul class="features">
+            <li><strong>NO Watermark</strong></li>
+            <li>Desktop app for Mac/Windows</li>
+            <li>Audio-Responsive visuals</li>
+            <li>Real-time beat detection</li>
+            <li>Compose visuals for your tracks and set</li>
+            <li>Line In / Mic</li>
+            <li>HDMI out to projector</li>
+            <li>Drag &amp; Drop images, videos, gifs, colors, webcam, text, and all other effects</li>
+            <li>Oscilloscope effect</li>
+            <li>Bubbles effect</li>
+        </ul>
+
+        <!-- TEST BUTTON MONTHLY -->
+        <button [hidden]="yearly" class="red" id="checkout-button-plan_FGMKQF2uISVdiV" role="link" mat-raised-button>
+            CHECKOUT
+        </button>
+
+        <!-- TEST BUTTON YEARLY -->
+        <button [hidden]="!yearly" class="red" id="checkout-button-plan_FGNdA98XXMUJv6" role="link" mat-raised-button>
+            CHECKOUT
+        </button>
+
+        <!-- PROD BUTTON MONTHLY
+        <button style="background-color:#6772E5;color:#FFF;padding:8px 12px;border:0;border-radius:4px;font-size:1em"
+            id="checkout-button-plan_FGEssJMOVRMg55" role="link">
+            Checkout
+        </button> -->
+
+        <!-- PROD BUTTON YEARLY 
+        <button style="background-color:#6772E5;color:#FFF;padding:8px 12px;border:0;border-radius:4px;font-size:1em"
+            id="checkout-button-plan_FGNnyJ6JaUOGyD" role="link">
+            Checkout
+        </button>
+        -->
+
+        <span class="tip">* Most popular!</span>
+    </div>
+
+    <div class="price_card charlie" aria-disabled="true">
+        <div class="header">
+            <span class="price" [hidden]="yearly">$9/monthly</span>
+            <span class="price" [hidden]="!yearly">$99/yearly</span>
+            <span class="name">PRO</span>
+        </div>
+        <ul class="features">
+            <li>Very cool features in PRO are stil under development. Start with the basic plan and
+                we'll let you know when PRO is available.</li>
+            <!--
+            <li>Desktop app for Mac/Windows</li>
+            <li>Audio-Responsive visuals</li>
+            <li>Real-time beat detection</li>
+            <li>Compose visuals for your tracks and set</li>
+            <li>Line In / Mic</li>
+            <li>HDMI out to projector</li>
+            <li>Drag &amp; Drop images, videos, gifs, colors, webcam, text, and all other effects</li>
+            <li>Oscilloscope effect</li>
+            <li>Bubbles effect</li>
+            <li><strong>NO Watermark</strong></li>
+            <li><strong>Remote Mobile Cameras</strong></li>
+            <li><strong>Fan Selfy Effect</strong></li>
+            <li><strong>Crowd Mobile Device Effects</strong></li>
+            -->
+        </ul>
+    </div>
+
+    <!--
+    <mat-card class="example-card left">
+        <mat-card-header>
+            <div mat-card-avatar class="example-header-image black"></div>
+            <mat-card-title>FREE</mat-card-title>
+            <mat-card-subtitle>$0.00</mat-card-subtitle>
+        </mat-card-header>
+        <mat-card-content>
+            <ul>
+                <li>Desktop app for Mac/Windows</li>
+                <li>Audio-Responsive visuals</li>
+                <li>Real-time beat detection</li>
+                <li>Compose visuals for your tracks and set</li>
+                <li>Line In / Mic</li>
+                <li>HDMI out to projector</li>
+                <li>Drag &amp; Drop images, videos, gifs, colors, webcam, text, and all other effects</li>
+                <li>Oscilloscope effect</li>
+                <li>Bubbles effect</li>
+                <li>Watermark</li>
+            </ul>
+        </mat-card-content>
+        <mat-card-actions>
+            <a href="https://samwhitemusic.com/" target="_blank" mat-button>More Info</a>
+        </mat-card-actions>
+    </mat-card>
+-->
+    <div class='clearfix'></div>
+
+</div>
