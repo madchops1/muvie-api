@@ -167,13 +167,18 @@ app.post("/api/authSeat", async function (req, res) {
         axios.get('https://visualzkeystore.s3.us-east-2.amazonaws.com/' + key + '.key')
             .then((response) => {
                 // handle success
-                //console.log(response);
+                console.log(response);
                 res.status(200).json();
+                res.end();
             })
             .catch((error) => {
-                throw error.status;
+                throw error;
                 // handle error
                 //console.log(error);
+            })
+            .finally(() => {
+                // always executed
+
             });
         /*
         const xhr = new XMLHttpRequest();
