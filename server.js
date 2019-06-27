@@ -6,6 +6,7 @@ const concat = require('./api/concat');
 const signS3 = require('./api/sign-s3');
 const make = require('./api/make');
 console.log('env', process.env.STRIPE_TEST_KEY);
+const axios = require('axios');
 
 // test key
 const stripe = require('stripe')(process.env.STRIPE_TEST_KEY);
@@ -162,6 +163,22 @@ app.post("/api/authSeat", async function (req, res) {
         console.log('request', req.fields);
 
         // check s3 for a key file that is created when a seat is created
+        // Make a request for a user with a given ID
+        axios.get('https://visualzkeystore.s3.us-east-2.amazonaws.com/' + key + '.key')
+            .then(function (response) {
+                // handle success
+                console.log(response);
+                res.status(200).json();
+            })
+            .catch(function (error) {
+                throw error;
+                // handle error
+                console.log(error);
+            })
+            .finally(function () {
+                // always executed
+            });
+        /*
         const xhr = new XMLHttpRequest();
         let key = req.fields.mid;
         xhr.open('GET', 'https://visualzkeystore.s3.us-east-2.amazonaws.com/' + key + '.key');
@@ -180,6 +197,7 @@ app.post("/api/authSeat", async function (req, res) {
                 }
             }
         };
+        */
     } catch (err) {
         handleError(res, err, 'nope');
     }
