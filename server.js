@@ -165,18 +165,15 @@ app.post("/api/authSeat", async function (req, res) {
         // check s3 for a key file that is created when a seat is created
         // Make a request for a user with a given ID
         axios.get('https://visualzkeystore.s3.us-east-2.amazonaws.com/' + key + '.key')
-            .then(function (response) {
+            .then((response) => {
                 // handle success
-                console.log(response);
+                //console.log(response);
                 res.status(200).json();
             })
-            .catch(function (error) {
-                throw error;
+            .catch((error) => {
+                throw error.status;
                 // handle error
-                console.log(error);
-            })
-            .finally(function () {
-                // always executed
+                //console.log(error);
             });
         /*
         const xhr = new XMLHttpRequest();
