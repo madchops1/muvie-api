@@ -164,42 +164,24 @@ app.post("/api/authSeat", async function (req, res) {
         let key = req.fields.mid;
         // check s3 for a key file that is created when a seat is created
         // Make a request for a user with a given ID
-        await axios.get('https://visualzkeystore.s3.us-east-2.amazonaws.com/' + key + '.key')
-            .then((response) => {
+        axios.get('https://visualzkeystore.s3.us-east-2.amazonaws.com/' + key + '.key')
+            .then(function (response) {
                 // handle success
-                console.log(response);
-                res.status(200).json();
+                console.log(response.data);
+                res.write(response.data);
+                res.end();
+                //res.status(200).json();
                 //res.end();
             })
-            .catch((error) => {
+            .catch(function (error) {
                 throw error.status;
                 // handle error
                 //console.log(error);
             })
-            .finally(() => {
+            .finally(function () {
                 // always executed
 
             });
-        /*
-        const xhr = new XMLHttpRequest();
-        
-        xhr.open('GET', 'https://visualzkeystore.s3.us-east-2.amazonaws.com/' + key + '.key');
-        xhr.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
-        xhr.onreadystatechange = () => {
-            if (xhr.readyState === 4) {
-                if (xhr.status === 200) {
-                    //const response = JSON.parse(xhr.responseText);
-                    //resolve();
-                    res.status(200).json();
-                }
-                else {
-                    throw xhr.status;
-                    //console.log('Error');
-                    //reject('err');
-                }
-            }
-        };
-        */
     } catch (err) {
         handleError(res, err, 'nope');
     }
