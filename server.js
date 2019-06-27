@@ -5,8 +5,10 @@ const bodyParser = require("body-parser");
 const concat = require('./api/concat');
 const signS3 = require('./api/sign-s3');
 const make = require('./api/make');
-//console.log('env', process.env.S3_BUCKET);
-const stripe = require('stripe')('sk_test_Rkq0V7j1iotHFKOxqVbtEidn');
+console.log('env', process.env.STRIPE_TEST_KEY);
+
+// test key
+const stripe = require('stripe')(process.env.STRIPE_TEST_KEY);
 
 
 const app = express();
@@ -141,7 +143,9 @@ app.post("/api/createSeat", async function (req, res) {
 
 app.post("/api/authSeat", async function (req, res) {
     try {
-
+        console.log('request', req);
+        res.write(JSON.stringify(req));
+        res.end();
     } catch (err) {
 
     }
