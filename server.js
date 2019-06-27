@@ -159,8 +159,8 @@ app.post("/api/createSeat", async function (req, res) {
 
 app.post("/api/authSeat", async function (req, res) {
     try {
-        console.log('request', req);
-        res.write(JSON.stringify(req));
+        console.log('request', req.params, req.fields);
+        res.write(JSON.stringify(req.params));
         res.end();
     } catch (err) {
         handleError(res, err, 'nope');
