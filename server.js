@@ -79,6 +79,22 @@ app.get('/*', function(req,res) {
 app.listen(process.env.PORT || 8080);
 */
 
+app.all('*', function (req, res, next) {
+    res.header('Access-Control-Allow-Origin', '*');
+    //res.header("Access-Control-Allow-Headers", "X-Requested-With");
+    //res.header('Access-Control-Allow-Headers', 'Content-Type');
+    res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS');
+    res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization, Content-Length, X-Requested-With');
+    // intercept OPTIONS method
+    if ('OPTIONS' == req.method) {
+        res.send(200);
+    }
+    else {
+        next();
+    }
+    next();
+});
+
 app.get("/api/sign-s3", async function (req, res) {
     try {
         let sign = await signS3.signS3(req);
@@ -137,7 +153,7 @@ app.post("/api/createSeat", async function (req, res) {
 
 
     } catch (err) {
-
+        handleError(res, err, 'nope');
     }
 });
 
@@ -147,7 +163,7 @@ app.post("/api/authSeat", async function (req, res) {
         res.write(JSON.stringify(req));
         res.end();
     } catch (err) {
-
+        handleError(res, err, 'nope');
     }
 });
 
@@ -155,12 +171,6 @@ app.post("/api/removeSeat", async function (req, res) {
     try {
 
     } catch (err) {
-
+        handleError(res, err, 'nope');
     }
 });
-
-app.post("/api/removeSeat/", async function (req, res) {
-
-});
-//app.get("/api/authorize ")
-
