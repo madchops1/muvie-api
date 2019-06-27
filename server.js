@@ -161,7 +161,7 @@ app.post("/api/createSeat", async function (req, res) {
 app.post("/api/authSeat", async function (req, res) {
     try {
         console.log('request', req.fields);
-
+        let key = req.fields.mid;
         // check s3 for a key file that is created when a seat is created
         // Make a request for a user with a given ID
         axios.get('https://visualzkeystore.s3.us-east-2.amazonaws.com/' + key + '.key')
@@ -180,7 +180,7 @@ app.post("/api/authSeat", async function (req, res) {
             });
         /*
         const xhr = new XMLHttpRequest();
-        let key = req.fields.mid;
+        
         xhr.open('GET', 'https://visualzkeystore.s3.us-east-2.amazonaws.com/' + key + '.key');
         xhr.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
         xhr.onreadystatechange = () => {
