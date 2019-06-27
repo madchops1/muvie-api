@@ -6,6 +6,7 @@ const concat = require('./api/concat');
 const signS3 = require('./api/sign-s3');
 const make = require('./api/make');
 //console.log('env', process.env.S3_BUCKET);
+const stripe = require('stripe')('sk_test_Rkq0V7j1iotHFKOxqVbtEidn');
 
 
 const app = express();
@@ -112,4 +113,50 @@ app.get("/api/concat", function (req, res) {
 
     }
 });
+
+app.post("/api/createSeat", async function (req, res) {
+    try {
+        console.log('request', req);
+
+        //(async () => {
+        // get the customer via their email
+        stripe.customers.list(
+            {
+                limit: 3,
+                email: ''
+            },
+            function (err, customers) {
+                // async
+
+
+            }
+        );
+
+
+
+    } catch (err) {
+
+    }
+});
+
+app.post("/api/authSeat", async function (req, res) {
+    try {
+
+    } catch (err) {
+
+    }
+});
+
+app.post("/api/removeSeat", async function (req, res) {
+    try {
+
+    } catch (err) {
+
+    }
+});
+
+app.post("/api/removeSeat/", async function (req, res) {
+
+});
+//app.get("/api/authorize ")
 

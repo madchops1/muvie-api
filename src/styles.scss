@@ -13,20 +13,27 @@ body {
     color: #fff;
 }
 
-
-
 .wrapper {
-    padding: 10%;
+    min-height: 500px;
     background: url(assets/images/blackwhite.jpg);
     background-size: cover;
     //height: 100%;
     //width: 100%;
-    background-position: top center;
+    background-position: bottom center;
     background-repeat: no-repeat;
     text-shadow: 0px 2px 3px #000;
     color: #fff;
     text-align: center;
     letter-spacing: 3px;
+    padding-top: 5%;
+
+    .main {
+        background: rgba(0, 0, 0, 0.5);
+        padding: 40px;
+        max-width: 600px;
+        margin: 0 auto;
+        //margin:100px auto 0px auto;
+    }
 
     button {
         background-color: #e91e63;
@@ -43,14 +50,49 @@ body {
     line-height: 20px;
     letter-spacing: 1px;
 
+    .macwrap {
+
+        iframe {
+            width: 477px;
+            height: 298px;
+            position: relative;
+            display: block;
+            margin: -377px auto 0;
+        }
+    }
+
+    .main {
+        width: 300px;
+        margin: 0px auto;
+
+    }
+
+    h3 {
+        text-align: center;
+    }
+
+    ul {
+        li {
+            margin: 10px;
+        }
+    }
+
     &.dark {
         background-color: #333 !important;
 
     }
 
     mat-card {
-        width: calc(33% - 50px);
-        margin: 10px;
+        //width: calc(33% - 50px);
+        //margin: 10px;
+        margin-bottom: 20px;
+
+        a {
+            margin: 0px auto;
+            color: #fff;
+            display: block;
+            background-color: #e91e63;
+        }
     }
 
     .left {
@@ -95,6 +137,13 @@ header {
 
     .nav {
         float: right;
+        div {
+            color: #cccccc;
+            font-size: 12px;
+            width: 300px;
+            margin-top: 10px;
+
+        }
         a {
             color: #fff;
             display: inline-block;
