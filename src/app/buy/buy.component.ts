@@ -14,14 +14,68 @@ export class BuyComponent implements OnInit {
     stripeScript: any = '';
     stripeScriptProd: any = '';
     stripeScriptTest: any = '';
-    testMode: any = true;
+    testMode: Boolean = true;
     yearly: Boolean = false;
 
     constructor(private sanitizer: DomSanitizer) { }
 
     ngOnInit() {
 
-        this.stripeScriptProd = this.sanitizer.bypassSecurityTrustHtml(``);
+        this.stripeScriptProd = this.sanitizer.bypassSecurityTrustHtml(`
+        <script>
+                var stripe = Stripe('pk_live_ZPeiS3btumpDQ4L0NgtsynHI');
+
+                var checkoutButtonMonthlyTest = document.getElementById('checkout-button-plan_FGEssJMOVRMg55');
+                checkoutButtonMonthlyTest.addEventListener('click', function () {
+                    // When the customer clicks on the button, redirect
+                    // them to Checkout.
+                    stripe.redirectToCheckout({
+                    items: [{plan: 'plan_FGEssJMOVRMg55', quantity: 1}],
+
+                    // Do not rely on the redirect to the successUrl for fulfilling
+                    // purchases, customers may not always reach the success_url after
+                    // a successful payment.
+                    // Instead use one of the strategies described in
+                    // https://stripe.com/docs/payments/checkout/fulfillment
+                    successUrl: 'http://www.visualzstudio.com/success',
+                    cancelUrl: 'http://www.visualzstudio.com/canceled',
+                    })
+                    .then(function (result) {
+                    if (result.error) {
+                        // If redirectToCheckout fails due to a browser or network
+                        // error, display the localized error message to your customer.
+                        var displayError = document.getElementById('error-message');
+                        displayError.textContent = result.error.message;
+                    }
+                    });
+                });
+
+                var checkoutButtonYearlyTest = document.getElementById('checkout-button-plan_FGNnyJ6JaUOGyD');
+                checkoutButtonYearlyTest.addEventListener('click', function () {
+                    // When the customer clicks on the button, redirect
+                    // them to Checkout.
+                    stripe.redirectToCheckout({
+                    items: [{plan: 'plan_FGNnyJ6JaUOGyD', quantity: 1}],
+
+                    // Do not rely on the redirect to the successUrl for fulfilling
+                    // purchases, customers may not always reach the success_url after
+                    // a successful payment.
+                    // Instead use one of the strategies described in
+                    // https://stripe.com/docs/payments/checkout/fulfillment
+                    successUrl: 'http://www.visualzstudio.com/success',
+                    cancelUrl: 'http://www.visualzstudio.com/canceled',
+                    })
+                    .then(function (result) {
+                    if (result.error) {
+                        // If redirectToCheckout fails due to a browser or network
+                        // error, display the localized error message to your customer.
+                        var displayError = document.getElementById('error-message');
+                        displayError.textContent = result.error.message;
+                    }
+                    });
+                });
+            </script>
+        `);
 
         this.stripeScriptTest = this.sanitizer.bypassSecurityTrustHtml(`
             <script>
@@ -39,8 +93,8 @@ export class BuyComponent implements OnInit {
                     // a successful payment.
                     // Instead use one of the strategies described in
                     // https://stripe.com/docs/payments/checkout/fulfillment
-                    successUrl: 'https://muvie-video.herokuapp.com/success',
-                    cancelUrl: 'https://muvie-video.herokuapp.com/canceled',
+                    successUrl: 'http://localhost:4200/success',
+                    cancelUrl: 'http://localhost:4200/canceled',
                     })
                     .then(function (result) {
                     if (result.error) {
@@ -64,8 +118,8 @@ export class BuyComponent implements OnInit {
                     // a successful payment.
                     // Instead use one of the strategies described in
                     // https://stripe.com/docs/payments/checkout/fulfillment
-                    successUrl: 'https://muvie-video.herokuapp.com/success',
-                    cancelUrl: 'https://muvie-video.herokuapp.com/canceled',
+                    successUrl: 'http://localhost:4200/success',
+                    cancelUrl: 'http://localhost:4200/canceled',
                     })
                     .then(function (result) {
                     if (result.error) {

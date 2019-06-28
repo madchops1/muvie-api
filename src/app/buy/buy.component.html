@@ -24,6 +24,7 @@
             <li>Drag &amp; Drop images, videos, gifs, colors, webcam, text, and all other effects</li>
             <li>Oscilloscope effect</li>
             <li>Bubbles effect</li>
+            <li>Gif feature (Very Cool)</li>
         </ul>
         <button routerLink="/download" class="blue" mat-raised-button>
             DOWNLOAD FREE
@@ -39,39 +40,52 @@
         </div>
         <ul class="features">
             <li><strong>NO Watermark</strong></li>
+            <li><strong>Version 1 Users will be granfathered in at $4.00 monthly or $44 annually forever</strong></li>
             <li>Desktop app for Mac/Windows</li>
             <li>Audio-Responsive visuals</li>
-            <li>Real-time beat detection</li>
+            <li>Real-Time beat detection</li>
             <li>Compose visuals for your tracks and set</li>
             <li>Line In / Mic</li>
             <li>HDMI out to projector</li>
             <li>Drag &amp; Drop images, videos, gifs, colors, webcam, text, and all other effects</li>
             <li>Oscilloscope effect</li>
             <li>Bubbles effect</li>
+            <li>Gif feature (Very Cool)</li>
         </ul>
 
-        <!-- TEST BUTTON MONTHLY -->
-        <button [hidden]="yearly" class="red" id="checkout-button-plan_FGMKQF2uISVdiV" role="link" mat-raised-button>
-            CHECKOUT
-        </button>
+        <div [hidden]="testMode === true">
+            <!-- PROD BUTTON MONTHLY -->
+            <button [hidden]="yearly && testMode === false" class="red" id="checkout-button-plan_FGEssJMOVRMg55"
+                role="link" mat-raised-button>
+                CHECKOUT MONTHLY
+            </button>
 
-        <!-- TEST BUTTON YEARLY -->
-        <button [hidden]="!yearly" class="red" id="checkout-button-plan_FGNdA98XXMUJv6" role="link" mat-raised-button>
-            CHECKOUT
-        </button>
+            <!-- PROD BUTTON YEARLY  -->
+            <button [hidden]="!yearly && testMode === false" class="red" id="checkout-button-plan_FGNnyJ6JaUOGyD"
+                role="link" mat-raised-button>
+                CHECKOUT YEARLY
+            </button>
+        </div>
 
-        <!-- PROD BUTTON MONTHLY
-        <button style="background-color:#6772E5;color:#FFF;padding:8px 12px;border:0;border-radius:4px;font-size:1em"
-            id="checkout-button-plan_FGEssJMOVRMg55" role="link">
-            Checkout
-        </button> -->
+        <div [hidden]="testMode === false">
 
-        <!-- PROD BUTTON YEARLY 
-        <button style="background-color:#6772E5;color:#FFF;padding:8px 12px;border:0;border-radius:4px;font-size:1em"
-            id="checkout-button-plan_FGNnyJ6JaUOGyD" role="link">
-            Checkout
-        </button>
-        -->
+            <!-- TEST BUTTON MONTHLY -->
+            <button [hidden]="yearly" class="red" id="checkout-button-plan_FGMKQF2uISVdiV" role="link"
+                mat-raised-button>
+                TEST CHECKOUT MONTHLY
+            </button>
+
+            <!-- TEST BUTTON YEARLY -->
+            <button [hidden]="!yearly" class="red" id="checkout-button-plan_FGNdA98XXMUJv6" role="link"
+                mat-raised-button>
+                TEST CHECKOUT YEARLY
+            </button>
+        </div>
+
+
+
+
+
 
         <span class="tip">* Most popular!</span>
     </div>

@@ -23,6 +23,8 @@ import { SuccessComponent } from './success/success.component';
 import { CanceledComponent } from './canceled/canceled.component';
 import { DownloadComponent } from './download/download.component';
 import { HowComponent } from './how/how.component';
+import { TermsComponent } from './terms/terms.component';
+import { PrivacyComponent } from './privacy/privacy.component';
 const config: SocketIoConfig = { url: environment.ioUrl, options: {} };
 
 @NgModule({
@@ -38,7 +40,9 @@ const config: SocketIoConfig = { url: environment.ioUrl, options: {} };
         SuccessComponent,
         CanceledComponent,
         DownloadComponent,
-        HowComponent
+        HowComponent,
+        TermsComponent,
+        PrivacyComponent
     ],
     imports: [
         BrowserModule,

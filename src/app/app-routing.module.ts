@@ -11,6 +11,8 @@ import { SuccessComponent } from './success/success.component';
 import { CanceledComponent } from './canceled/canceled.component';
 import { DownloadComponent } from './download/download.component';
 import { HowComponent } from './how/how.component';
+import { TermsComponent } from './terms/terms.component';
+import { PrivacyComponent } from './privacy/privacy.component';
 
 const routes: Routes = [
     { path: '', component: VisualzComponent },
@@ -20,6 +22,8 @@ const routes: Routes = [
     { path: 'canceled', component: CanceledComponent },
     { path: 'download', component: DownloadComponent },
     { path: 'how-it-works', component: HowComponent },
+    { path: 'terms-conditions', component: TermsComponent },
+    { path: 'privacy-policy', component: PrivacyComponent },
     //{ path: 'movie', component: NewMovieComponent },
     //{ path: 'filter', component: FilterComponent },
     //{ path: 'upload', component: UploadComponent },
