@@ -36,8 +36,8 @@ const app = express();
 //}));
 
 // make a comment on this.. lol
-//app.use(formidableMiddleware());
-app.use(bodyParser({ extended: false }));
+app.use(formidableMiddleware());
+//app.use(bodyParser({ extended: false }));
 
 // Create link to Angular build directory
 app.use(express.static(__dirname + '/dist/muvie'));
