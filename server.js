@@ -18,11 +18,11 @@ const AWS = require('aws-sdk');
 //dotenv.config();
 
 //console.log('env', process.env.STRIPE_TEST_KEY);
-//if (process.env.ENVIRONMENT == 'development') {
-const stripe = require('stripe')(process.env.STRIPE_TEST_KEY);
-//} else {
-//    const stripe = require('stripe')(process.env.STRIPE_KEY);
-//}
+if (process.env.ENVIRONMENT == 'development') {
+    const stripe = require('stripe')(process.env.STRIPE_TEST_KEY);
+} else {
+    const stripe = require('stripe')(process.env.STRIPE_KEY);
+}
 const s3 = new AWS.S3({
     accessKeyId: process.env.AWS_ACCESS_KEY,
     secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY
@@ -36,8 +36,8 @@ const app = express();
 //}));
 
 // make a comment on this.. lol
-app.use(formidableMiddleware());
-//app.use(bodyParser({ extended: false }));
+//app.use(formidableMiddleware());
+app.use(bodyParser({ extended: false }));
 
 // Create link to Angular build directory
 app.use(express.static(__dirname + '/dist/muvie'));
