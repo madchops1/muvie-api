@@ -97,6 +97,7 @@ app.get('/*', function(req,res) {
 app.listen(process.env.PORT || 8080);
 */
 
+/*
 app.all('*', function (req, res, next) {
     res.header('Access-Control-Allow-Origin', '*');
     //res.header("Access-Control-Allow-Headers", "X-Requested-With");
@@ -208,7 +209,7 @@ app.post("/api/createSeat", async function (req, res) {
                             if (!error && response.statusCode == 200) {
                                 console.log('success', body);
                                 res.status(200).json(JSON.parse(body));
-                                //console.log(body) // Show the HTML for the Google homepage. 
+                                //console.log(body) // Show the HTML for the Google homepage.
                             } else {
                                 res.status(200).json({ plan: 0, email: '' });
                             }
@@ -243,7 +244,7 @@ app.post("/api/authSeat", async function (req, res) {
         if (!error && response.statusCode == 200) {
             console.log('success', body);
             res.status(200).json(JSON.parse(body));
-            //console.log(body) // Show the HTML for the Google homepage. 
+            //console.log(body) // Show the HTML for the Google homepage.
         } else {
             res.status(200).json({ plan: 0, email: '' });
         }
@@ -270,3 +271,4 @@ app.post("/api/removeSeat", async function (req, res) {
         handleError(res, err, 'nope');
     }
 });
+*/
