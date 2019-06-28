@@ -22,7 +22,6 @@ if (process.env.ENVIRONMENT == 'development') {
     const stripe = require('stripe')(process.env.STRIPE_TEST_KEY);
 } else {
     const stripe = require('stripe')(process.env.STRIPE_KEY);
-
 }
 const s3 = new AWS.S3({
     accessKeyId: process.env.AWS_ACCESS_KEY,
@@ -112,6 +111,12 @@ app.all('*', function (req, res, next) {
         next();
     }
     next();
+});
+
+app.use(function (req, res, next) {
+    //var err = new Error('Not Found');
+    //err.status = 404;
+    //next(err);
 });
 
 app.get("/api/sign-s3", async function (req, res) {
@@ -265,7 +270,3 @@ app.post("/api/removeSeat", async function (req, res) {
         handleError(res, err, 'nope');
     }
 });
-
-//app.get("*", (req, res) => {
-//    res.sendFile(__dirname + '/dist/muvie/index.html');
-//});
