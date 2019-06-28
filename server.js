@@ -14,8 +14,8 @@ const AWS = require('aws-sdk');
 //console.log('env', process.env.STRIPE_TEST_KEY);
 
 // ENV VARS
-const dotenv = require('dotenv');
-dotenv.config();
+//const dotenv = require('dotenv');
+//dotenv.config();
 
 //console.log('env', process.env.STRIPE_TEST_KEY);
 //if (process.env.ENVIRONMENT == 'development') {
