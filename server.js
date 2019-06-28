@@ -270,3 +270,7 @@ app.post("/api/removeSeat", async function (req, res) {
         handleError(res, err, 'nope');
     }
 });
+
+app.get("*", (req, res) => {
+    res.sendFile(__dirname + '/dist/muvie/index.html');	//    res.sendFile(__dirname + '/dist/muvie/index.html');
+});
