@@ -111,14 +111,14 @@ app.get("*", (req, res) => {
     res.sendFile(__dirname + '/dist/muvie/index.html');	//    res.sendFile(__dirname + '/dist/muvie/index.html');
 });
 
+
 app.all('*', function (req, res, next) {
-    res.header('Access-Control-Allow-Origin', '*');
-    //res.header("Access-Control-Allow-Headers", "X-Requested-With");
-    //res.header('Access-Control-Allow-Headers', 'Content-Type');
-    res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS');
-    res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization, Content-Length, X-Requested-With');
     // intercept OPTIONS method
     if ('OPTIONS' == req.method) {
+        res.header('Access-Control-Allow-Origin', '*');
+        res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS');
+        res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization, Content-Length, X-Requested-With');
+
         res.send(200);
     }
     else {
@@ -164,6 +164,11 @@ app.post("/api/make", async function (req, res) {
     try {
         console.log('calling api make', req.fields);
         let makeVideo = await make.Make(req);
+
+        res.header('Access-Control-Allow-Origin', '*');
+        res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS');
+        res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization, Content-Length, X-Requested-With');
+
         res.write(JSON.stringify(makeVideo));
         res.end();
     } catch (err) {
@@ -176,6 +181,10 @@ app.get("/api/concat", function (req, res) {
         let concatVideo = concat.Concat();
         concatVideo.then(function (result) {
             console.log(result);
+            res.header('Access-Control-Allow-Origin', '*');
+            res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS');
+            res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization, Content-Length, X-Requested-With');
+
             res.status(200).json();
         },
             function (err) {
@@ -238,9 +247,17 @@ app.post("/api/createSeat", async function (req, res) {
                         request('https://' + process.env.KEYSTORE + '.s3.us-east-2.amazonaws.com/' + key + '.json', function (error, response, body) {
                             if (!error && response.statusCode == 200) {
                                 console.log('success', body);
+                                res.header('Access-Control-Allow-Origin', '*');
+                                res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS');
+                                res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization, Content-Length, X-Requested-With');
+
                                 res.status(200).json(JSON.parse(body));
                                 //console.log(body) // Show the HTML for the Google homepage. 
                             } else {
+                                res.header('Access-Control-Allow-Origin', '*');
+                                res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS');
+                                res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization, Content-Length, X-Requested-With');
+
                                 res.status(200).json({ plan: 0, email: '' });
                             }
                         });
@@ -273,9 +290,17 @@ app.post("/api/authSeat", async function (req, res) {
     await request('https://' + process.env.KEYSTORE + '.s3.us-east-2.amazonaws.com/' + key + '.json', function (error, response, body) {
         if (!error && response.statusCode == 200) {
             console.log('success', body);
+            res.header('Access-Control-Allow-Origin', '*');
+            res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS');
+            res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization, Content-Length, X-Requested-With');
+
             res.status(200).json(JSON.parse(body));
             //console.log(body) // Show the HTML for the Google homepage. 
         } else {
+            res.header('Access-Control-Allow-Origin', '*');
+            res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS');
+            res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization, Content-Length, X-Requested-With');
+
             res.status(200).json({ plan: 0, email: '' });
         }
     });
@@ -294,6 +319,10 @@ app.post("/api/removeSeat", async function (req, res) {
                 throw err;
             } else {
                 console.log('remove seat success');
+                res.header('Access-Control-Allow-Origin', '*');
+                res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS');
+                res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization, Content-Length, X-Requested-With');
+
                 res.status(200).json();
             }
         });
