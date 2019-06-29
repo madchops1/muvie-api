@@ -37,8 +37,8 @@ export class BuyComponent implements OnInit {
                     // a successful payment.
                     // Instead use one of the strategies described in
                     // https://stripe.com/docs/payments/checkout/fulfillment
-                    successUrl: 'http://www.visualzstudio.com/success',
-                    cancelUrl: 'http://www.visualzstudio.com/canceled',
+                    successUrl: 'https://www.visualzstudio.com/success',
+                    cancelUrl: 'https://www.visualzstudio.com/canceled',
                     })
                     .then(function (result) {
                     if (result.error) {
@@ -62,8 +62,8 @@ export class BuyComponent implements OnInit {
                     // a successful payment.
                     // Instead use one of the strategies described in
                     // https://stripe.com/docs/payments/checkout/fulfillment
-                    successUrl: 'http://www.visualzstudio.com/success',
-                    cancelUrl: 'http://www.visualzstudio.com/canceled',
+                    successUrl: 'https://www.visualzstudio.com/success',
+                    cancelUrl: 'https://www.visualzstudio.com/canceled',
                     })
                     .then(function (result) {
                     if (result.error) {

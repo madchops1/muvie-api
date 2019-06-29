@@ -1,4 +1,5 @@
 //Install express server
+var sslRedirect = require('heroku-ssl-redirect');
 const express = require('express');
 const formidableMiddleware = require('express-formidable');
 const bodyParser = require("body-parser");
@@ -10,7 +11,7 @@ const make = require('./api/make');
 const request = require('request');
 const fs = require('fs');
 const AWS = require('aws-sdk');
-var enforce = require('express-sslify');
+//var enforce = require('express-sslify');
 
 //console.log('env', process.env.STRIPE_TEST_KEY);
 
@@ -30,6 +31,10 @@ const s3 = new AWS.S3({
 });
 
 const app = express();
+
+// enable ssl redirect
+app.use(sslRedirect());
+
 //var http = require('http').Server(app);
 //app.use(bodyParser.json());
 //app.use(bodyParser.urlencoded({
@@ -38,15 +43,14 @@ const app = express();
 
 // make a comment on this.. lol
 //app.use(formidableMiddleware());
-app.use(bodyParser({ extended: false }));
+if(process.env.ENVIRONMENT == 'production') {
+    app.use(bodyParser({ extended: false }));
+}
 
 // Create link to Angular build directory
 app.use(express.static(__dirname + '/dist/muvie'));
 app.use(express.static(__dirname + '/src/assets'));
 
-if (process.env.ENVIRONMENT == 'production') {
-    app.use(enforce.HTTPS({ trustProtoHeader: true }));
-}
 
 // Initialize the app.
 var server = app.listen(process.env.PORT || 8080, function () {
@@ -129,6 +133,17 @@ app.all('*', function (req, res, next) {
 //        res.redirect("https://" + req.headers.host + req.url);
 //    }
 //});
+
+
+if (process.env.ENVIRONMENT == 'production') {
+    //app.use(enforce.HTTPS({ trustProtoHeader: true }));
+    app.use(function (req, res) {
+        if (!req.secure && process.env.ENVIRONMENT == 'production') {
+            res.redirect("https://" + req.headers.host + req.url);
+        }
+    });
+
+}
 
 app.get("/api/sign-s3", async function (req, res) {
     try {
