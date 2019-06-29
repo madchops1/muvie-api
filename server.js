@@ -119,6 +119,12 @@ app.use(function (req, res, next) {
     //next(err);
 });
 
+app.use(function (req, res) {
+    if (!req.secure && process.env.ENVIRONMENT == 'production') {
+        response.redirect("https://" + req.headers.host + req.url);
+    }
+});
+
 app.get("/api/sign-s3", async function (req, res) {
     try {
         let sign = await signS3.signS3(req);
