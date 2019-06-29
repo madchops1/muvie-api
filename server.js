@@ -121,7 +121,7 @@ app.use(function (req, res, next) {
 
 app.use(function (req, res) {
     if (!req.secure && process.env.ENVIRONMENT == 'production') {
-        response.redirect("https://" + req.headers.host + req.url);
+        res.redirect("https://" + req.headers.host + req.url);
     }
 });
 
