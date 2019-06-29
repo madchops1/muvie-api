@@ -60,6 +60,7 @@ var server = app.listen(process.env.PORT || 8080, function () {
 
 
 //const io = socketIO(server);
+/*
 var io = require('socket.io')(server);
 
 io.on('connection', (socket) => {
@@ -87,10 +88,11 @@ io.on('connection', (socket) => {
         }
     });
 });
+*/
 
 // Generic error handler used by all endpoints.
 function handleError(res, reason, message, code) {
-    console.log("ERROR: " + reason);
+    //console.log("ERROR: " + reason);
     res.status(code || 500).json({ "error": message });
 }
 
@@ -107,7 +109,7 @@ app.listen(process.env.PORT || 8080);
 */
 
 app.get("*", (req, res) => {
-    console.log('ALPHA');
+    //console.log('ALPHA');
     res.sendFile(__dirname + '/dist/muvie/index.html');	//    res.sendFile(__dirname + '/dist/muvie/index.html');
 });
 
@@ -118,7 +120,6 @@ app.all('*', function (req, res, next) {
         res.header('Access-Control-Allow-Origin', '*');
         res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS');
         res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization, Content-Length, X-Requested-With');
-
         res.send(200);
     }
     else {
@@ -289,18 +290,16 @@ app.post("/api/authSeat", async function (req, res) {
     let key = req.body.mid; //'27540e6c-3929-4733-bc0b-314f657dec0b';
     await request('https://' + process.env.KEYSTORE + '.s3.us-east-2.amazonaws.com/' + key + '.json', function (error, response, body) {
         if (!error && response.statusCode == 200) {
-            console.log('success', body);
+            //console.log('success', body);
             res.header('Access-Control-Allow-Origin', '*');
             res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS');
             res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization, Content-Length, X-Requested-With');
-
             res.status(200).json(JSON.parse(body));
             //console.log(body) // Show the HTML for the Google homepage. 
         } else {
             res.header('Access-Control-Allow-Origin', '*');
             res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS');
             res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization, Content-Length, X-Requested-With');
-
             res.status(200).json({ plan: 0, email: '' });
         }
     });
