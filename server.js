@@ -33,7 +33,9 @@ const s3 = new AWS.S3({
 const app = express();
 
 // enable ssl redirect
-app.use(sslRedirect());
+if (process.env.ENVIRONMENT == 'production') {
+    app.use(sslRedirect());
+}
 
 //var http = require('http').Server(app);
 //app.use(bodyParser.json());
@@ -43,9 +45,7 @@ app.use(sslRedirect());
 
 // make a comment on this.. lol
 //app.use(formidableMiddleware());
-if(process.env.ENVIRONMENT == 'production') {
-    app.use(bodyParser({ extended: false }));
-}
+app.use(bodyParser({ extended: false }));
 
 // Create link to Angular build directory
 app.use(express.static(__dirname + '/dist/muvie'));
