@@ -113,17 +113,17 @@ app.all('*', function (req, res, next) {
     next();
 });
 
-app.use(function (req, res, next) {
-    //var err = new Error('Not Found');
-    //err.status = 404;
-    //next(err);
-});
+//app.use(function (req, res, next) {
+//var err = new Error('Not Found');
+//err.status = 404;
+//next(err);
+//});
 
-app.use(function (req, res) {
-    if (!req.secure && process.env.ENVIRONMENT == 'production') {
-        res.redirect("https://" + req.headers.host + req.url);
-    }
-});
+//app.use(function (req, res) {
+//    if (!req.secure && process.env.ENVIRONMENT == 'production') {
+//        res.redirect("https://" + req.headers.host + req.url);
+//    }
+//});
 
 app.get("/api/sign-s3", async function (req, res) {
     try {
