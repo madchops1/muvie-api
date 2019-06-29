@@ -297,6 +297,7 @@ app.post("/api/removeSeat", async function (req, res) {
     }
 });
 
-app.get("*", (req, res) => {
+app.get("/*", (req, res) => {
+
     res.sendFile(__dirname + '/dist/muvie/index.html');	//    res.sendFile(__dirname + '/dist/muvie/index.html');
 });
