@@ -10,6 +10,7 @@ const make = require('./api/make');
 const request = require('request');
 const fs = require('fs');
 const AWS = require('aws-sdk');
+var enforce = require('express-sslify');
 
 //console.log('env', process.env.STRIPE_TEST_KEY);
 
@@ -42,6 +43,10 @@ app.use(bodyParser({ extended: false }));
 // Create link to Angular build directory
 app.use(express.static(__dirname + '/dist/muvie'));
 app.use(express.static(__dirname + '/src/assets'));
+
+if (process.env.ENVIRONMENT == 'production') {
+    app.use(enforce.HTTPS({ trustProtoHeader: true }));
+}
 
 // Initialize the app.
 var server = app.listen(process.env.PORT || 8080, function () {
