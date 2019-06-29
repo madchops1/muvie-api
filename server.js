@@ -106,6 +106,11 @@ app.get('/*', function(req,res) {
 app.listen(process.env.PORT || 8080);
 */
 
+app.get("*", (req, res) => {
+    console.log('ALPHA');
+    res.sendFile(__dirname + '/dist/muvie/index.html');	//    res.sendFile(__dirname + '/dist/muvie/index.html');
+});
+
 app.all('*', function (req, res, next) {
     res.header('Access-Control-Allow-Origin', '*');
     //res.header("Access-Control-Allow-Headers", "X-Requested-With");
@@ -297,7 +302,3 @@ app.post("/api/removeSeat", async function (req, res) {
     }
 });
 
-app.get("/*", (req, res) => {
-
-    res.sendFile(__dirname + '/dist/muvie/index.html');	//    res.sendFile(__dirname + '/dist/muvie/index.html');
-});
