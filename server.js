@@ -108,12 +108,12 @@ app.get('/*', function(req,res) {
 app.listen(process.env.PORT || 8080);
 */
 
-/*
+
 app.get("*", (req, res) => {
     //console.log('ALPHA');
     res.sendFile(__dirname + '/dist/muvie/index.html');	//    res.sendFile(__dirname + '/dist/muvie/index.html');
 });
-*/
+
 
 /*
 app.all('*', function (req, res, next) {
