@@ -2,35 +2,29 @@
     <h1 class="center">Download For<br>Windows or Mac</h1>
     <h2>VISUALZ v1.0.0</h2>
     <div class="clearfix"></div>
+    <div class="bordered">
+        <a href="https://visualz-1.s3.us-east-2.amazonaws.com/VISUALZ-installer.rar" target="_blank" mat-raised-button
+            (click)="downloadWindows()" class="pink button">
+            Download For Windows
+        </a>
 
-    <mat-grid-list cols="1" rowHeight="1.5:1">
-        <mat-grid-tile>
-            <div class="bordered">
-                <button mat-raised-button class="pink">
-                    Download For Windows
-                </button>
+        <img class="windows" src="../../assets/images/windows.png" />
 
-                <img class="windows" src="../../assets/images/windows.png" />
+        <p>
+            <a href="https://www.google.com/search?q=install+non+store+apps+windows+10&rlz=1C1CHBF_enUS840US840&oq=non-store+apps+win&aqs=chrome.2.69i57j69i60j0l4.8285j0j9&sourceid=chrome&ie=UTF-8"
+                target="_blank">Allow Non-Store Apps to Install on Windows 10</a>
+        </p>
+    </div>
+    <div class="bordered">
+        <p>
+            The Mac Version Is Coming Soon.
+        </p>
+        <img class="mac" src="../../assets/images/macos.png" />
 
-                <p>
-                    <a href="https://www.google.com/search?q=install+non+store+apps+windows+10&rlz=1C1CHBF_enUS840US840&oq=non-store+apps+win&aqs=chrome.2.69i57j69i60j0l4.8285j0j9&sourceid=chrome&ie=UTF-8"
-                        target="_blank">Allow Non-Store Apps to Install on Windows 10</a>
-                </p>
-            </div>
-        </mat-grid-tile>
-        <mat-grid-tile>
-            <div class="bordered">
-                <p>
-                    The Mac Version Is Coming Soon.
-                </p>
-                <img class="mac" src="../../assets/images/macos.png" />
-
-                <p>
-                    <a href="https://www.google.com/search?q=allow+unsigned+apps+on+mac&rlz=1C1CHBF_enUS840US840&oq=allow+apps+on+mac&aqs=chrome.4.69i57j0l5.7806j0j4&sourceid=chrome&ie=UTF-8"
-                        target="_blank">Allowing
-                        Third Party Applications to Install on a MacBook</a>
-                </p>
-            </div>
-        </mat-grid-tile>
-    </mat-grid-list>
+        <p>
+            <a href="https://www.google.com/search?q=allow+unsigned+apps+on+mac&rlz=1C1CHBF_enUS840US840&oq=allow+apps+on+mac&aqs=chrome.4.69i57j0l5.7806j0j4&sourceid=chrome&ie=UTF-8"
+                target="_blank">Allowing
+                Third Party Applications to Install on a MacBook</a>
+        </p>
+    </div>
 </div>

@@ -53,13 +53,6 @@ body {
 
     .macwrap {
 
-        iframe {
-            width: 477px;
-            height: 298px;
-            position: relative;
-            display: block;
-            margin: -377px auto 0;
-        }
     }
 
     .main {
@@ -80,7 +73,14 @@ body {
 
     &.dark {
         background-color: #333 !important;
-
+        
+        iframe {
+            width: 477px;
+            height: 298px;
+            position: relative;
+            display: block;
+            margin: 40px auto 20px;
+        }
     }
 
     mat-card {

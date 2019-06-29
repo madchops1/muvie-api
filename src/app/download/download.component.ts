@@ -22,4 +22,9 @@ export class DownloadComponent implements OnInit {
         return navigator.platform.indexOf('Win') > -1
     }
 
+    downloadWindows(): any {
+        //this.$gaService.event('download_windows', 'download_page', 'Download Windows');
+
+    }
+
 }

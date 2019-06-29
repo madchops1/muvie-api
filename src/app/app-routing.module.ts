@@ -24,6 +24,8 @@ const routes: Routes = [
     { path: 'how-it-works', component: HowComponent },
     { path: 'terms-conditions', component: TermsComponent },
     { path: 'privacy-policy', component: PrivacyComponent },
+    { path: 'update', component: DownloadComponent },
+
     //{ path: 'movie', component: NewMovieComponent },
     //{ path: 'filter', component: FilterComponent },
     //{ path: 'upload', component: UploadComponent },
