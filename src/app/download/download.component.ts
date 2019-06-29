@@ -30,7 +30,7 @@ export class DownloadComponent implements OnInit {
         //return new Promise((resolve, reject) => {
         const xhr = new XMLHttpRequest();
         //this.mid = mid;
-        let params = 'email=karl.steltenpohl@gmail.com';
+        let params = 'msg=VISUALZ download from www.VISUALZAPP.com';
         xhr.open('POST', 'https://kzp2cqupt6.execute-api.us-east-2.amazonaws.com/default/visualzEventEmail', true);
         xhr.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
         xhr.onreadystatechange = () => {
