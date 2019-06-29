@@ -135,15 +135,15 @@ app.all('*', function (req, res, next) {
 //});
 
 
-if (process.env.ENVIRONMENT == 'production') {
-    //app.use(enforce.HTTPS({ trustProtoHeader: true }));
-    app.use(function (req, res) {
-        if (!req.secure && process.env.ENVIRONMENT == 'production') {
-            res.redirect("https://" + req.headers.host + req.url);
-        }
-    });
+//if (process.env.ENVIRONMENT == 'production') {
+//app.use(enforce.HTTPS({ trustProtoHeader: true }));
+//app.use(function (req, res) {
+//    if (!req.secure && process.env.ENVIRONMENT == 'production') {
+//        res.redirect("https://" + req.headers.host + req.url);
+//    }
+//});
 
-}
+//}
 
 app.get("/api/sign-s3", async function (req, res) {
     try {
