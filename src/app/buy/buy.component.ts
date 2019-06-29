@@ -14,7 +14,7 @@ export class BuyComponent implements OnInit {
     stripeScript: any = '';
     stripeScriptProd: any = '';
     stripeScriptTest: any = '';
-    testMode: Boolean = true;
+    testMode: Boolean = false;
     yearly: Boolean = false;
 
     constructor(private sanitizer: DomSanitizer) { }
