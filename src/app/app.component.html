@@ -6,12 +6,21 @@
         </div>-->
         <!--<a routerLink="/filter">Filter</a>-->
 
-        <a routerLink="/">HOME</a>
-        <a routerLink="/download">DOWNLOAD FREE</a>
-        <a routerLink="/prices">PRICES</a>
+        <button mat-button routerLink="/">HOME</button>
+        <button mat-button routerLink="/download">DOWNLOAD FREE</button>
+        <button mat-button routerLink="/prices">PRICES</button>
+
+        <!--
         <a routerLink="/support">SUPPORT</a>
         <a routerLink="/how-it-works">HOW IT WORKS</a>
-
+        -->
+        <button mat-button [matMenuTriggerFor]="menu">LEARN &amp; SUPPORT</button>
+        <mat-menu #menu="matMenu">            
+            <button mat-menu-item routerLink="/how-it-works">LEARN</button>
+            <button mat-menu-item routerLink="/resources">RESOURCES</button>
+            <button mat-menu-item routerLink="/support">COMMUNITY</button>
+            <button mat-menu-item routerLink="/book">BOOK DEMO</button>
+        </mat-menu>
     </div>
     <div class="clearfix"></div>
 </header>

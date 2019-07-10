@@ -13,6 +13,8 @@ import { DownloadComponent } from './download/download.component';
 import { HowComponent } from './how/how.component';
 import { TermsComponent } from './terms/terms.component';
 import { PrivacyComponent } from './privacy/privacy.component';
+import { BookComponent } from './book/book.component';
+import { ResourcesComponent } from './resources/resources.component';
 
 const routes: Routes = [
     { path: '', component: VisualzComponent },
@@ -25,6 +27,8 @@ const routes: Routes = [
     { path: 'terms-conditions', component: TermsComponent },
     { path: 'privacy-policy', component: PrivacyComponent },
     { path: 'update', component: DownloadComponent },
+    { path: 'book', component: BookComponent },
+    { path: 'resources', component: ResourcesComponent }
 
     //{ path: 'movie', component: NewMovieComponent },
     //{ path: 'filter', component: FilterComponent },
