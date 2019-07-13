@@ -19,8 +19,8 @@ const AWS = require('aws-sdk');
 const dotenv = require('dotenv');
 dotenv.config();
 
-//console.log('env', process.env);
-console.log('Environment', process.env.ENVIRONMENT);
+console.log('env', process.env);
+//console.log('Environment', process.env.ENVIRONMENT);
 const stripe = require('stripe')(process.env.STRIPE_KEY);
 
 const s3 = new AWS.S3({
@@ -204,6 +204,9 @@ app.post("/api/createSeat", async function (req, res) {
     let key = req.body.mid; //'27540e6c-3929-4733-bc0b-314f657dec0b';
     let email = req.body.email;
     let plan = 0;
+    if(!key) {
+        handleError(res, err, 'no key');
+    }
     try {
         //console.log('request', req);
 
@@ -211,7 +214,6 @@ app.post("/api/createSeat", async function (req, res) {
         stripe.customers.list({ limit: 1, email: email },
             function (err, customers) {
                 if (err) {
-                    console.log(err);
                     handleError(res, err, 'nope');
                 }
 
@@ -252,15 +254,12 @@ app.post("/api/createSeat", async function (req, res) {
                                 res.header('Access-Control-Allow-Origin', '*');
                                 res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS');
                                 res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization, Content-Length, X-Requested-With');
-
                                 res.status(200).json(JSON.parse(body));
-                                //console.log(body) // Show the HTML for the Google homepage. 
                             } else {
                                 res.header('Access-Control-Allow-Origin', '*');
                                 res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS');
                                 res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization, Content-Length, X-Requested-With');
-
-                                res.status(200).json({ plan: 0, email: '' });
+                                res.status(200).json({ plan: 0, email: '', s3Error: error });
                             }
                         });
 
