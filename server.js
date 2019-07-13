@@ -16,15 +16,13 @@ const AWS = require('aws-sdk');
 //console.log('env', process.env.STRIPE_TEST_KEY);
 
 // ENV VARS
-//const dotenv = require('dotenv');
-//dotenv.config();
+const dotenv = require('dotenv');
+dotenv.config();
 
-//console.log('env', process.env.STRIPE_TEST_KEY);
-if (process.env.ENVIRONMENT == 'development') {
-    const stripe = require('stripe')(process.env.STRIPE_TEST_KEY);
-} else {
-    const stripe = require('stripe')(process.env.STRIPE_KEY);
-}
+//console.log('env', process.env);
+console.log('Environment', process.env.ENVIRONMENT);
+const stripe = require('stripe')(process.env.STRIPE_KEY);
+
 const s3 = new AWS.S3({
     accessKeyId: process.env.AWS_ACCESS_KEY,
     secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY
@@ -92,7 +90,7 @@ io.on('connection', (socket) => {
 
 // Generic error handler used by all endpoints.
 function handleError(res, reason, message, code) {
-    //console.log("ERROR: " + reason);
+    console.log("ERROR: " + reason);
     res.status(code || 500).json({ "error": message });
 }
 
@@ -213,6 +211,7 @@ app.post("/api/createSeat", async function (req, res) {
         stripe.customers.list({ limit: 1, email: email },
             function (err, customers) {
                 if (err) {
+                    console.log(err);
                     handleError(res, err, 'nope');
                 }
 
@@ -271,6 +270,7 @@ app.post("/api/createSeat", async function (req, res) {
 
 
                 } else {
+
                     handleError(res, err, 'nope');
                 }
 
