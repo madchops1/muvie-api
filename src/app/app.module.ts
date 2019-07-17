@@ -2,7 +2,7 @@ import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { MatMenuModule, MatSlideToggleModule, MatIconModule, MatButtonModule, MatSidenavModule, MatRadioModule, MatCheckboxModule, MatSliderModule, MatCardModule, MatGridListModule, MatProgressSpinnerModule } from '@angular/material';
+import { MatMenuModule, MatSlideToggleModule, MatIconModule, MatButtonModule, MatToolbarModule, MatButtonToggleModule, MatSidenavModule, MatRadioModule, MatCheckboxModule, MatSliderModule, MatCardModule, MatGridListModule, MatProgressSpinnerModule, MatToolbar } from '@angular/material';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -27,7 +27,11 @@ import { TermsComponent } from './terms/terms.component';
 import { PrivacyComponent } from './privacy/privacy.component';
 import { BookComponent } from './book/book.component';
 import { ResourcesComponent } from './resources/resources.component';
-const config: SocketIoConfig = { url: environment.ioUrl, options: {} };
+import { FanCamComponent } from './fan-cam/fan-cam.component';
+import { FanScreenComponent } from './fan-screen/fan-screen.component';
+import { RemoteCamComponent } from './remote-cam/remote-cam.component';
+import { RemoteQueComponent } from './remote-que/remote-que.component';
+const config: SocketIoConfig = { url: environment.ioUrl, options: { autoConnect: false } };
 
 @NgModule({
     declarations: [
@@ -46,14 +50,20 @@ const config: SocketIoConfig = { url: environment.ioUrl, options: {} };
         TermsComponent,
         PrivacyComponent,
         BookComponent,
-        ResourcesComponent
+        ResourcesComponent,
+        FanCamComponent,
+        FanScreenComponent,
+        RemoteCamComponent,
+        RemoteQueComponent
     ],
     imports: [
         BrowserModule,
         AppRoutingModule,
         BrowserAnimationsModule,
         MatMenuModule,
+        MatToolbarModule,
         MatButtonModule,
+        MatButtonToggleModule,
         MatCheckboxModule,
         MatSliderModule,
         MatCardModule,

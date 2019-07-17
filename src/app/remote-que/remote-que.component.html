@@ -1,0 +1,40 @@
+<header *ngIf="!interactive">
+    <a routerLink="/" class="logo">VISUALZ <span>REMOTE QUE</span></a>
+    <div class="clearfix"></div>
+</header>
+<mat-toolbar class="pink" *ngIf="tracks.length">
+    <mat-toolbar-row class="main">
+
+        <button title="Play" mat-mini-fab *ngIf="!playing" (click)="play()">
+            <mat-icon aria-label="Play">play_arrow</mat-icon>
+        </button>
+
+        <button title="Pause" mat-mini-fab *ngIf="playing" (click)="stop()">
+            <mat-icon aria-label="Pause">pause</mat-icon>
+        </button>
+
+        <button title="Next Track" mat-mini-fab *ngIf="tracks.length > 1" (click)="nextTrack()">
+            <mat-icon aria-label="Next Track">skip_next</mat-icon>
+        </button>
+
+        <button title="Refresh" mat-mini-fab (click)="refreshQue()">
+            <mat-icon aria-label="Refresh">refresh</mat-icon>
+        </button>
+
+    </mat-toolbar-row>
+</mat-toolbar>
+<div class="interactive-wrapper">
+    <div *ngIf="tracks.length == 0" class="center no-tracks">
+        <strong>0 Tracks</strong>
+        <br>
+        Add tracks in VISUALZ.
+    </div>
+    <mat-button-toggle-group name="tracks" aria-label="Tracks" vertical="true" value="0"
+        #trackgroup="matButtonToggleGroup">
+        <mat-button-toggle *ngFor="let track of tracks; let i = index" (click)="changeTrack(i)" class="lefttrack"
+            value="i">
+            <mat-icon aria-label="Song">music_note</mat-icon>
+            {{track.name}}
+        </mat-button-toggle>
+    </mat-button-toggle-group>
+</div>

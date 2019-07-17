@@ -15,6 +15,10 @@ import { TermsComponent } from './terms/terms.component';
 import { PrivacyComponent } from './privacy/privacy.component';
 import { BookComponent } from './book/book.component';
 import { ResourcesComponent } from './resources/resources.component';
+import { FanCamComponent } from './fan-cam/fan-cam.component';
+import { FanScreenComponent } from './fan-screen/fan-screen.component';
+import { RemoteCamComponent } from './remote-cam/remote-cam.component';
+import { RemoteQueComponent } from './remote-que/remote-que.component';
 
 const routes: Routes = [
     { path: '', component: VisualzComponent },
@@ -28,7 +32,11 @@ const routes: Routes = [
     { path: 'privacy-policy', component: PrivacyComponent },
     { path: 'update', component: DownloadComponent },
     { path: 'book', component: BookComponent },
-    { path: 'resources', component: ResourcesComponent }
+    { path: 'resources', component: ResourcesComponent },
+    { path: 'fan-cam/:mid', component: FanCamComponent },
+    { path: 'fan-screen/:mid', component: FanScreenComponent },
+    { path: 'remote-cam/:mid', component: RemoteCamComponent },
+    { path: 'remote-que/:mid', component: RemoteQueComponent }
 
     //{ path: 'movie', component: NewMovieComponent },
     //{ path: 'filter', component: FilterComponent },

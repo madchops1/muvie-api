@@ -58,11 +58,15 @@ var server = app.listen(process.env.PORT || 8080, function () {
 
 
 //const io = socketIO(server);
-/*
+
 var io = require('socket.io')(server);
 
 io.on('connection', (socket) => {
-    console.log('Client connected');
+
+    let mid = socket.handshake.query.mid;
+    socket.join(String(mid));
+    console.log('Client connected', mid);
+
     socket.on('disconnect', () => console.log('Client disconnected'));
 
     socket.on("test", value => {
@@ -71,6 +75,50 @@ io.on('connection', (socket) => {
         socket.emit("testclient", value);
     });
 
+    // receive the remote que request from VISUALZ
+    // and pass it on to the website
+    socket.on("sendRemoteQue", async data => {
+        console.log('server recieved sendRemoteQue');
+        //try {
+        //console.log('server sending getRemoteQue');
+        //socket.broadcast.emit("testclient", data);
+        //console.log('broadcast to', mid);
+        //socket.broadcast.to(String(mid)).emit('getRemoteQue', data);
+        socket.broadcast.emit('getRemoteQue', data);
+        //} catch (err) {
+        //    console.log(err);
+        //handleError(res, err, 'nope');
+        //}
+    });
+
+    // recieve a refresh que request from the QUE / website
+    // and pass it on to the VISUALZ APP
+    socket.on("refreshQue", async data => {
+        console.log('server recieved refreshQue');
+        socket.broadcast.emit('refreshQueRequest', data);
+    });
+
+    socket.on("play", async data => {
+        console.log('server recieved play');
+        socket.broadcast.emit('playRequest', data);
+    });
+
+    socket.on("stop", async data => {
+        console.log('server recieved stop');
+        socket.broadcast.emit('stopRequest', data);
+    });
+
+    socket.on("nextTrack", async data => {
+        console.log('server recieved nextTrack');
+        socket.broadcast.emit('nextTrackRequest', data);
+    });
+
+    socket.on("changeTrack", async data => {
+        console.log('server recieved changeTrack');
+        socket.broadcast.emit('changeTrackRequest', data);
+    });
+
+    /*
     socket.on("make", async data => {
         try {
             console.log('calling api make', data);
@@ -85,8 +133,9 @@ io.on('connection', (socket) => {
             //handleError(res, err, 'nope');
         }
     });
+    */
 });
-*/
+
 
 // Generic error handler used by all endpoints.
 function handleError(res, reason, message, code) {
@@ -204,7 +253,7 @@ app.post("/api/createSeat", async function (req, res) {
     let key = req.body.mid; //'27540e6c-3929-4733-bc0b-314f657dec0b';
     let email = req.body.email;
     let plan = 0;
-    if(!key) {
+    if (!key) {
         handleError(res, err, 'no key');
     }
     try {
@@ -284,30 +333,30 @@ app.post("/api/createSeat", async function (req, res) {
 
 app.post("/api/authSeat", async function (req, res) {
 
-    //console.log(req.body);
-    //try {
+    console.log(req.body);
+    try {
 
 
-    let key = req.body.mid; //'27540e6c-3929-4733-bc0b-314f657dec0b';
-    await request('https://' + process.env.KEYSTORE + '.s3.us-east-2.amazonaws.com/' + key + '.json', function (error, response, body) {
-        if (!error && response.statusCode == 200) {
-            //console.log('success', body);
-            res.header('Access-Control-Allow-Origin', '*');
-            res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS');
-            res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization, Content-Length, X-Requested-With');
-            res.status(200).json(JSON.parse(body));
-            //console.log(body) // Show the HTML for the Google homepage. 
-        } else {
-            res.header('Access-Control-Allow-Origin', '*');
-            res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS');
-            res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization, Content-Length, X-Requested-With');
-            res.status(200).json({ plan: 0, email: '' });
-        }
-    });
+        let key = req.body.mid; //'27540e6c-3929-4733-bc0b-314f657dec0b';
+        await request('https://' + process.env.KEYSTORE + '.s3.us-east-2.amazonaws.com/' + key + '.json', function (error, response, body) {
+            if (!error && response.statusCode == 200) {
+                //console.log('success', body);
+                res.header('Access-Control-Allow-Origin', '*');
+                res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS');
+                res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization, Content-Length, X-Requested-With');
+                res.status(200).json(JSON.parse(body));
+                //console.log(body) // Show the HTML for the Google homepage. 
+            } else {
+                res.header('Access-Control-Allow-Origin', '*');
+                res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS');
+                res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization, Content-Length, X-Requested-With');
+                res.status(200).json({ plan: 0, email: '' });
+            }
+        });
 
-    //} catch (err) {
-    //    handleError(res, err, 'nope');
-    //}
+    } catch (err) {
+        handleError(res, err, 'nope');
+    }
 });
 
 app.post("/api/removeSeat", async function (req, res) {

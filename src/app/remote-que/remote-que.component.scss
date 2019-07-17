@@ -1,0 +1,28 @@
+mat-button-toggle-group {
+    border: 0px;
+    border-radius: 0px;
+}
+
+.mat-mini-fab {
+    margin-right: 10px;
+}
+
+.mat-button-toggle-button {
+    width: 100%;
+    border-left: 0px;
+    border-right: 0px;
+    height: 40px;
+}
+
+.mat-button-toggle-group, .mat-button-toggle-standalone {
+    width: 100%;
+}
+
+.no-tracks {
+    margin: 40px auto;
+    width: 50%;
+    background: #fff;
+    border-radius: 3px;
+    padding: 20px;
+    font-size: 14px;
+}
