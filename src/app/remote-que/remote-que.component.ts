@@ -15,6 +15,7 @@ export class RemoteQueComponent implements OnInit {
     tracks: any = [];
     currentTrack: any = 0;
     playing: any = false;
+    lastData: any = {};
 
     //private _anythingSub: Subscription;
     currentRoute: any = '';
@@ -37,11 +38,26 @@ export class RemoteQueComponent implements OnInit {
         this.socketService.connect(this.mid);
 
         this._getRemoteQue = this.socketService.getRemoteQue.subscribe(data => {
-            console.log('receiving getRemoteQue', data);
-            this.tracks = data.tracks;
-            this.currentTrack = data.currentTrack;
-            this.set = data.set;
-            this.playing = data.playing;
+            if (JSON.stringify(data) === JSON.stringify(this.lastData)) {
+                ///
+            } else {
+                console.log('receiving getRemoteQue', data);
+                this.set = data.set;
+                this.playing = data.playing;
+                //setTimeout(() => {
+                this.tracks = data.tracks;
+                this.currentTrack = data.currentTrack;
+
+                //this.currentTrack = data.currentTrack;
+                //if (this.currentTrack != data.currentTrack) {
+                //}
+                //}, 1000);
+            }
+            this.lastData = data;
+            //setTimeout(() => {
+            //if (this.currentTrack != data.currentTrack) {
+            //}
+            //}, 1000);
         });
 
         this.refreshQue();
@@ -60,7 +76,6 @@ export class RemoteQueComponent implements OnInit {
 
     play(): any {
         this.socketService.play();
-
     }
 
     stop(): any {
@@ -72,7 +87,7 @@ export class RemoteQueComponent implements OnInit {
     }
 
     changeTrack(i): any {
-        this.currentTrack = i;
+        //this.currentTrack = i;
         this.socketService.changeTrack(i);
     }
 

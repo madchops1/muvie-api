@@ -1,5 +1,5 @@
-<header *ngIf="!interactive">
-    <a routerLink="/" class="logo">VISUALZ <span>REMOTE QUE</span></a>
+<header>
+    <a class="logo">VISUALZ <span>REMOTE QUE</span></a>
     <div class="clearfix"></div>
 </header>
 <mat-toolbar class="pink" *ngIf="tracks.length">
@@ -29,10 +29,10 @@
         <br>
         Add tracks in VISUALZ.
     </div>
-    <mat-button-toggle-group name="tracks" aria-label="Tracks" vertical="true" value="0"
+    <mat-button-toggle-group name="tracks" aria-label="Tracks" selected vertical="true" [value]="currentTrack"
         #trackgroup="matButtonToggleGroup">
         <mat-button-toggle *ngFor="let track of tracks; let i = index" (click)="changeTrack(i)" class="lefttrack"
-            value="i">
+            [value]="i">
             <mat-icon aria-label="Song">music_note</mat-icon>
             {{track.name}}
         </mat-button-toggle>
