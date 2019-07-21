@@ -2,7 +2,8 @@
     <a class="logo">VISUALZ <span>REMOTE QUE</span></a>
     <div class="clearfix"></div>
 </header>
-<mat-toolbar class="pink" *ngIf="tracks.length">
+
+<mat-toolbar class="pink" *ngIf="tracks.length && auth">
     <mat-toolbar-row class="main">
 
         <button title="Play" mat-mini-fab *ngIf="!playing" (click)="play()">
@@ -23,7 +24,7 @@
 
     </mat-toolbar-row>
 </mat-toolbar>
-<div class="interactive-wrapper">
+<div class="interactive-wrapper" *ngIf="auth">
     <div *ngIf="tracks.length == 0" class="center no-tracks">
         <strong>0 Tracks</strong>
         <br>

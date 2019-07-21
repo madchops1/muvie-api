@@ -15,6 +15,7 @@ export class SocketService {
     anything = this.socket.fromEvent<any>('testclient');
     made = this.socket.fromEvent<any>('made');
     getRemoteQue = this.socket.fromEvent<any>('getRemoteQue');
+    getCrowdScreen = this.socket.fromEvent<any>('getCrowdScreen');
 
     constructor(private socket: Socket) {
         //this.socket.emit('test', 'alpha');
@@ -33,6 +34,10 @@ export class SocketService {
 
     refreshQue(): any {
         this.socket.emit('refreshQue');
+    }
+
+    refreshCrowdScreen(): any {
+        this.socket.emit('refreshCrowdScreen');
     }
 
     play(): any {

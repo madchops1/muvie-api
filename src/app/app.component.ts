@@ -19,8 +19,8 @@ export class AppComponent {
                 console.log('route', val);
                 this.currentRoute = val.url;
                 if (
-                    this.currentRoute.includes('fan-screen') ||
-                    this.currentRoute.includes('fan-cam') ||
+                    this.currentRoute.includes('crowdscreen') ||
+                    this.currentRoute.includes('crowdcam') ||
                     this.currentRoute.includes('remote-cam') ||
                     this.currentRoute.includes('remote-que')) {
                     this.interactive = true;

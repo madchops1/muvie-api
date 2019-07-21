@@ -10,6 +10,7 @@ import { ActivatedRoute, Router, NavigationEnd } from '@angular/router';
 })
 export class RemoteQueComponent implements OnInit {
 
+    auth: any = false;
     mid: any = '';
     set: any = {};
     tracks: any = [];
@@ -23,7 +24,6 @@ export class RemoteQueComponent implements OnInit {
 
     constructor(private route: ActivatedRoute, private router: Router, private socketService: SocketService) {
         router.events.subscribe((val) => {
-            // see also 
             if (val instanceof NavigationEnd) {
                 this.currentRoute = val.url;
                 let routeArray = this.currentRoute.split("/");

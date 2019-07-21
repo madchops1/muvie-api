@@ -33,8 +33,8 @@ const routes: Routes = [
     { path: 'update', component: DownloadComponent },
     { path: 'book', component: BookComponent },
     { path: 'resources', component: ResourcesComponent },
-    { path: 'fan-cam/:mid', component: FanCamComponent },
-    { path: 'fan-screen/:mid', component: FanScreenComponent },
+    { path: 'crowdcam/:mid', component: FanCamComponent },
+    { path: 'crowdscreen/:mid', component: FanScreenComponent },
     { path: 'remote-cam/:mid', component: RemoteCamComponent },
     { path: 'remote-que/:mid', component: RemoteQueComponent }
 
