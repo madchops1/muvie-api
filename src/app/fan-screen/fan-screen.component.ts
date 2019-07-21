@@ -57,6 +57,17 @@ export class FanScreenComponent implements OnInit {
             //Get the environment camera (usually the second one)
             navigator.mediaDevices.enumerateDevices().then(devices => {
                 console.log('devices',devices);
+
+                const cameras = devices.filter((device) => device.kind === 'videoinput');
+
+                if (cameras.length === 0) {
+                    console.log('No camera found on this device.');
+                }
+                
+                const camera = cameras[cameras.length - 1];
+                console.log(camera);
+
+
             }); 
         }
         

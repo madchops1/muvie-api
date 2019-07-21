@@ -28,7 +28,7 @@ const accountSid = process.env.TWILIO_SID;
 const authToken = process.env.TWILIO_AUTH_TOKEN;
 const twilioClient = require('twilio')(accountSid, authToken);
 const MessagingResponse = require('twilio').twiml.MessagingResponse;
-let crowdScreenUrl = 'https://b1ee5978.ngrok.io'; // https://www.visualzstudio.com
+let crowdScreenUrl = process.env.CROWD_SCREEN_URL; //'https://b1ee5978.ngrok.io'; // https://www.visualzstudio.com
 
 // Send a test msg real quick
 /*
