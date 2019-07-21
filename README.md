@@ -5,9 +5,25 @@ This project was generated with [Angular CLI](https://github.com/angular/angular
 ## Note
 This is a Heroku project
 
-## Development server
+## Angular Site Development server
 
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The app will automatically reload if you change any of the source files.
+Run `ng serve -o` for a dev server. Navigate to `http://localhost:4200/`. The app will automatically reload if you change any of the source files.
+
+
+
+## Node API
+
+Run `node server.js` on port 8080.
+
+This will also run the angular app on 8080 from the dist dir.
+
+### Twilio 
+
+Twilio requires that the localhost port be exposed in order to send messages locally. For that we use ngrok.
+
+Run `ngrok http 8080` and use the url in the webhook for the number in the twilio console.
+
+# Angular Cli Stuff...
 
 ## Code scaffolding
 

@@ -1,4 +1,4 @@
-<header>
+<header *ngIf="!interactive">
     <a routerLink="/" class="logo">VISUALZ</a>
     <div class="nav">
         <!--<div>
@@ -15,7 +15,7 @@
         <a routerLink="/how-it-works">HOW IT WORKS</a>
         -->
         <button mat-button [matMenuTriggerFor]="menu">LEARN &amp; SUPPORT</button>
-        <mat-menu #menu="matMenu">            
+        <mat-menu #menu="matMenu">
             <button mat-menu-item routerLink="/how-it-works">LEARN</button>
             <button mat-menu-item routerLink="/resources">RESOURCES</button>
             <button mat-menu-item routerLink="/support">COMMUNITY</button>
@@ -27,7 +27,7 @@
 
 <router-outlet></router-outlet>
 
-<footer>
+<footer *ngIf="!interactive">
 
     <a routerLink="/support">Support</a> |
     <a routerLink="/how-it-works">How It Works</a> |

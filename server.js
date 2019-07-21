@@ -11,6 +11,7 @@ const make = require('./api/make');
 const request = require('request');
 const fs = require('fs');
 const AWS = require('aws-sdk');
+
 //var enforce = require('express-sslify');
 
 //console.log('env', process.env.STRIPE_TEST_KEY);
@@ -21,6 +22,26 @@ dotenv.config();
 
 console.log('env', process.env);
 //console.log('Environment', process.env.ENVIRONMENT);
+
+// Twilio
+const accountSid = process.env.TWILIO_SID;
+const authToken = process.env.TWILIO_AUTH_TOKEN;
+const twilioClient = require('twilio')(accountSid, authToken);
+const MessagingResponse = require('twilio').twiml.MessagingResponse;
+let crowdScreenUrl = process.env.CROWD_SCREEN_URL; //'https://b1ee5978.ngrok.io'; // https://www.visualzstudio.com
+
+// Send a test msg real quick
+/*
+twilioClient.messages
+  .create({
+     body: 'This is the ship that made the Kessel Run in fourteen parsecs?',
+     from: '+12248777729',
+     to: '+16302175813'
+   })
+  .then(message => console.log(message.sid));
+*/
+
+// Stripe
 const stripe = require('stripe')(process.env.STRIPE_KEY);
 
 const s3 = new AWS.S3({
@@ -56,13 +77,19 @@ var server = app.listen(process.env.PORT || 8080, function () {
     console.log("App now running on port", port);
 });
 
+let crowdScreenKeyMap = {};
+
 
 //const io = socketIO(server);
-/*
+
 var io = require('socket.io')(server);
 
 io.on('connection', (socket) => {
-    console.log('Client connected');
+
+    let mid = socket.handshake.query.mid;
+    socket.join(String(mid));
+    console.log('Client connected', mid);
+
     socket.on('disconnect', () => console.log('Client disconnected'));
 
     socket.on("test", value => {
@@ -71,6 +98,61 @@ io.on('connection', (socket) => {
         socket.emit("testclient", value);
     });
 
+    // receive the remote que request from VISUALZ
+    // and pass it on to the website
+    socket.on("sendRemoteQue", async data => {
+        console.log('server recieved sendRemoteQue');
+        socket.broadcast.to(String(mid)).emit('getRemoteQue', data);
+    });
+
+    // recieve a refresh que request from the QUE / website
+    // and pass it on to the VISUALZ APP
+    socket.on("refreshQue", async data => {
+        console.log('server recieved refreshQue');
+        socket.broadcast.to(String(mid)).emit('refreshQueRequest', data);
+    });
+
+    socket.on("play", async data => {
+        console.log('server recieved play');
+        socket.broadcast.to(String(mid)).emit('playRequest', data);
+    });
+
+    socket.on("stop", async data => {
+        console.log('server recieved stop');
+        socket.broadcast.to(String(mid)).emit('stopRequest', data);
+    });
+
+    socket.on("nextTrack", async data => {
+        console.log('server recieved nextTrack');
+        socket.broadcast.to(String(mid)).emit('nextTrackRequest', data);
+    });
+
+    socket.on("changeTrack", async data => {
+        console.log('server recieved changeTrack');
+        socket.broadcast.to(String(mid)).emit('changeTrackRequest', data);
+    });
+
+    // Get the crowd screen from VISUALZ 
+    // and send it the web server
+    socket.on("sendCrowdScreen", async data => {
+        console.log('server recieved sendCrowdScreen', console.log(crowdScreenKeyMap));
+        let crowdScreenKey = data.key;
+        if(crowdScreenKey) {
+            if(!crowdScreenKeyMap[crowdScreenKey]) {
+                crowdScreenKeyMap[crowdScreenKey] = data.mid;
+            }
+        }
+        socket.broadcast.to(String(mid)).emit('getCrowdScreen', data);
+    });
+    
+    // recieve a refresh crowd screen request from the web server
+    // and pass it on to the VISUALZ APP
+    socket.on("refreshCrowdScreen", async data => {
+        console.log('server recieved refreshCrowdScreen');
+        socket.broadcast.to(String(mid)).emit('refreshCrowdScreenRequest', data);
+    });
+
+    /*
     socket.on("make", async data => {
         try {
             console.log('calling api make', data);
@@ -85,8 +167,9 @@ io.on('connection', (socket) => {
             //handleError(res, err, 'nope');
         }
     });
+    */
 });
-*/
+
 
 // Generic error handler used by all endpoints.
 function handleError(res, reason, message, code) {
@@ -197,6 +280,23 @@ app.get("/api/concat", function (req, res) {
     }
 });
 
+// Twilio webhook
+app.post('/api/sms/reply', (req, res) => {
+    console.log('received an sms at twilio number', req.body.Body);
+
+    const twiml = new MessagingResponse();
+    let key = req.body.Body;
+    if(crowdScreenKeyMap[key]) {
+        twiml.message('Click the link to connect. ' + crowdScreenUrl + '/crowdscreen/' + crowdScreenKeyMap[key]);
+    } else  {
+        twiml.message('Could not find the VISUALZ :(');
+    }        
+
+    //twiml.message('The Robots are coming! Head for the hills!');
+  
+    res.writeHead(200, {'Content-Type': 'text/xml'});
+    res.end(twiml.toString());
+});
 
 // Create Seat
 // creates a seat by uploading a file to s3
@@ -204,7 +304,7 @@ app.post("/api/createSeat", async function (req, res) {
     let key = req.body.mid; //'27540e6c-3929-4733-bc0b-314f657dec0b';
     let email = req.body.email;
     let plan = 0;
-    if(!key) {
+    if (!key) {
         handleError(res, err, 'no key');
     }
     try {
@@ -284,30 +384,30 @@ app.post("/api/createSeat", async function (req, res) {
 
 app.post("/api/authSeat", async function (req, res) {
 
-    //console.log(req.body);
-    //try {
+    console.log(req.body);
+    try {
 
 
-    let key = req.body.mid; //'27540e6c-3929-4733-bc0b-314f657dec0b';
-    await request('https://' + process.env.KEYSTORE + '.s3.us-east-2.amazonaws.com/' + key + '.json', function (error, response, body) {
-        if (!error && response.statusCode == 200) {
-            //console.log('success', body);
-            res.header('Access-Control-Allow-Origin', '*');
-            res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS');
-            res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization, Content-Length, X-Requested-With');
-            res.status(200).json(JSON.parse(body));
-            //console.log(body) // Show the HTML for the Google homepage. 
-        } else {
-            res.header('Access-Control-Allow-Origin', '*');
-            res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS');
-            res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization, Content-Length, X-Requested-With');
-            res.status(200).json({ plan: 0, email: '' });
-        }
-    });
+        let key = req.body.mid; //'27540e6c-3929-4733-bc0b-314f657dec0b';
+        await request('https://' + process.env.KEYSTORE + '.s3.us-east-2.amazonaws.com/' + key + '.json', function (error, response, body) {
+            if (!error && response.statusCode == 200) {
+                //console.log('success', body);
+                res.header('Access-Control-Allow-Origin', '*');
+                res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS');
+                res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization, Content-Length, X-Requested-With');
+                res.status(200).json(JSON.parse(body));
+                //console.log(body) // Show the HTML for the Google homepage. 
+            } else {
+                res.header('Access-Control-Allow-Origin', '*');
+                res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS');
+                res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization, Content-Length, X-Requested-With');
+                res.status(200).json({ plan: 0, email: '' });
+            }
+        });
 
-    //} catch (err) {
-    //    handleError(res, err, 'nope');
-    //}
+    } catch (err) {
+        handleError(res, err, 'nope');
+    }
 });
 
 app.post("/api/removeSeat", async function (req, res) {

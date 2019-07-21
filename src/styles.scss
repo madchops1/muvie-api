@@ -34,6 +34,13 @@ p {
     color: #fff;
 }
 
+.interactive-wrapper{
+    //background-color: #e91e63;
+    width: 100%;
+    height: 100%;
+    display: block;
+}
+
 .wrapper {
     min-height: 500px;
     background: url(assets/images/main.gif);
@@ -162,6 +169,10 @@ header {
         text-transform: uppercase;
         font-size: 40px;
         float: left;
+
+        span {
+            font-size: 20px;
+        }
     }
 
     .nav {
