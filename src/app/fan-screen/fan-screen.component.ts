@@ -21,6 +21,8 @@ export class FanScreenComponent implements OnInit {
     crowdScreenBackgroundColor: any = 'transparent';
     
     currentRoute: any = '';
+    camera: any = false;
+
     private _getCrowdScreen: Subscription;
 
     
@@ -64,8 +66,8 @@ export class FanScreenComponent implements OnInit {
                     console.log('No camera found on this device.');
                 }
                 
-                const camera = cameras[cameras.length - 1];
-                console.log(camera);
+                this.camera = cameras[cameras.length - 1];
+                //console.log(camera);
 
 
             }); 

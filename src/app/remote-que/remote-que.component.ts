@@ -10,7 +10,7 @@ import { ActivatedRoute, Router, NavigationEnd } from '@angular/router';
 })
 export class RemoteQueComponent implements OnInit {
 
-    auth: any = false;
+    auth: any = true;
     mid: any = '';
     set: any = {};
     tracks: any = [];
