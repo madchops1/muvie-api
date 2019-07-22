@@ -85,4 +85,10 @@ export class FanScreenComponent implements OnInit {
         this.socketService.refreshCrowdScreen();
     }
 
+    torchCompatible(e): any {
+        console.log('torch compatible', e);
+        this.msg = e;
+        this.torch = true;
+    }
+
 }

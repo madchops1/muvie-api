@@ -3,7 +3,7 @@
 
         {{msg}}
 
-        <zxing-scanner [torch]="torch"></zxing-scanner>
+        <zxing-scanner [torch]="torch" (torchCompatible)="torchCompatible($event)"></zxing-scanner>
 
     </div>
 </div>
