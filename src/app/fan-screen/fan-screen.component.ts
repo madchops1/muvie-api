@@ -3,7 +3,6 @@ import { Observable, Subscription } from 'rxjs';
 import { SocketService } from '../socket.service';
 import { ActivatedRoute, Router, NavigationEnd } from '@angular/router';
 //import { Flashlight } from '@ionic-native/flashlight';
-import { FlashlightService } from 'angular-cordova/plugin/flashlight';
 import "p5/lib/addons/p5.sound";
 import "p5/lib/addons/p5.dom";
 
@@ -12,27 +11,26 @@ const SUPPORTS_MEDIA_DEVICES = 'mediaDevices' in navigator;
 @Component({
     selector: 'app-fan-screen',
     templateUrl: './fan-screen.component.html',
-    styleUrls: ['./fan-screen.component.scss'],
-    providers: [
-        FlashlightService
-    ]
+    styleUrls: ['./fan-screen.component.scss']
 })
 export class FanScreenComponent implements OnInit {
 
     mid: any = '';
     torch: any = false;
+    //torchCompatible
     crowdScreenBackgroundColor: any = 'transparent';
     
     currentRoute: any = '';
     camera: any = false;
     track: any = false;
     msg: any = "";
+    
 
     private _getCrowdScreen: Subscription;
 
     
 
-    constructor(private route: ActivatedRoute, private router: Router, private socketService: SocketService, private flashlight: Flashlight) { 
+    constructor(private route: ActivatedRoute, private router: Router, private socketService: SocketService) { 
         router.events.subscribe((val) => {
             if (val instanceof NavigationEnd) {
                 this.currentRoute = val.url;
@@ -73,9 +71,8 @@ export class FanScreenComponent implements OnInit {
             console.log('receiving getCrowdScreen', data);
             this.crowdScreenBackgroundColor = data.backgroundColor;
             if(data.torch) {
-                flashlight.on({
-                    intensity: 1
-                })
+                
+                
             }
 
         });
