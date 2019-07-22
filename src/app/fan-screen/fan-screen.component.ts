@@ -2,8 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { Observable, Subscription } from 'rxjs';
 import { SocketService } from '../socket.service';
 import { ActivatedRoute, Router, NavigationEnd } from '@angular/router';
+import * as flashlight from "nativescript-flashlight";
 
-import * as p5 from 'p5';
 import "p5/lib/addons/p5.sound";
 import "p5/lib/addons/p5.dom";
 
@@ -22,6 +22,8 @@ export class FanScreenComponent implements OnInit {
     
     currentRoute: any = '';
     camera: any = false;
+    track: any = false;
+    msg: any = "";
 
     private _getCrowdScreen: Subscription;
 
@@ -41,37 +43,25 @@ export class FanScreenComponent implements OnInit {
     ngOnInit() {
         this.socketService.connect(this.mid);
 
+        if (flashlight.isAvailable()) {
+            //flashlight.on();
+        } else {
+            this.msg = "A flashlight is not available on your device.";
+        }
+
         this._getCrowdScreen = this.socketService.getCrowdScreen.subscribe(data => {
-            //if (JSON.stringify(data) === JSON.stringify(this.lastData)) {
-                ///
-            //} else {
-                console.log('receiving getCrowdScreen', data);
-                this.crowdScreenBackgroundColor = data.backgroundColor;
-            //}
-            //setTimeout(() => {
-            //    this.drawCanvas();
-            //}, 1000);
+            
+            console.log('receiving getCrowdScreen', data);
+            this.crowdScreenBackgroundColor = data.backgroundColor;
+            if(data.torch) {
+                flashlight.on({
+                    intensity: 1
+                })
+            }
+
         });
 
         this.refreshCrowdScreen();
-
-        if (SUPPORTS_MEDIA_DEVICES) {
-            //Get the environment camera (usually the second one)
-            navigator.mediaDevices.enumerateDevices().then(devices => {
-                console.log('devices',devices);
-
-                const cameras = devices.filter((device) => device.kind === 'videoinput');
-
-                if (cameras.length === 0) {
-                    console.log('No camera found on this device.');
-                }
-                
-                this.camera = cameras[cameras.length - 1];
-                //console.log(camera);
-
-
-            }); 
-        }
         
     }
 
