@@ -88,7 +88,7 @@ var io = require('socket.io')(server);
 io.on('connection', (socket) => {
 
     let mid = socket.handshake.query.mid;
-    let remoteQueKey = socket.handshake.query.key;
+    let remoteQueKey = socket.handshake.query.remoteQueKey;
     if(remoteQueKey) {
         if(!remoteQueKeyMap[remoteQueKey]) {
             remoteQueKeyMap[remoteQueKey] = mid;
