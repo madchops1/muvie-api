@@ -18,10 +18,12 @@ const SUPPORTS_MEDIA_DEVICES = 'mediaDevices' in navigator;
 export class FanScreenComponent implements OnInit {
 
     mid: any = '';
-    torch: any = true;
+    torch: any = false;
     intensity: any = 1;
     crowdScreenBackgroundColor: any = 'transparent';
-    
+    crowdScreenFunction: any = '';
+    crowdScreenIntensity: any = 1;
+    interval: any = false;
     currentRoute: any = '';
     camera: any = false;
     track: any = false;
@@ -38,46 +40,42 @@ export class FanScreenComponent implements OnInit {
                 console.log('mid', this.mid);
             }
         });
-
-        /*
-        flashlight.available(function(isAvailable) {
-            if (isAvailable) {
-          
-              // switch on
-              flashlight.switchOn(
-                function() {}, // optional success callback
-                function() {}, // optional error callback
-                {intensity: 0.3} // optional as well
-              );
-          
-              // switch off after 3 seconds
-              setTimeout(function() {
-                flashlight.switchOff(); // success/error callbacks may be passed
-              }, 3000);
-          
-            } else {
-              this.msg = "Flashlight not available on this device";
-            }
-          });
-        */
     }
 
     ngOnInit() {
+        
+        // Connect to ws
         this.socketService.connect(this.mid);
 
+        // Get crowdscreen data from ws
         this._getCrowdScreen = this.socketService.getCrowdScreen.subscribe(data => {
-            
             console.log('receiving getCrowdScreen', data);
             this.crowdScreenBackgroundColor = data.backgroundColor;
-            //if(data.torch) {
-                this.track.applyConstraints({
-                    advanced: [<any>{torch: data.torch, intensity: this.intensity }]
-                });
-            //}
+            this.crowdScreenFunction = data.function;
+            this.crowdScreenIntensity = data.intensity;
+            this.torch = data.torch;
+            
+            this.applyConstraints();
+
+            clearInterval(this.interval);
+            
+            // Multi-color, change to a random color at a random interval between 500-2000ms
+            if(this.crowdScreenFunction == 'playCrowdScreenMultiColorModule') {
+                this.interval = setInterval(() => {
+                    this.crowdScreenBackgroundColor = this.generateHexColor();
+                }, this.randomInt(500,2000));
+            } 
+            // Sparkle, change to a random intensity at a random interval between 200-2000ms
+            else if(this.crowdScreenFunction == 'playCrowdScreenSparkleModule') {
+                this.interval = setInterval(() => {
+                    this.torch = !this.torch;
+                    this.crowdScreenIntensity = Math.random();
+                    this.applyConstraints();
+                }, this.randomInt(200,2000));
+            } 
+            
         });
 
-        
-        
         if (SUPPORTS_MEDIA_DEVICES) {
             //Get the environment camera (usually the second one)
             navigator.mediaDevices.enumerateDevices().then(devices => {
@@ -100,7 +98,6 @@ export class FanScreenComponent implements OnInit {
               }).then(stream => {
                 this.track = stream.getVideoTracks()[0];
         
-
                 //Create image capture object and get camera capabilities
                 const imageCapture = new ImageCapture(this.track)
                 const photoCapabilities = imageCapture.getPhotoCapabilities().then(() => {
@@ -121,8 +118,6 @@ export class FanScreenComponent implements OnInit {
             });
             
             //The light will be on as long the track exists
-            
-            
         }
 
         this.refreshCrowdScreen();
@@ -131,6 +126,22 @@ export class FanScreenComponent implements OnInit {
 
     refreshCrowdScreen(): any {
         this.socketService.refreshCrowdScreen();
+    }
+    
+    randomInt(min, max): any {
+        return Math.floor(Math.random()*(max-min+1)+min);
+    }
+
+    generateHexColor(): any {
+        return "#" + Math.random().toString(16).slice(2, 8);
+    }
+
+    applyConstraints(): any {
+        
+        this.track.applyConstraints({
+            advanced: [<any>{torch: this.torch, intensity: this.intensity }]
+        });
+        
     }
 
 }
