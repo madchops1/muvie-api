@@ -129,13 +129,7 @@ export class FanScreenComponent implements OnInit {
         }
 
         this.refreshCrowdScreen();
-
-        setInterval(function () {
-            window.location.href = "/new/page";
-            window.setTimeout(function () {
-                window.stop()
-            }, 0);
-        }, 3000);
+        
     }
 
     refreshCrowdScreen(): any {
