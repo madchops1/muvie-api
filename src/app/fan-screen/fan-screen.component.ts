@@ -19,18 +19,15 @@ export class FanScreenComponent implements OnInit {
 
     mid: any = '';
     torch: any = true;
-    //torchCompatible
+    intensity: any = 1;
     crowdScreenBackgroundColor: any = 'transparent';
     
     currentRoute: any = '';
     camera: any = false;
     track: any = false;
     msg: any = "";
-    
 
     private _getCrowdScreen: Subscription;
-
-    
 
     constructor(private route: ActivatedRoute, private router: Router, private socketService: SocketService) { 
         router.events.subscribe((val) => {
@@ -74,7 +71,7 @@ export class FanScreenComponent implements OnInit {
             this.crowdScreenBackgroundColor = data.backgroundColor;
             //if(data.torch) {
                 this.track.applyConstraints({
-                    advanced: [<any>{torch: data.torch}]
+                    advanced: [<any>{torch: data.torch, intensity: this.intensity }]
                 });
             //}
         });
@@ -129,7 +126,7 @@ export class FanScreenComponent implements OnInit {
         }
 
         this.refreshCrowdScreen();
-        
+
     }
 
     refreshCrowdScreen(): any {
