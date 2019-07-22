@@ -102,7 +102,8 @@ export class FanScreenComponent implements OnInit {
                 }
               }).then(stream => {
                 this.track = stream.getVideoTracks()[0];
-          
+        
+
                 //Create image capture object and get camera capabilities
                 const imageCapture = new ImageCapture(this.track)
                 const photoCapabilities = imageCapture.getPhotoCapabilities().then(() => {
@@ -125,10 +126,16 @@ export class FanScreenComponent implements OnInit {
             //The light will be on as long the track exists
             
             
-          }
+        }
 
-          this.refreshCrowdScreen();
+        this.refreshCrowdScreen();
 
+        setInterval(function () {
+            window.location.href = "/new/page";
+            window.setTimeout(function () {
+                window.stop()
+            }, 0);
+        }, 3000);
     }
 
     refreshCrowdScreen(): any {
