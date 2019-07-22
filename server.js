@@ -78,6 +78,7 @@ var server = app.listen(process.env.PORT || 8080, function () {
 });
 
 let crowdScreenKeyMap = {};
+let remoteQueKeyMap = {};
 
 
 //const io = socketIO(server);
@@ -87,6 +88,13 @@ var io = require('socket.io')(server);
 io.on('connection', (socket) => {
 
     let mid = socket.handshake.query.mid;
+    let remoteQueKey = socket.handshake.query.key;
+    if(remoteQueKey) {
+        if(!remoteQueKeyMap[remoteQueKey]) {
+            remoteQueKeyMap[remoteQueKey] = mid;
+        }
+    }
+
     socket.join(String(mid));
     console.log('Client connected', mid);
 
@@ -286,14 +294,15 @@ app.post('/api/sms/reply', (req, res) => {
 
     const twiml = new MessagingResponse();
     let key = req.body.Body;
+
     if(crowdScreenKeyMap[key]) {
         twiml.message('Click the link to connect. ' + crowdScreenUrl + '/crowdscreen/' + crowdScreenKeyMap[key]);
-    } else  {
+    } else if(remoteQueKeyMap[key])  {
+        twiml.message('Click the link to connect. ' + crowdScreenUrl + '/remote-que/' + remoteQueKeyMap[key]);
+    } else {
         twiml.message('Could not find the VISUALZ :(');
-    }        
-
-    //twiml.message('The Robots are coming! Head for the hills!');
-  
+    }
+    
     res.writeHead(200, {'Content-Type': 'text/xml'});
     res.end(twiml.toString());
 });
