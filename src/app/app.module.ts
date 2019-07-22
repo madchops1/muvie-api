@@ -32,6 +32,7 @@ import { FanScreenComponent } from './fan-screen/fan-screen.component';
 import { RemoteCamComponent } from './remote-cam/remote-cam.component';
 import { RemoteQueComponent } from './remote-que/remote-que.component';
 const config: SocketIoConfig = { url: environment.ioUrl, options: { autoConnect: false } };
+import { ZXingScannerModule } from '@zxing/ngx-scanner';
 
 @NgModule({
     declarations: [
@@ -60,6 +61,7 @@ const config: SocketIoConfig = { url: environment.ioUrl, options: { autoConnect:
         BrowserModule,
         AppRoutingModule,
         BrowserAnimationsModule,
+        ZXingScannerModule,
         MatMenuModule,
         MatToolbarModule,
         MatButtonModule,
