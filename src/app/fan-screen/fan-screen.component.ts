@@ -72,11 +72,11 @@ export class FanScreenComponent implements OnInit {
             
             console.log('receiving getCrowdScreen', data);
             this.crowdScreenBackgroundColor = data.backgroundColor;
-            if(data.torch) {
+            //if(data.torch) {
                 this.track.applyConstraints({
                     advanced: [<any>{torch: data.torch}]
                 });
-            }
+            //}
         });
 
         
@@ -107,7 +107,9 @@ export class FanScreenComponent implements OnInit {
                 const imageCapture = new ImageCapture(this.track)
                 const photoCapabilities = imageCapture.getPhotoCapabilities().then(() => {
           
-
+                    this.track.applyConstraints({
+                            advanced: [<any>{torch: true}]
+                    });
                   //  track.applyConstraints({ advanced})
                   //todo: check if camera has a torch
           
