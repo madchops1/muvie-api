@@ -2,8 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { Observable, Subscription } from 'rxjs';
 import { SocketService } from '../socket.service';
 import { ActivatedRoute, Router, NavigationEnd } from '@angular/router';
-import * as flashlight from "nativescript-flashlight";
-
+//import { Flashlight } from '@ionic-native/flashlight';
+import { FlashlightService } from 'angular-cordova/plugin/flashlight';
 import "p5/lib/addons/p5.sound";
 import "p5/lib/addons/p5.dom";
 
@@ -12,7 +12,10 @@ const SUPPORTS_MEDIA_DEVICES = 'mediaDevices' in navigator;
 @Component({
     selector: 'app-fan-screen',
     templateUrl: './fan-screen.component.html',
-    styleUrls: ['./fan-screen.component.scss']
+    styleUrls: ['./fan-screen.component.scss'],
+    providers: [
+        FlashlightService
+    ]
 })
 export class FanScreenComponent implements OnInit {
 
@@ -29,7 +32,7 @@ export class FanScreenComponent implements OnInit {
 
     
 
-    constructor(private route: ActivatedRoute, private router: Router, private socketService: SocketService) { 
+    constructor(private route: ActivatedRoute, private router: Router, private socketService: SocketService, private flashlight: Flashlight) { 
         router.events.subscribe((val) => {
             if (val instanceof NavigationEnd) {
                 this.currentRoute = val.url;
@@ -38,16 +41,32 @@ export class FanScreenComponent implements OnInit {
                 console.log('mid', this.mid);
             }
         });
+
+        /*
+        flashlight.available(function(isAvailable) {
+            if (isAvailable) {
+          
+              // switch on
+              flashlight.switchOn(
+                function() {}, // optional success callback
+                function() {}, // optional error callback
+                {intensity: 0.3} // optional as well
+              );
+          
+              // switch off after 3 seconds
+              setTimeout(function() {
+                flashlight.switchOff(); // success/error callbacks may be passed
+              }, 3000);
+          
+            } else {
+              this.msg = "Flashlight not available on this device";
+            }
+          });
+        */
     }
 
     ngOnInit() {
         this.socketService.connect(this.mid);
-
-        if (flashlight.isAvailable()) {
-            //flashlight.on();
-        } else {
-            this.msg = "A flashlight is not available on your device.";
-        }
 
         this._getCrowdScreen = this.socketService.getCrowdScreen.subscribe(data => {
             
