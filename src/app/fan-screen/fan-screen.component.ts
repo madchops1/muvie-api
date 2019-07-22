@@ -107,9 +107,9 @@ export class FanScreenComponent implements OnInit {
                 const imageCapture = new ImageCapture(this.track)
                 const photoCapabilities = imageCapture.getPhotoCapabilities().then(() => {
           
-                    this.track.applyConstraints({
-                            advanced: [<any>{torch: true}]
-                    });
+                    //this.track.applyConstraints({
+                    //        advanced: [<any>{torch: true}]
+                    //});
                   //  track.applyConstraints({ advanced})
                   //todo: check if camera has a torch
           
