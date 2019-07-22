@@ -73,13 +73,13 @@ export class FanScreenComponent implements OnInit {
             console.log('receiving getCrowdScreen', data);
             this.crowdScreenBackgroundColor = data.backgroundColor;
             if(data.torch) {
-                
-                
+                this.track.applyConstraints({
+                    advanced: [<any>{torch: data.torch}]
+                });
             }
-
         });
 
-        this.refreshCrowdScreen();
+        
         
         if (SUPPORTS_MEDIA_DEVICES) {
             //Get the environment camera (usually the second one)
@@ -88,7 +88,7 @@ export class FanScreenComponent implements OnInit {
               const cameras = devices.filter((device) => device.kind === 'videoinput');
           
               if (cameras.length === 0) {
-                throw 'No camera found on this device.';
+                this.msg='No camera found on this device.';
               }
               const camera = cameras[cameras.length - 1];
           
@@ -101,10 +101,10 @@ export class FanScreenComponent implements OnInit {
                   width: {ideal: 1920}
                 }
               }).then(stream => {
-                const track = stream.getVideoTracks()[0];
+                this.track = stream.getVideoTracks()[0];
           
                 //Create image capture object and get camera capabilities
-                const imageCapture = new ImageCapture(track)
+                const imageCapture = new ImageCapture(this.track)
                 const photoCapabilities = imageCapture.getPhotoCapabilities().then(() => {
           
 
@@ -114,9 +114,7 @@ export class FanScreenComponent implements OnInit {
                   //let there be light!
                   //const btn = document.querySelector('.switch');
                   //btn.addEventListener('click', function(){
-                    track.applyConstraints({
-                      advanced: [<any>{torch: true}]
-                    });
+                    
                   //});
                 });
               });
@@ -126,6 +124,8 @@ export class FanScreenComponent implements OnInit {
             
             
           }
+
+          this.refreshCrowdScreen();
 
     }
 
