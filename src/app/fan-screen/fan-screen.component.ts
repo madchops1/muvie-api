@@ -16,7 +16,7 @@ const SUPPORTS_MEDIA_DEVICES = 'mediaDevices' in navigator;
 export class FanScreenComponent implements OnInit {
 
     mid: any = '';
-    torch: any = false;
+    torch: any = true;
     //torchCompatible
     crowdScreenBackgroundColor: any = 'transparent';
     
