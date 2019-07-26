@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { ViewChild, HostListener, ElementRef, NgZone, ApplicationRef } from '@angular/core';
 import { Observable, Subscription } from 'rxjs';
 import { SocketService } from '../socket.service';
 import { ActivatedRoute, Router, NavigationEnd } from '@angular/router';
@@ -17,10 +18,12 @@ export class RemoteQueComponent implements OnInit {
     currentTrack: any = 0;
     playing: any = false;
     lastData: any = {};
+    password: any = '';
 
     //private _anythingSub: Subscription;
     currentRoute: any = '';
     private _getRemoteQue: Subscription;
+    private _getRemoteQueAuthorization: Subscription;
 
     constructor(private route: ActivatedRoute, private router: Router, private socketService: SocketService) {
         router.events.subscribe((val) => {
@@ -36,6 +39,10 @@ export class RemoteQueComponent implements OnInit {
     ngOnInit() {
 
         this.socketService.connect(this.mid);
+
+        this._getRemoteQueAuthorization = this.socketService.getRemoteQueAuthorization.subscribe(data => {
+            console.log('Authorization', data);
+        })
 
         this._getRemoteQue = this.socketService.getRemoteQue.subscribe(data => {
             if (JSON.stringify(data) === JSON.stringify(this.lastData)) {
@@ -94,4 +101,9 @@ export class RemoteQueComponent implements OnInit {
     //getTracks(): any {
     //    //this.socketService.getTracks(mid);
     //}
+
+    authorize(e): any {
+        console.log('authorize', this.password)
+        this.socketService.authorize(this.password);
+    }
 }

@@ -26,3 +26,20 @@ mat-button-toggle-group {
     padding: 20px;
     font-size: 14px;
 }
+.password-wrapper {
+
+    .password-field {
+        margin: 30vh auto 0;
+        width: 200px;
+        background: #444;
+        border-radius:4px;
+        display:block;
+        padding: 20px;
+        margin-bottom: 40px;
+    }
+
+    button {
+        margin: 10px auto;
+        display: block;
+    }
+}

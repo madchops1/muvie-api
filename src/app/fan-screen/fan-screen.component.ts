@@ -4,7 +4,6 @@ import { Component, OnInit } from '@angular/core';
 import { Observable, Subscription } from 'rxjs';
 import { SocketService } from '../socket.service';
 import { ActivatedRoute, Router, NavigationEnd } from '@angular/router';
-//import { Flashlight } from '@ionic-native/flashlight';
 import "p5/lib/addons/p5.sound";
 import "p5/lib/addons/p5.dom";
 
@@ -28,8 +27,10 @@ export class FanScreenComponent implements OnInit {
     camera: any = false;
     track: any = false;
     msg: any = "";
+    timeArray: any = [ 200, 300, 400, 500, 600, 700, 800, 900, 1000, 1100, 1200, 1300, 1400, 1500, 1600, 1700, 1800, 1900, 2000];
 
     private _getCrowdScreen: Subscription;
+    private _ping: Subscription;
 
     constructor(private route: ActivatedRoute, private router: Router, private socketService: SocketService) { 
         router.events.subscribe((val) => {
@@ -47,6 +48,11 @@ export class FanScreenComponent implements OnInit {
         // Connect to ws
         this.socketService.connect(this.mid);
 
+        // ws ping/pong
+        this._ping = this.socketService.ping.subscribe(() => {
+            this.socketService.pong();
+        });
+
         // Get crowdscreen data from ws
         this._getCrowdScreen = this.socketService.getCrowdScreen.subscribe(data => {
             console.log('receiving getCrowdScreen', data);
@@ -58,20 +64,27 @@ export class FanScreenComponent implements OnInit {
             this.applyConstraints();
 
             clearInterval(this.interval);
-            
+            let intervalTime = this.timeArray[Math.floor(Math.random()*this.timeArray.length)];
+
             // Multi-color, change to a random color at a random interval between 500-2000ms
             if(this.crowdScreenFunction == 'playCrowdScreenMultiColorModule') {
+
+                // Multi-Color loop
                 this.interval = setInterval(() => {
+                    console.log('Multi-Color Loop');
                     this.crowdScreenBackgroundColor = this.generateHexColor();
-                }, this.randomInt(500,2000));
+                }, intervalTime);
             } 
             // Sparkle, change to a random intensity at a random interval between 200-2000ms
             else if(this.crowdScreenFunction == 'playCrowdScreenSparkleModule') {
+
+                // Sparkle loop
                 this.interval = setInterval(() => {
+                    console.log('Sparkle Loop');
                     this.torch = !this.torch;
                     this.crowdScreenIntensity = Math.random();
                     this.applyConstraints();
-                }, this.randomInt(200,2000));
+                }, intervalTime);
             } 
             
         });
@@ -116,12 +129,9 @@ export class FanScreenComponent implements OnInit {
                 });
               });
             });
-            
             //The light will be on as long the track exists
         }
-
         this.refreshCrowdScreen();
-
     }
 
     refreshCrowdScreen(): any {
@@ -137,11 +147,16 @@ export class FanScreenComponent implements OnInit {
     }
 
     applyConstraints(): any {
-        
-        this.track.applyConstraints({
-            advanced: [<any>{torch: this.torch, intensity: this.intensity }]
-        });
-        
+        try {
+            this.track.applyConstraints({
+                advanced: [<any>{torch: this.torch, intensity: this.intensity }]
+            }).then(() => {
+                console.log('constraints applied')
+            },(err) => {
+                console.log('could not apply constraints beta')
+            });
+        } catch {
+            console.log('could not apply constraints alpha');
+        }   
     }
-
 }

@@ -2,7 +2,6 @@
     <a class="logo">VISUALZ <span>REMOTE QUE</span></a>
     <div class="clearfix"></div>
 </header>
-
 <mat-toolbar class="pink" *ngIf="tracks.length && auth">
     <mat-toolbar-row class="main">
 
@@ -24,6 +23,15 @@
 
     </mat-toolbar-row>
 </mat-toolbar>
+
+<div class="password-wrapper" *ngIf="!auth">
+    <mat-form-field class="password-field">
+        <input matInput type="password" placeholder="Password" [(ngModel)]="password" value="">
+    </mat-form-field>
+    <button mat-raised-button class="pink" (click)="authorize($event)">Authorize</button>
+    {{password}}
+</div>
+
 <div class="interactive-wrapper" *ngIf="auth">
     <div *ngIf="tracks.length == 0" class="center no-tracks">
         <strong>0 Tracks</strong>

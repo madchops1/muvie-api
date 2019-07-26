@@ -16,6 +16,8 @@ export class SocketService {
     made = this.socket.fromEvent<any>('made');
     getRemoteQue = this.socket.fromEvent<any>('getRemoteQue');
     getCrowdScreen = this.socket.fromEvent<any>('getCrowdScreen');
+    getRemoteQueAuthorization = this.socket.fromEvent<any>('getRemoteQueAuthorization');
+    ping = this.socket.fromEvent<any>('ping');
 
     constructor(private socket: Socket) {
         //this.socket.emit('test', 'alpha');
@@ -26,6 +28,10 @@ export class SocketService {
         this.socket.ioSocket.io.opts.query = { mid: mid } //new options
         //this.socket.ioSocket.io.uri = "http://localhost:3001" //new uri
         this.socket.connect(); //manually connection
+    }
+
+    pong():any {
+        this.socket.emit('pong');
     }
 
     sendMake(data): any {
@@ -56,6 +62,9 @@ export class SocketService {
         this.socket.emit('changeTrack', i);
     }
 
-
+    authorize(password): any {
+        console.log('authorize in socket', password);
+        this.socket.emit('remoteQueAuthorize', password);
+    }
 
 }

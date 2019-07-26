@@ -95,55 +95,68 @@ io.on('connection', (socket) => {
         }
     }
 
+    // clean up rooms @TODO
+
     socket.join(String(mid));
     console.log('Client connected', mid);
 
     socket.on('disconnect', () => console.log('Client disconnected'));
 
+    // ping/pong every 4 sec
+    setInterval(()=> {
+        for (let key in crowdScreenKeyMap) {
+            let roomMid = crowdScreenKeyMap[key];
+            socket.broadcast.to(String(mid)).emit('ping');
+        }
+    }, 4000);
+
+    socket.on("pong", () => {
+        console.log('server received pong');
+    });
+
     socket.on("test", value => {
-        console.log('server recieved test', value);
-        //safeJoin(docId);
+        console.log('server received test', value);
         socket.emit("testclient", value);
     });
 
     // receive the remote que request from VISUALZ
     // and pass it on to the website
     socket.on("sendRemoteQue", async data => {
-        console.log('server recieved sendRemoteQue');
+        console.log('server received sendRemoteQue');
         socket.broadcast.to(String(mid)).emit('getRemoteQue', data);
     });
 
-    // recieve a refresh que request from the QUE / website
+    // receive a refresh que request from the QUE / website
     // and pass it on to the VISUALZ APP
     socket.on("refreshQue", async data => {
-        console.log('server recieved refreshQue');
+        console.log('server received refreshQue');
         socket.broadcast.to(String(mid)).emit('refreshQueRequest', data);
     });
 
     socket.on("play", async data => {
-        console.log('server recieved play');
+        console.log('server received play');
         socket.broadcast.to(String(mid)).emit('playRequest', data);
     });
 
     socket.on("stop", async data => {
-        console.log('server recieved stop');
+        console.log('server received stop');
         socket.broadcast.to(String(mid)).emit('stopRequest', data);
     });
 
     socket.on("nextTrack", async data => {
-        console.log('server recieved nextTrack');
+        console.log('server received nextTrack');
         socket.broadcast.to(String(mid)).emit('nextTrackRequest', data);
     });
 
     socket.on("changeTrack", async data => {
-        console.log('server recieved changeTrack');
+        console.log('server received changeTrack');
         socket.broadcast.to(String(mid)).emit('changeTrackRequest', data);
     });
 
     // Get the crowd screen from VISUALZ 
     // and send it the web server
     socket.on("sendCrowdScreen", async data => {
-        console.log('server recieved sendCrowdScreen', console.log(crowdScreenKeyMap));
+        console.log('server received sendCrowdScreen', console.log(crowdScreenKeyMap));
         let crowdScreenKey = data.key;
         if(crowdScreenKey) {
             if(!crowdScreenKeyMap[crowdScreenKey]) {
@@ -153,12 +166,24 @@ io.on('connection', (socket) => {
         socket.broadcast.to(String(mid)).emit('getCrowdScreen', data);
     });
     
-    // recieve a refresh crowd screen request from the web server
+    // receive a refresh crowd screen request from the web server
     // and pass it on to the VISUALZ APP
     socket.on("refreshCrowdScreen", async data => {
-        console.log('server recieved refreshCrowdScreen');
+        console.log('server received refreshCrowdScreen');
         socket.broadcast.to(String(mid)).emit('refreshCrowdScreenRequest', data);
     });
+
+    // receive an auth request from the remote que 
+    // and pass it on to the visualz app
+    socket.on("remoteQueAuthorize", async data => {
+        console.log('server received authorization request');
+        socket.broadcast.to(String(mid)).emit('remoteQueAuthorizationRequest', data);
+    });
+
+    socket.on("authorizationConfirmation", async data => {
+        console.log('server received authorization confirmation');
+        socket.broadcast.to(String(mid)).emit('getRemoteQueAuthorization', data);
+    })
 
     /*
     socket.on("make", async data => {

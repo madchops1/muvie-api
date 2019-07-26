@@ -2,7 +2,8 @@ import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { MatMenuModule, MatSlideToggleModule, MatIconModule, MatButtonModule, MatToolbarModule, MatButtonToggleModule, MatSidenavModule, MatRadioModule, MatCheckboxModule, MatSliderModule, MatCardModule, MatGridListModule, MatProgressSpinnerModule, MatToolbar } from '@angular/material';
+import { MatMenuModule, MatFormFieldModule, MatInputModule, MatSlideToggleModule, MatIconModule, MatButtonModule, MatToolbarModule, MatButtonToggleModule, MatSidenavModule, MatRadioModule, MatCheckboxModule, MatSliderModule, MatCardModule, MatGridListModule, MatProgressSpinnerModule, MatToolbar } from '@angular/material';
+import { FormsModule } from '@angular/forms';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -60,6 +61,8 @@ const config: SocketIoConfig = { url: environment.ioUrl, options: { autoConnect:
         BrowserModule,
         AppRoutingModule,
         BrowserAnimationsModule,
+        MatFormFieldModule,
+        MatInputModule,
         MatMenuModule,
         MatToolbarModule,
         MatButtonModule,
@@ -77,7 +80,8 @@ const config: SocketIoConfig = { url: environment.ioUrl, options: { autoConnect:
         FontAwesomeModule,
         NgxAudioPlayerModule,
         DragDropModule,
-        SocketIoModule.forRoot(config)
+        SocketIoModule.forRoot(config),
+        FormsModule
     ],
     providers: [
     ],
