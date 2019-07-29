@@ -11,7 +11,7 @@ import { ActivatedRoute, Router, NavigationEnd } from '@angular/router';
 })
 export class RemoteQueComponent implements OnInit {
 
-    auth: any = true;
+    auth: any = false;
     mid: any = '';
     set: any = {};
     tracks: any = [];
@@ -20,10 +20,10 @@ export class RemoteQueComponent implements OnInit {
     lastData: any = {};
     password: any = '';
 
-    //private _anythingSub: Subscription;
     currentRoute: any = '';
     private _getRemoteQue: Subscription;
-    private _getRemoteQueAuthorization: Subscription;
+    private _getRemoteQueAuthorizationConfirmation: Subscription;
+    private _getRemoteQueAuthorizationDenied: Subscription;
 
     constructor(private route: ActivatedRoute, private router: Router, private socketService: SocketService) {
         router.events.subscribe((val) => {
@@ -40,9 +40,15 @@ export class RemoteQueComponent implements OnInit {
 
         this.socketService.connect(this.mid);
 
-        this._getRemoteQueAuthorization = this.socketService.getRemoteQueAuthorization.subscribe(data => {
+        this._getRemoteQueAuthorizationConfirmation = this.socketService.getRemoteQueAuthorizationConfirmation.subscribe(data => {
             console.log('Authorization', data);
-        })
+            this.auth = true;
+        });
+
+        this._getRemoteQueAuthorizationDenied = this.socketService.getRemoteQueAuthorizationDenied.subscribe(data => {
+            console.log('Authorization Denied', data);
+            this.auth = false;
+        });
 
         this._getRemoteQue = this.socketService.getRemoteQue.subscribe(data => {
             if (JSON.stringify(data) === JSON.stringify(this.lastData)) {
@@ -51,30 +57,13 @@ export class RemoteQueComponent implements OnInit {
                 console.log('receiving getRemoteQue', data);
                 this.set = data.set;
                 this.playing = data.playing;
-                //setTimeout(() => {
                 this.tracks = data.tracks;
                 this.currentTrack = data.currentTrack;
-
-                //this.currentTrack = data.currentTrack;
-                //if (this.currentTrack != data.currentTrack) {
-                //}
-                //}, 1000);
             }
             this.lastData = data;
-            //setTimeout(() => {
-            //if (this.currentTrack != data.currentTrack) {
-            //}
-            //}, 1000);
         });
 
         this.refreshQue();
-
-        //this._anythingSub = this.socketService.anything.subscribe(item => {
-        //    console.log('received anything sub', item)
-        //});
-
-        //this.socketService.refresh();
-
     }
 
     refreshQue(): any {
@@ -94,13 +83,8 @@ export class RemoteQueComponent implements OnInit {
     }
 
     changeTrack(i): any {
-        //this.currentTrack = i;
         this.socketService.changeTrack(i);
     }
-
-    //getTracks(): any {
-    //    //this.socketService.getTracks(mid);
-    //}
 
     authorize(e): any {
         console.log('authorize', this.password)

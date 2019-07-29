@@ -16,17 +16,15 @@ export class SocketService {
     made = this.socket.fromEvent<any>('made');
     getRemoteQue = this.socket.fromEvent<any>('getRemoteQue');
     getCrowdScreen = this.socket.fromEvent<any>('getCrowdScreen');
-    getRemoteQueAuthorization = this.socket.fromEvent<any>('getRemoteQueAuthorization');
+    getRemoteQueAuthorizationConfirmation = this.socket.fromEvent<any>('getRemoteQueAuthorizationConfirmation');
+    getRemoteQueAuthorizationDenied = this.socket.fromEvent<any>('getRemoteQueAuthorizationDenied');
+    
     ping = this.socket.fromEvent<any>('ping');
 
-    constructor(private socket: Socket) {
-        //this.socket.emit('test', 'alpha');
-    }
+    constructor(private socket: Socket) { }
 
     connect(mid): any {
-        //this.socket.connectWithParams()
         this.socket.ioSocket.io.opts.query = { mid: mid } //new options
-        //this.socket.ioSocket.io.uri = "http://localhost:3001" //new uri
         this.socket.connect(); //manually connection
     }
 
@@ -66,5 +64,4 @@ export class SocketService {
         console.log('authorize in socket', password);
         this.socket.emit('remoteQueAuthorize', password);
     }
-
 }

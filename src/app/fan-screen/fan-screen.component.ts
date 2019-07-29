@@ -1,6 +1,6 @@
-/// <reference path="./image-capture.d.ts" />
+//<reference path="./image-capture.d.ts" />
 
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { Observable, Subscription } from 'rxjs';
 import { SocketService } from '../socket.service';
 import { ActivatedRoute, Router, NavigationEnd } from '@angular/router';
@@ -28,6 +28,10 @@ export class FanScreenComponent implements OnInit {
     track: any = false;
     msg: any = "";
     timeArray: any = [ 200, 300, 400, 500, 600, 700, 800, 900, 1000, 1100, 1200, 1300, 1400, 1500, 1600, 1700, 1800, 1900, 2000];
+    gotCapabilities: any = false;
+
+    @ViewChild('videoElement') videoElement: any;  
+    video: any;
 
     private _getCrowdScreen: Subscription;
     private _ping: Subscription;
@@ -44,7 +48,8 @@ export class FanScreenComponent implements OnInit {
     }
 
     ngOnInit() {
-        
+        this.video = this.videoElement.nativeElement;
+
         // Connect to ws
         this.socketService.connect(this.mid);
 
@@ -107,14 +112,20 @@ export class FanScreenComponent implements OnInit {
                   facingMode: ['user', 'environment'],
                   height: {ideal: 1080},
                   width: {ideal: 1920}
-                }
+                },
+                audio: false
               }).then(stream => {
                 this.track = stream.getVideoTracks()[0];
         
                 //Create image capture object and get camera capabilities
                 const imageCapture = new ImageCapture(this.track)
                 const photoCapabilities = imageCapture.getPhotoCapabilities().then(() => {
-          
+                    this.gotCapabilities = true;          
+                    
+                    //this.video.srcObject = stream;// = window.URL.createObjectURL(stream);
+                    //this.video.play();
+                    this.applyConstraints();
+              
                     //this.track.applyConstraints({
                     //        advanced: [<any>{torch: true}]
                     //});
@@ -147,16 +158,24 @@ export class FanScreenComponent implements OnInit {
     }
 
     applyConstraints(): any {
-        try {
-            this.track.applyConstraints({
-                advanced: [<any>{torch: this.torch, intensity: this.intensity }]
-            }).then(() => {
-                console.log('constraints applied')
-            },(err) => {
-                console.log('could not apply constraints beta')
-            });
-        } catch {
-            console.log('could not apply constraints alpha');
-        }   
+        if(this.gotCapabilities) {
+            try {
+                this.track.applyConstraints({
+                    advanced: [<any>{torch: this.torch, intensity: this.intensity }]
+                }).then(() => {
+                    console.log('constraints applied')
+                },(err) => {
+                    console.log('could not apply constraints beta')
+                });
+            } catch {
+                console.log('could not apply constraints alpha');
+            }   
+        }
     }
+
+    takePic(): any {
+        console.log('takePic');
+    }
+    
+    
 }

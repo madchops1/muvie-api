@@ -3,5 +3,11 @@
         <video width="1" height="1" loop="loop" autoplay style="position: absolute; top: 0px; left: -10px;">
             <source src="https://muvievideos.s3.us-east-2.amazonaws.com/SampleVideo_1280x720_2mb.mp4_1.mp4" type="video/mp4">
         </video>
+        <video class="cam" #videoElement></video>
+        <button mat-mini-fab color="primary" class="take-pic" (click)="takePic($event)">
+            <mat-icon>camera</mat-icon>
+        </button>
+        <input type="file" accept="image/*" capture="camera" />
+
     </div>
 </div>

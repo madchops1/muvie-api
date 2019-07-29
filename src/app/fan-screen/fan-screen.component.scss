@@ -3,9 +3,18 @@
     height: 100vh;
 }
 
-.main-wrapper {
-    //height: calc(100% - 0px);
+.cam {
+    width: 90%;
+    margin: 5%;
+}
 
+.take-pic {
+    position: fixed;
+    bottom: 20px;
+    left: 50%;
+}
+
+.main-wrapper {
     height: 100vh;
 }
 

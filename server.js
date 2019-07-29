@@ -180,10 +180,16 @@ io.on('connection', (socket) => {
         socket.broadcast.to(String(mid)).emit('remoteQueAuthorizationRequest', data);
     });
 
-    socket.on("authorizationConfirmation", async data => {
+    socket.on("remoteQueAuthorizationConfirmation", async data => {
         console.log('server received authorization confirmation');
-        socket.broadcast.to(String(mid)).emit('getRemoteQueAuthorization', data);
+        socket.broadcast.to(String(mid)).emit('getRemoteQueAuthorizationConfirmation', data);
+    });
+
+    socket.on("remoteQueAuthorizationDenied", async data => {
+        console.log('server received authorization deinied');
+        socket.broadcast.to(String(mid)).emit('getRemoteQueAuthorizationDenied', data);
     })
+
 
     /*
     socket.on("make", async data => {
