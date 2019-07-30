@@ -29,6 +29,7 @@ export class FanScreenComponent implements OnInit {
     msg: any = "";
     timeArray: any = [ 200, 300, 400, 500, 600, 700, 800, 900, 1000, 1100, 1200, 1300, 1400, 1500, 1600, 1700, 1800, 1900, 2000];
     gotCapabilities: any = false;
+    stream: any;
 
     @ViewChild('videoElement') videoElement: any;  
     video: any;
@@ -121,7 +122,7 @@ export class FanScreenComponent implements OnInit {
                 const imageCapture = new ImageCapture(this.track)
                 const photoCapabilities = imageCapture.getPhotoCapabilities().then(() => {
                     this.gotCapabilities = true;          
-                    
+                    this.stream = stream;            
                     //this.video.srcObject = stream;// = window.URL.createObjectURL(stream);
                     //this.video.play();
                     this.applyConstraints();
@@ -175,6 +176,8 @@ export class FanScreenComponent implements OnInit {
 
     takePic(e): any {
         console.log('takePic');
+        this.video.srcObject = this.stream;// = window.URL.createObjectURL(stream);
+        this.video.play();
     }
     
     
