@@ -173,7 +173,7 @@ export class FanScreenComponent implements OnInit {
         }
     }
 
-    takePic(): any {
+    takePic(e): any {
         console.log('takePic');
     }
     
