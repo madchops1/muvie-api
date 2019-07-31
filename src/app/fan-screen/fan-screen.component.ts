@@ -118,7 +118,8 @@ export class FanScreenComponent implements OnInit {
               navigator.mediaDevices.getUserMedia({
                 video: {
                   deviceId: camera.deviceId,
-                  facingMode: ['user', 'environment'],
+                  //facingMode: ['user', 'environment'],
+                  facingMode: { exact: 'environment' },
                   height: {ideal: 1080},
                   width: {ideal: 1920}
                 },
