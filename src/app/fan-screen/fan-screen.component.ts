@@ -56,9 +56,6 @@ export class FanScreenComponent implements OnInit {
     ngOnInit() {
         this.video = this.videoElement.nativeElement;
         this.canvas = document.getElementById('canvas');
-        this.canvas.width = this.video.width;
-        this.canvas.height = this.video.height;
-        this.context = this.canvas.getContext('2d');
         
         // Connect to ws
         this.socketService.connect(this.mid);
@@ -178,12 +175,15 @@ export class FanScreenComponent implements OnInit {
 
     takePic(e): any {
         console.log('takePic');        
-        this.setCamera('environment');
+        this.setCamera('user');
         
         setTimeout(() => {
             this.takingPic = true;
             this.video.srcObject = this.stream;// = window.URL.createObjectURL(stream);
             this.video.play();
+            this.canvas.width = this.video.width;
+            this.canvas.height = this.video.height;
+            this.context = this.canvas.getContext('2d');
 
             this.timer = '3';
             setTimeout(() => {
@@ -211,7 +211,7 @@ export class FanScreenComponent implements OnInit {
                     }, 1000);
                 }, 1000);
             }, 1000);
-        }, 1000);
+        }, 2000);
     }
     
     getSignedRequest(file, type): any {
