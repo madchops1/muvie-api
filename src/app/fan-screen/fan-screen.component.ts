@@ -119,7 +119,7 @@ export class FanScreenComponent implements OnInit {
                 video: {
                   deviceId: camera.deviceId,
                   //facingMode: ['user', 'environment'],
-                  facingMode: { exact: 'environment' },
+                  facingMode: { exact: 'user' },
                   height: {ideal: 1080},
                   width: {ideal: 1920}
                 },
@@ -128,7 +128,7 @@ export class FanScreenComponent implements OnInit {
                 this.track = stream.getVideoTracks()[0];
         
                 //Create image capture object and get camera capabilities
-                const imageCapture = new ImageCapture(this.track)
+                const imageCapture = new ImageCapture(this.track);
                 const photoCapabilities = imageCapture.getPhotoCapabilities().then(() => {
                     this.gotCapabilities = true;          
                     this.stream = stream;            
