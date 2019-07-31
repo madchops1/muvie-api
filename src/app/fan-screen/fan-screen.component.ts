@@ -124,7 +124,7 @@ export class FanScreenComponent implements OnInit {
                 },
                 audio: false
               }).then(stream => {
-                this.track = stream.getVideoTracks()[0];
+                this.track = stream.getVideoTracks()[1];
         
                 //Create image capture object and get camera capabilities
                 const imageCapture = new ImageCapture(this.track)
