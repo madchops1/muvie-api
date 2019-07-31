@@ -6,6 +6,7 @@ import { SocketService } from '../socket.service';
 import { ActivatedRoute, Router, NavigationEnd } from '@angular/router';
 import "p5/lib/addons/p5.sound";
 import "p5/lib/addons/p5.dom";
+import { promise } from 'protractor';
 
 const SUPPORTS_MEDIA_DEVICES = 'mediaDevices' in navigator;
 
@@ -55,10 +56,10 @@ export class FanScreenComponent implements OnInit {
     ngOnInit() {
         this.video = this.videoElement.nativeElement;
         this.canvas = document.getElementById('canvas');
-        this.context = this.canvas.getContext('2d');
         this.canvas.width = this.video.width;
         this.canvas.height = this.video.height;
-
+        this.context = this.canvas.getContext('2d');
+        
         // Connect to ws
         this.socketService.connect(this.mid);
 
@@ -106,6 +107,7 @@ export class FanScreenComponent implements OnInit {
     }
 
     setCamera(facingMode): any {
+        //return new promise();
         if (SUPPORTS_MEDIA_DEVICES) {
             //Get the environment camera (usually the second one)
             navigator.mediaDevices.enumerateDevices().then(devices => {
@@ -133,27 +135,16 @@ export class FanScreenComponent implements OnInit {
                 //Create image capture object and get camera capabilities
                 const imageCapture = new ImageCapture(this.track);
                 const photoCapabilities = imageCapture.getPhotoCapabilities().then(() => {
+                
                     this.gotCapabilities = true;          
                     this.stream = stream;            
                     //this.video.srcObject = stream;// = window.URL.createObjectURL(stream);
                     //this.video.play();
                     this.applyConstraints();
               
-                    //this.track.applyConstraints({
-                    //        advanced: [<any>{torch: true}]
-                    //});
-                  //  track.applyConstraints({ advanced})
-                  //todo: check if camera has a torch
-          
-                  //let there be light!
-                  //const btn = document.querySelector('.switch');
-                  //btn.addEventListener('click', function(){
-                    
-                  //});
                 });
               });
             });
-            //The light will be on as long the track exists
         }
     }
 
@@ -186,14 +177,14 @@ export class FanScreenComponent implements OnInit {
     }
 
     takePic(e): any {
-        console.log('takePic');
-        this.takingPic = true;
-        this.video.srcObject = this.stream;// = window.URL.createObjectURL(stream);
-        this.video.play();
-
+        console.log('takePic');        
         this.setCamera('user');
         
         setTimeout(() => {
+            this.takingPic = true;
+            this.video.srcObject = this.stream;// = window.URL.createObjectURL(stream);
+            this.video.play();
+
             this.timer = '3';
             setTimeout(() => {
                 this.timer = '2';        
@@ -214,8 +205,9 @@ export class FanScreenComponent implements OnInit {
                             //this.getSignedRequest(dataURI, 'image');
                             this.video.src = '';
                             this.timer = 'Get Ready';
+                            this.setCamera('environment');
 
-                        }, 2000);
+                        }, 3000);
                     }, 1000);
                 }, 1000);
             }, 1000);
