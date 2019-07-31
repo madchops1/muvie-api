@@ -193,7 +193,6 @@ export class FanScreenComponent implements OnInit {
                     setTimeout(() => {
 
                         this.timer = '';
-                        this.context.fillRect(0,0,this.canvas.width, this.canvas.height);
                         this.context.drawImage(this.video, 0, 0, this.canvas.width, this.canvas.height);
                         let dataUri = this.canvas.toDataURL('image/jpeg'); // can also use 'image/png'
                         this.socketService.sendCrowdScreenImage(dataUri);
@@ -203,6 +202,7 @@ export class FanScreenComponent implements OnInit {
                             this.takingPic = false;
                             //this.context.clearRect(0,0,this.canvas.width, this.canvas.height);
                             //this.getSignedRequest(dataURI, 'image');
+                            this.context.fillRect(0,0,this.canvas.width, this.canvas.height);
                             this.video.src = '';
                             this.timer = 'Get Ready';
                             this.setCamera('environment');
