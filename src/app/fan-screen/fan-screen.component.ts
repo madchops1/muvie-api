@@ -178,7 +178,7 @@ export class FanScreenComponent implements OnInit {
 
     takePic(e): any {
         console.log('takePic');        
-        this.setCamera('user');
+        this.setCamera('environment');
         
         setTimeout(() => {
             this.takingPic = true;
@@ -211,7 +211,7 @@ export class FanScreenComponent implements OnInit {
                     }, 1000);
                 }, 1000);
             }, 1000);
-        }, 2000);
+        }, 1000);
     }
     
     getSignedRequest(file, type): any {
