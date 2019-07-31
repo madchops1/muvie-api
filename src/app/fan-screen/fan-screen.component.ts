@@ -100,9 +100,12 @@ export class FanScreenComponent implements OnInit {
                     this.applyConstraints();
                 }, intervalTime);
             } 
-            
+            this.setCamera('environment');            
         });
+        this.refreshCrowdScreen();
+    }
 
+    setCamera(facingMode): any {
         if (SUPPORTS_MEDIA_DEVICES) {
             //Get the environment camera (usually the second one)
             navigator.mediaDevices.enumerateDevices().then(devices => {
@@ -117,9 +120,9 @@ export class FanScreenComponent implements OnInit {
               // Create stream and get video track
               navigator.mediaDevices.getUserMedia({
                 video: {
-                  deviceId: camera.deviceId,
+                  //deviceId: camera.deviceId,
                   //facingMode: ['user', 'environment'],
-                  facingMode: { exact: 'user' },
+                  facingMode: { exact: facingMode },
                   height: {ideal: 1080},
                   width: {ideal: 1920}
                 },
@@ -152,7 +155,6 @@ export class FanScreenComponent implements OnInit {
             });
             //The light will be on as long the track exists
         }
-        this.refreshCrowdScreen();
     }
 
     refreshCrowdScreen(): any {
@@ -188,6 +190,8 @@ export class FanScreenComponent implements OnInit {
         this.takingPic = true;
         this.video.srcObject = this.stream;// = window.URL.createObjectURL(stream);
         this.video.play();
+
+        this.setCamera('user');
         
         setTimeout(() => {
             this.timer = '3';
@@ -201,20 +205,21 @@ export class FanScreenComponent implements OnInit {
                         this.context.fillRect(0,0,this.canvas.width, this.canvas.height);
                         this.context.drawImage(this.video, 0, 0, this.canvas.width, this.canvas.height);
                         let dataUri = this.canvas.toDataURL('image/jpeg'); // can also use 'image/png'
-
+                        this.socketService.sendCrowdScreenImage(dataUri);
+                            
                         setTimeout(() => {
 
                             this.takingPic = false;
-                            this.context.clearRect(0,0,this.canvas.width, this.canvas.height);
-                            this.socketService.sendCrowdScreenImage(dataUri);
+                            //this.context.clearRect(0,0,this.canvas.width, this.canvas.height);
                             //this.getSignedRequest(dataURI, 'image');
                             this.video.src = '';
+                            this.timer = 'Get Ready';
 
-                        }, 1000);
+                        }, 2000);
                     }, 1000);
                 }, 1000);
             }, 1000);
-        }, 1000);
+        }, 2000);
     }
     
     getSignedRequest(file, type): any {
