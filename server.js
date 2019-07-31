@@ -13,7 +13,6 @@ const fs = require('fs');
 const AWS = require('aws-sdk');
 
 //var enforce = require('express-sslify');
-
 //console.log('env', process.env.STRIPE_TEST_KEY);
 
 // ENV VARS
@@ -188,8 +187,13 @@ io.on('connection', (socket) => {
     socket.on("remoteQueAuthorizationDenied", async data => {
         console.log('server received authorization deinied');
         socket.broadcast.to(String(mid)).emit('getRemoteQueAuthorizationDenied', data);
-    })
+    });
 
+    // get the data uri from the phone and send it to visualz
+    socket.on("sendCrowdScreenImage", async data => {
+        console.log('server received data Uri Image');
+        socket.broadcast.to(String(mid)).emit('getCrowdScreenImage', data);
+    });
 
     /*
     socket.on("make", async data => {
@@ -228,12 +232,10 @@ app.get('/*', function(req,res) {
 app.listen(process.env.PORT || 8080);
 */
 
-
 app.get("*", (req, res) => {
     //console.log('ALPHA');
     res.sendFile(__dirname + '/dist/muvie/index.html');	//    res.sendFile(__dirname + '/dist/muvie/index.html');
 });
-
 
 /*
 app.all('*', function (req, res, next) {
@@ -261,7 +263,6 @@ app.all('*', function (req, res, next) {
 //        res.redirect("https://" + req.headers.host + req.url);
 //    }
 //});
-
 
 //if (process.env.ENVIRONMENT == 'production') {
 //app.use(enforce.HTTPS({ trustProtoHeader: true }));
@@ -406,17 +407,11 @@ app.post("/api/createSeat", async function (req, res) {
                         //res.write(JSON.stringify(params));
                         //res.end();
                     });
-
-
                 } else {
 
                     handleError(res, err, 'nope');
                 }
-
             });
-
-
-
     } catch (err) {
         handleError(res, err, 'nope');
     }

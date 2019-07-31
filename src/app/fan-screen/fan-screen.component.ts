@@ -30,6 +30,10 @@ export class FanScreenComponent implements OnInit {
     timeArray: any = [ 200, 300, 400, 500, 600, 700, 800, 900, 1000, 1100, 1200, 1300, 1400, 1500, 1600, 1700, 1800, 1900, 2000];
     gotCapabilities: any = false;
     stream: any;
+    takingPic: any = false;
+    timer: any = 'Get Ready';
+    canvas: any;
+    context: any;
 
     @ViewChild('videoElement') videoElement: any;  
     video: any;
@@ -50,6 +54,10 @@ export class FanScreenComponent implements OnInit {
 
     ngOnInit() {
         this.video = this.videoElement.nativeElement;
+        this.canvas = document.getElementById('canvas');
+        this.context = this.canvas.getContext('2d');
+        this.canvas.width = this.video.width;
+        this.canvas.height = this.video.height;
 
         // Connect to ws
         this.socketService.connect(this.mid);
@@ -176,9 +184,73 @@ export class FanScreenComponent implements OnInit {
 
     takePic(e): any {
         console.log('takePic');
+        this.takingPic = true;
         this.video.srcObject = this.stream;// = window.URL.createObjectURL(stream);
         this.video.play();
+        
+        setTimeout(() => {
+            this.timer = '3';
+            setTimeout(() => {
+                this.timer = '2';        
+                setTimeout(() => {
+                    this.timer = '1';               
+                    setTimeout(() => {
+
+                        this.timer = '';
+                        this.context.fillRect(0,0,this.canvas.width, this.canvas.height);
+
+                        this.context.drawImage(this.video, 0, 0, this.canvas.width, this.canvas.height);
+                        let dataUri = this.canvas.toDataURL('image/jpeg'); // can also use 'image/png'
+
+                        setTimeout(() => {
+
+                            this.takingPic = false;
+                            this.context.clearRect(0,0,this.canvas.width, this.canvas.height);
+                            this.socketService.sendCrowdScreenImage(dataUri);
+                            //this.getSignedRequest(dataURI, 'image');
+                            
+                        }, 1000);
+                    }, 1000);
+                }, 1000);
+            }, 1000);
+        }, 1000);
     }
     
-    
+    getSignedRequest(file, type): any {
+        const xhr = new XMLHttpRequest();
+        xhr.open('GET', `/api/sign-s3?file-name=${file.name}&file-type=${file.type}`);
+        xhr.onreadystatechange = () => {
+            if (xhr.readyState === 4) {
+                if (xhr.status === 200) {
+                    const response = JSON.parse(xhr.responseText);
+                    this.uploadFile(file, response.signedRequest, response.url, type);
+                }
+                else {
+                    alert('Could not get signed URL.');
+                }
+            }
+        };
+        xhr.send();
+    }
+
+    uploadFile(file, signedRequest, url, type): any {
+        const xhr = new XMLHttpRequest();
+        xhr.open('PUT', signedRequest);
+        xhr.onreadystatechange = () => {
+            if (xhr.readyState === 4) {
+                if (xhr.status === 200) {
+                    
+                    //let response = JSON.parse(xhr.responseText);
+                    console.log('Uploaded.', xhr.responseURL);
+                    let s = xhr.responseURL
+                    s = s.substring(0, s.indexOf('?'));
+
+                }
+                else {
+                    alert('Could not upload file.');
+                }
+            }
+        };
+        xhr.send(file);
+    }
 }

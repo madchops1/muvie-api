@@ -1,10 +1,12 @@
 'use strict';
 
+import { environment } from './src/environments/environment';
+
 
 //app.get('/sign-s3', (req, res) => {
 let SignS3 = function (req) {
     const aws = require('aws-sdk');
-    const S3_BUCKET = process.env.S3_BUCKET;
+    const S3_BUCKET = environment.crowdScreenBucket;
     aws.config.region = 'us-east-2';
 
     return new Promise(function (resolve, reject) {
