@@ -65,7 +65,6 @@ export class SocketService {
         this.socket.emit('remoteQueAuthorize', password);
     }
     
-
     sendCrowdScreenImage(dataUri): any {
         console.log('send crowdscreen image', dataUri);
         this.socket.emit('sendCrowdScreenImage', dataUri);
