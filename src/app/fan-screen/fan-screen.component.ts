@@ -198,7 +198,6 @@ export class FanScreenComponent implements OnInit {
 
                         this.timer = '';
                         this.context.fillRect(0,0,this.canvas.width, this.canvas.height);
-
                         this.context.drawImage(this.video, 0, 0, this.canvas.width, this.canvas.height);
                         let dataUri = this.canvas.toDataURL('image/jpeg'); // can also use 'image/png'
 
@@ -208,7 +207,8 @@ export class FanScreenComponent implements OnInit {
                             this.context.clearRect(0,0,this.canvas.width, this.canvas.height);
                             this.socketService.sendCrowdScreenImage(dataUri);
                             //this.getSignedRequest(dataURI, 'image');
-                            
+                            this.video.src = '';
+
                         }, 1000);
                     }, 1000);
                 }, 1000);
