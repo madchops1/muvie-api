@@ -5,7 +5,16 @@
 
 .cam {
     width: 100%;
+    position: absolute;
+    top: 0px;
+    z-index: 0;
     //margin: 5%;
+}
+
+canvas {
+    position: absolute;
+    top: 0px;
+    z-index: 1;
 }
 
 .take-pic {

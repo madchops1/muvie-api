@@ -16,9 +16,10 @@ export class SocketService {
     made = this.socket.fromEvent<any>('made');
     getRemoteQue = this.socket.fromEvent<any>('getRemoteQue');
     getCrowdScreen = this.socket.fromEvent<any>('getCrowdScreen');
+    getLaserz = this.socket.fromEvent<any>('getLaserz');
     getRemoteQueAuthorizationConfirmation = this.socket.fromEvent<any>('getRemoteQueAuthorizationConfirmation');
     getRemoteQueAuthorizationDenied = this.socket.fromEvent<any>('getRemoteQueAuthorizationDenied');
-    
+
     ping = this.socket.fromEvent<any>('ping');
 
     constructor(private socket: Socket) { }
@@ -28,7 +29,7 @@ export class SocketService {
         this.socket.connect(); //manually connection
     }
 
-    pong():any {
+    pong(): any {
         this.socket.emit('pong');
     }
 
@@ -42,6 +43,10 @@ export class SocketService {
 
     refreshCrowdScreen(): any {
         this.socket.emit('refreshCrowdScreen');
+    }
+
+    refreshLaserz(): any {
+        this.socket.emit('refreshLaserz')
     }
 
     play(): any {
@@ -64,7 +69,7 @@ export class SocketService {
         console.log('authorize in socket', password);
         this.socket.emit('remoteQueAuthorize', password);
     }
-    
+
     sendCrowdScreenImage(dataUri): any {
         console.log('send crowdscreen image', dataUri);
         this.socket.emit('sendCrowdScreenImage', dataUri);

@@ -78,6 +78,7 @@ var server = app.listen(process.env.PORT || 8080, function () {
 
 let crowdScreenKeyMap = {};
 let remoteQueKeyMap = {};
+let laserzKeyMap = {};
 
 //const io = socketIO(server);
 
@@ -87,8 +88,8 @@ io.on('connection', (socket) => {
 
     let mid = socket.handshake.query.mid;
     let remoteQueKey = socket.handshake.query.remoteQueKey;
-    if(remoteQueKey) {
-        if(!remoteQueKeyMap[remoteQueKey]) {
+    if (remoteQueKey) {
+        if (!remoteQueKeyMap[remoteQueKey]) {
             remoteQueKeyMap[remoteQueKey] = mid;
         }
     }
@@ -100,12 +101,19 @@ io.on('connection', (socket) => {
 
     socket.on('disconnect', () => console.log('Client disconnected'));
 
-    // ping/pong every 4 sec
-    setInterval(()=> {
+    // ping/pong crowd screens, and laserz, every 4 sec to keep them connected
+    setInterval(() => {
+
         for (let key in crowdScreenKeyMap) {
             let roomMid = crowdScreenKeyMap[key];
             socket.broadcast.to(String(mid)).emit('ping');
         }
+
+        for (let key in laserzKeyMap) {
+            let roomMid = laserzKeyMap[key];
+            socket.broadcast.to(String(mid)).emit('ping');
+        }
+
     }, 4000);
 
     socket.on("pong", () => {
@@ -115,6 +123,26 @@ io.on('connection', (socket) => {
     socket.on("test", value => {
         console.log('server received test', value);
         socket.emit("testclient", value);
+    });
+
+    // receive the laserz request from VISUALZ
+    // and pass it on to the website
+    socket.on("sendLaserz", async data => {
+        console.log('server received sendLaserz');
+        let laserzKey = data.key;
+        if (laserzKey) {
+            if (!laserzKeyMap[laserzKey]) {
+                laserzKeyMap[laserzKey] = data.mid;
+            }
+        }
+        socket.broadcast.to(String(data.mid)).emit('getLaserz', data);
+    });
+
+    // receive a refresh laserz request from the networked device / site
+    // and pass it on to the VISUALZ app.
+    socket.on("refreshLaserz", async data => {
+        console.log('server received refreshLaserz');
+        socket.broadcast.to(String(mid)).emit('refreshLaserzRequest', data);
     });
 
     // receive the remote que request from VISUALZ
@@ -156,14 +184,14 @@ io.on('connection', (socket) => {
     socket.on("sendCrowdScreen", async data => {
         console.log('server received sendCrowdScreen', console.log(crowdScreenKeyMap));
         let crowdScreenKey = data.key;
-        if(crowdScreenKey) {
-            if(!crowdScreenKeyMap[crowdScreenKey]) {
+        if (crowdScreenKey) {
+            if (!crowdScreenKeyMap[crowdScreenKey]) {
                 crowdScreenKeyMap[crowdScreenKey] = data.mid;
             }
         }
         socket.broadcast.to(String(mid)).emit('getCrowdScreen', data);
     });
-    
+
     // receive a refresh crowd screen request from the web server
     // and pass it on to the VISUALZ APP
     socket.on("refreshCrowdScreen", async data => {
@@ -326,15 +354,17 @@ app.post('/api/sms/reply', (req, res) => {
     const twiml = new MessagingResponse();
     let key = req.body.Body;
 
-    if(crowdScreenKeyMap[key]) {
+    if (crowdScreenKeyMap[key]) {
         twiml.message('Click the link to connect. ' + crowdScreenUrl + '/crowdscreen/' + crowdScreenKeyMap[key]);
-    } else if(remoteQueKeyMap[key])  {
+    } else if (remoteQueKeyMap[key]) {
         twiml.message('Click the link to connect. ' + crowdScreenUrl + '/remote-que/' + remoteQueKeyMap[key]);
+    } else if (laserzKeyMap[key]) {
+        twiml.message('Click the link to connect. ' + crowdScreenUrl + '/laserz/' + laserzKeyMap[key]);
     } else {
         twiml.message('Could not find the VISUALZ :(');
     }
-    
-    res.writeHead(200, {'Content-Type': 'text/xml'});
+
+    res.writeHead(200, { 'Content-Type': 'text/xml' });
     res.end(twiml.toString());
 });
 

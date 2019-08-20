@@ -21,6 +21,7 @@ export class AppComponent {
                 if (
                     this.currentRoute.includes('crowdscreen') ||
                     this.currentRoute.includes('crowdcam') ||
+                    this.currentRoute.includes('laserz') ||
                     this.currentRoute.includes('remote-cam') ||
                     this.currentRoute.includes('remote-que')) {
                     this.interactive = true;
