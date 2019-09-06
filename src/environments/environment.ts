@@ -4,9 +4,9 @@
 
 export const environment = {
     production: false,
-    ioUrl: 'http://localhost:8080',
+    //ioUrl: 'http://localhost:8080',
+    ioUrl: 'http://192.168.1.132:8080',
     crowdScreenBucket: 'crowdscreen'
-
 };
 
 /*
