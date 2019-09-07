@@ -1,3 +1,21 @@
-<p>
-  remote-cam works!
-</p>
+<div class="main-wrapper">
+  <div class="crowd-preview" [ngStyle]="{'background-color':crowdScreenBackgroundColor}">
+
+    <canvas id="canvas"></canvas>
+
+    <video class="cam" #videoElement></video>
+
+    <button mat-button color="primary" class="grant-perms" *ngIf="!cameraPerm" (click)="setCamera('environment')">
+      Allow Camera
+    </button>
+
+    <button mat-mini-fab color="primary" class="take-pic" *ngIf="!takingPic && cameraPerm" (click)="takePic($event)">
+      <mat-icon>camera</mat-icon>
+    </button>
+
+    <video width="1" height="1" loop="loop" autoplay muted="muted" style="position: absolute; top: 0px; left: -10px;">
+      <source src="https://muvievideos.s3.us-east-2.amazonaws.com/SampleVideo_1280x720_2mb.mp4_1.mp4" type="video/mp4">
+    </video>
+
+  </div>
+</div>

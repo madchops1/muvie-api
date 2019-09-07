@@ -143,6 +143,7 @@ p {
 
 .content-wrapper {
     padding: 140px 40px 80px;
+    overflow-x: hidden;
     //background-color: #fff;
 
     &.normal {
@@ -224,6 +225,14 @@ p {
             height: 300px;
             text-align: center;
 
+            h1 {
+                line-height: 60px;
+                margin: 0px;
+                font-size: 34px;
+                //letter-spacing: -1px;
+                //white-space: nowrap;
+            }
+
             @media (max-width: $breakpoint-mobile) {
                 width: 100%;
                 height: auto;
@@ -233,10 +242,10 @@ p {
             mat-icon {
                 display: block;
                 margin: 0px auto;
-                width: 100px;
-                height: 100px;
+                width: 140px;
+                height: 130px;
                 color: #e91e63;
-                font-size: 100px;
+                font-size: 140px;
                 margin-bottom: 20px;
             }
         }

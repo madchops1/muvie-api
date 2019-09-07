@@ -35,6 +35,7 @@ export class FanScreenComponent implements OnInit {
     timer: any = 'Get Ready';
     canvas: any;
     context: any;
+    cameraPerm: any = false;
 
     @ViewChild('videoElement') videoElement: any;
     video: any;
@@ -110,37 +111,40 @@ export class FanScreenComponent implements OnInit {
             navigator.mediaDevices.enumerateDevices().then(devices => {
 
                 const cameras = devices.filter((device) => device.kind === 'videoinput');
-
+                console.log('cameras', cameras);
                 if (cameras.length === 0) {
                     this.msg = 'No camera found on this device.';
-                }
-                const camera = cameras[cameras.length - 1];
+                    this.cameraPerm = false;
+                } else {
+                    const camera = cameras[cameras.length - 1];
+                    this.cameraPerm = true;
 
-                // Create stream and get video track
-                navigator.mediaDevices.getUserMedia({
-                    video: {
-                        //deviceId: camera.deviceId,
-                        //facingMode: ['user', 'environment'],
-                        facingMode: { exact: facingMode },
-                        height: { ideal: 1080 },
-                        width: { ideal: 1920 }
-                    },
-                    audio: false
-                }).then(stream => {
-                    this.track = stream.getVideoTracks()[0];
+                    // Create stream and get video track
+                    navigator.mediaDevices.getUserMedia({
+                        video: {
+                            //deviceId: camera.deviceId,
+                            //facingMode: ['user', 'environment'],
+                            facingMode: { exact: facingMode },
+                            height: { ideal: 1080 },
+                            width: { ideal: 1920 }
+                        },
+                        audio: false
+                    }).then(stream => {
+                        this.track = stream.getVideoTracks()[0];
 
-                    //Create image capture object and get camera capabilities
-                    const imageCapture = new ImageCapture(this.track);
-                    const photoCapabilities = imageCapture.getPhotoCapabilities().then(() => {
+                        //Create image capture object and get camera capabilities
+                        const imageCapture = new ImageCapture(this.track);
+                        const photoCapabilities = imageCapture.getPhotoCapabilities().then(() => {
 
-                        this.gotCapabilities = true;
-                        this.stream = stream;
-                        //this.video.srcObject = stream;// = window.URL.createObjectURL(stream);
-                        //this.video.play();
-                        this.applyConstraints();
+                            this.gotCapabilities = true;
+                            this.stream = stream;
+                            //this.video.srcObject = stream;// = window.URL.createObjectURL(stream);
+                            //this.video.play();
+                            this.applyConstraints();
 
+                        });
                     });
-                });
+                }
             });
         }
     }
@@ -203,7 +207,7 @@ export class FanScreenComponent implements OnInit {
                     setTimeout(() => {
 
                         this.timer = '';
-                        this.context.drawImage(this.video, 0, 0, this.canvas.width, this.canvas.height);
+                        this.context.drawImage(this.video, 0, 0, this.video.videoWidth, this.video.videoHeight);
                         let dataUri = this.canvas.toDataURL('image/jpeg'); // can also use 'image/png'
                         this.socketService.sendCrowdScreenImage(dataUri);
 

@@ -180,9 +180,9 @@ io.on('connection', (socket) => {
     });
 
     // Get the crowd screen from VISUALZ 
-    // and send it the web server
+    // and send it the website
     socket.on("sendCrowdScreen", async data => {
-        console.log('server received sendCrowdScreen', console.log(crowdScreenKeyMap));
+        console.log('server received sendCrowdScreen', crowdScreenKeyMap);
         let crowdScreenKey = data.key;
         if (crowdScreenKey) {
             if (!crowdScreenKeyMap[crowdScreenKey]) {
@@ -361,7 +361,7 @@ app.post('/api/sms/reply', (req, res) => {
     } else if (laserzKeyMap[key]) {
         twiml.message('Click the link to connect. ' + crowdScreenUrl + '/laserz/' + laserzKeyMap[key]);
     } else {
-        twiml.message('Could not find the VISUALZ :(');
+        twiml.message('Connection Error :(');
     }
 
     res.writeHead(200, { 'Content-Type': 'text/xml' });

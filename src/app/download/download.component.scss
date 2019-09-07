@@ -1,7 +1,13 @@
+$breakpoint-mobile: 768px;
+
 .windows {
     height: 80px;
     display: block;
     margin: 25px auto;
+
+    @media (max-width: $breakpoint-mobile) {
+        height: calc(60px);
+    }
 }
 
 .mac {
@@ -21,6 +27,10 @@ a.button {
     width: 350px;
     margin: 20px auto;
     text-align:center;
+
+    @media (max-width: $breakpoint-mobile) {
+        width: calc(250px);
+    }
 
     color: #fff;
 
