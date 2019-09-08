@@ -33,6 +33,7 @@ import { FanScreenComponent } from './fan-screen/fan-screen.component';
 import { RemoteCamComponent } from './remote-cam/remote-cam.component';
 import { RemoteQueComponent } from './remote-que/remote-que.component';
 import { LaserzComponent } from './laserz/laserz.component';
+import { HtwComponent } from './htw/htw.component';
 const config: SocketIoConfig = { url: environment.ioUrl, options: { autoConnect: false } };
 
 @NgModule({
@@ -57,7 +58,8 @@ const config: SocketIoConfig = { url: environment.ioUrl, options: { autoConnect:
         FanScreenComponent,
         RemoteCamComponent,
         RemoteQueComponent,
-        LaserzComponent
+        LaserzComponent,
+        HtwComponent
     ],
     imports: [
         BrowserModule,
