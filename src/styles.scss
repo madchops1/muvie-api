@@ -455,3 +455,9 @@ img {
         border-radius: 4px;
     }
 }
+
+.big-only {
+    @media (max-width: $breakpoint-mobile) {
+        display: none;
+    }
+}
