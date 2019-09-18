@@ -34,6 +34,7 @@ import { RemoteCamComponent } from './remote-cam/remote-cam.component';
 import { RemoteQueComponent } from './remote-que/remote-que.component';
 import { LaserzComponent } from './laserz/laserz.component';
 import { HtwComponent } from './htw/htw.component';
+import { BlogComponent } from './blog/blog.component';
 const config: SocketIoConfig = { url: environment.ioUrl, options: { autoConnect: false } };
 
 @NgModule({
@@ -59,7 +60,8 @@ const config: SocketIoConfig = { url: environment.ioUrl, options: { autoConnect:
         RemoteCamComponent,
         RemoteQueComponent,
         LaserzComponent,
-        HtwComponent
+        HtwComponent,
+        BlogComponent
     ],
     imports: [
         BrowserModule,
