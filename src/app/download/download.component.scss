@@ -1,20 +1,6 @@
 $breakpoint-mobile: 768px;
 
-.windows {
-    height: 80px;
-    display: block;
-    margin: 25px auto;
 
-    @media (max-width: $breakpoint-mobile) {
-        height: calc(60px);
-    }
-}
-
-.mac {
-    height: 80px;
-    display: block;
-    margin: 25px auto;
-}
 
 a.button {
     color: #ffffff !important;

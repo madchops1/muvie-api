@@ -6,6 +6,9 @@ import { MatMenuModule, MatFormFieldModule, MatInputModule, MatSlideToggleModule
 import { FormsModule } from '@angular/forms';
 
 import { AppRoutingModule } from './app-routing.module';
+import { DeviceDetectorModule } from 'ngx-device-detector';
+
+
 import { AppComponent } from './app.component';
 import { UploadComponent } from './upload/upload.component';
 import { TestComponent } from './test/test.component';
@@ -34,6 +37,7 @@ import { RemoteCamComponent } from './remote-cam/remote-cam.component';
 import { RemoteQueComponent } from './remote-que/remote-que.component';
 import { LaserzComponent } from './laserz/laserz.component';
 import { HtwComponent } from './htw/htw.component';
+
 const config: SocketIoConfig = { url: environment.ioUrl, options: { autoConnect: false } };
 
 @NgModule({
@@ -86,7 +90,8 @@ const config: SocketIoConfig = { url: environment.ioUrl, options: { autoConnect:
         NgxAudioPlayerModule,
         DragDropModule,
         SocketIoModule.forRoot(config),
-        FormsModule
+        FormsModule,
+        DeviceDetectorModule.forRoot()
     ],
     providers: [
     ],
