@@ -7,8 +7,6 @@ import { Component, OnInit } from '@angular/core';
 })
 export class DownloadComponent implements OnInit {
 
-    //version: any = '1.0.1';
-
     constructor() { }
 
     ngOnInit() {
