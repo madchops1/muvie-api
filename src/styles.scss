@@ -142,9 +142,14 @@ p {
 }
 
 .content-wrapper {
-    padding: 100px 40px 80px;
+    padding: 100px 40px 140px;
     overflow-x: hidden;
     //background-color: #fff;
+
+    &.feature {
+        padding: 60px 40px 40px;
+        overflow: hidden;
+    }
 
     &.normal {
         padding: 40px;
@@ -312,12 +317,28 @@ footer{
 header {
     background-color: #e91e63;
     padding: 20px;
+    position: relative;
+    z-index: 1;
 
     &.skew {
         transform: skewY(-2deg);
         margin-top: -30px;
         margin-bottom: -30px;
     }
+
+    &.right {
+        width: calc(50% - 40px);
+        float: right;
+    }
+
+    &.dark {
+        background-color: #333;
+    }
+
+    &.white {
+        background-color: #fff;
+    }
+    
 
     a.logo {
         color: #333;
@@ -506,6 +527,54 @@ img {
     ul {
         margin: 20px 0 20px -25px;
     }
+}
+
+.main-feature {
+
+    margin-top: -100px;
+    margin-bottom: -100px;
+
+    img {
+        float: left;
+        width: calc(50% + 400px);
+        margin-right: -400px;
+        //margin-bottom: -80px;
+        transform: skewY(-2deg);
+    }
+}
+
+.feature-text {
+    float: left;
+    text-align: right;
+    width: calc(50% - 40px);
+    padding-right: 40px;
+    margin-top: 140px;
+
+    h1 {
+        font-size: 40px;
+        text-align: right;
+        clear: both;
+        margin-bottom: 30px;
+    }
+
+    h2 {
+        font-size: 18px;
+        text-align: right;
+        line-height: 24px;
+        margin-bottom: 20px;
+    }
+
+    mat-icon {
+        display: block;
+        //margin: 0px auto;
+        width: 67px;
+        height: 110px;
+        color: #333;
+        font-size: 80px;
+        margin-bottom: 0px;
+        float: right;
+    }
+
 }
 
 .windows {

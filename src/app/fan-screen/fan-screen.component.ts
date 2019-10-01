@@ -68,38 +68,39 @@ export class FanScreenComponent implements OnInit {
 
         // Get crowdscreen data from ws
         this._getCrowdScreen = this.socketService.getCrowdScreen.subscribe(data => {
-            console.log('receiving getCrowdScreen', data);
-            this.crowdScreenBackgroundColor = data.backgroundColor;
-            this.crowdScreenFunction = data.function;
-            this.crowdScreenIntensity = data.intensity;
-            this.torch = data.torch;
+            
+            if(!this.takingPic) {
+                console.log('receiving getCrowdScreen', data);
+                this.crowdScreenBackgroundColor = data.backgroundColor;
+                this.crowdScreenFunction = data.function;
+                this.crowdScreenIntensity = data.intensity;
+                this.torch = data.torch;
 
-            this.applyConstraints();
+                this.applyConstraints();
 
-            clearInterval(this.interval);
-            let intervalTime = this.timeArray[Math.floor(Math.random() * this.timeArray.length)];
+                clearInterval(this.interval);
+                let intervalTime = this.timeArray[Math.floor(Math.random() * this.timeArray.length)];
 
-            // Multi-color, change to a random color at a random interval between 500-2000ms
-            if (this.crowdScreenFunction == 'playCrowdScreenMultiColorModule') {
-
-                // Multi-Color loop
-                this.interval = setInterval(() => {
-                    console.log('Multi-Color Loop');
-                    this.crowdScreenBackgroundColor = this.generateHexColor();
-                }, intervalTime);
+                // Multi-color, change to a random color at a random interval between 500-2000ms
+                if (this.crowdScreenFunction == 'playCrowdScreenMultiColorModule') {
+                    // Multi-Color loop
+                    this.interval = setInterval(() => {
+                        console.log('Multi-Color Loop');
+                        this.crowdScreenBackgroundColor = this.generateHexColor();
+                    }, intervalTime);
+                }
+                // Sparkle, change to a random intensity at a random interval between 200-2000ms
+                else if (this.crowdScreenFunction == 'playCrowdScreenSparkleModule') {
+                    // Sparkle loop
+                    this.interval = setInterval(() => {
+                        console.log('Sparkle Loop');
+                        this.torch = !this.torch;
+                        this.crowdScreenIntensity = Math.random();
+                        this.applyConstraints();
+                    }, intervalTime);
+                }
+                this.setCamera('environment');
             }
-            // Sparkle, change to a random intensity at a random interval between 200-2000ms
-            else if (this.crowdScreenFunction == 'playCrowdScreenSparkleModule') {
-
-                // Sparkle loop
-                this.interval = setInterval(() => {
-                    console.log('Sparkle Loop');
-                    this.torch = !this.torch;
-                    this.crowdScreenIntensity = Math.random();
-                    this.applyConstraints();
-                }, intervalTime);
-            }
-            this.setCamera('environment');
         });
         this.refreshCrowdScreen();
     }
@@ -178,9 +179,12 @@ export class FanScreenComponent implements OnInit {
     }
 
     takePic(e): any {
+
         console.log('takePic');
-        this.setCamera('user');
         this.takingPic = true;
+        this.torch = false;
+        this.setCamera('user');
+
         setTimeout(() => {
             this.video.srcObject = this.stream;// = window.URL.createObjectURL(stream);
             this.video.onloadeddata = () => {
