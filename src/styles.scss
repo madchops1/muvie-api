@@ -628,6 +628,10 @@ img {
         margin-bottom: 0px;
         float: right;
 
+        &.wide {
+            margin-right: 13px;
+        }
+
         @media (max-width: $breakpoint-mobile) {
             margin: 0px auto;
             float:none;
