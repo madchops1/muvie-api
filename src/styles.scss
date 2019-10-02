@@ -146,9 +146,18 @@ p {
     overflow-x: hidden;
     //background-color: #fff;
 
+    &.small-bottom {
+        padding-bottom: 80px;
+        padding-top: 140px;
+    }
+
     &.feature {
         padding: 60px 40px 40px;
         overflow: hidden;
+
+        @media (max-width: $breakpoint-mobile) {
+            padding: 60px 40px 80px;
+        }
     }
 
     &.normal {
@@ -262,13 +271,28 @@ p {
     }
 
     mat-card {
-        width: calc(33% - 70px);
+        width: calc(19% - 65px);
 
         @media (max-width: $breakpoint-mobile) {
             width: calc(100% - 70px);
         }
 
-        //img { }
+        .mat-card-header-text {
+            margin: 0px !important;
+
+            mat-card-title {
+                font-size: 11px;
+                margin-bottom: 4px;
+                white-space: nowrap;
+            }
+
+            mat-card-subtitle {
+                font-size: 10px;
+                white-space: nowrap;
+            }
+        }
+
+
 
         //width: 300px;
         float: left;
@@ -281,6 +305,11 @@ p {
             color: #fff;
             display: block;
             background-color: #e91e63;
+
+            .mat-button-wrapper {
+                font-size: 11px; 
+                font-weight: normal;
+            }
         }
     }
 
@@ -534,27 +563,50 @@ img {
     margin-top: -100px;
     margin-bottom: -100px;
 
+
+    @media (max-width: $breakpoint-mobile) {
+        margin-top: -32px;
+        margin-bottom: -32px;
+    }
+
     img {
-        float: left;
+        float: right;
         width: calc(50% + 400px);
         margin-right: -400px;
         //margin-bottom: -80px;
         transform: skewY(-2deg);
+    
+        @media (max-width: $breakpoint-mobile) {
+            float: none;
+            width: calc(100% + 80px);
+            margin: 0 0 0 -40px;
+        }
     }
 }
 
 .feature-text {
-    float: left;
+    float: right;
     text-align: right;
     width: calc(50% - 40px);
     padding-right: 40px;
     margin-top: 140px;
+
+    @media (max-width: $breakpoint-mobile) {
+        float: none;
+        width: calc(100%);
+        padding-right: 0px;
+        margin-top: 40px;
+        text-align: center;
+    }
 
     h1 {
         font-size: 40px;
         text-align: right;
         clear: both;
         margin-bottom: 30px;
+        @media (max-width: $breakpoint-mobile) {
+            text-align: center;
+        }
     }
 
     h2 {
@@ -562,17 +614,24 @@ img {
         text-align: right;
         line-height: 24px;
         margin-bottom: 20px;
+        @media (max-width: $breakpoint-mobile) {
+            text-align: center;
+        }
     }
 
     mat-icon {
         display: block;
-        //margin: 0px auto;
         width: 67px;
         height: 110px;
         color: #333;
         font-size: 80px;
         margin-bottom: 0px;
         float: right;
+
+        @media (max-width: $breakpoint-mobile) {
+            margin: 0px auto;
+            float:none;
+        }
     }
 
 }
