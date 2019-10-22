@@ -87,7 +87,7 @@ export class FanScreenComponent implements OnInit {
                     this.interval = setInterval(() => {
                         console.log('Multi-Color Loop');
                         this.crowdScreenBackgroundColor = this.generateHexColor();
-                    }, intervalTime);
+                    }, 200);
                 }
                 // Sparkle, change to a random intensity at a random interval between 200-2000ms
                 else if (this.crowdScreenFunction == 'playCrowdScreenSparkleModule') {
