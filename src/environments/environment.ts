@@ -5,7 +5,7 @@
 export const environment = {
     production: false,
     //ioUrl: 'http://localhost:8080',
-    ioUrl: 'https://605152ee.ngrok.io',
+    ioUrl: 'https://visualz.ngrok.io',
     crowdScreenBucket: 'crowdscreen'
 };
 

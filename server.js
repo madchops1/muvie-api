@@ -5,6 +5,7 @@ const formidableMiddleware = require('express-formidable');
 const bodyParser = require("body-parser");
 const concat = require('./api/concat');
 const signS3 = require('./api/sign-s3');
+const uploadFile = require('./api/uploadFile');
 const make = require('./api/make');
 //const authSeat = require('./api/authSeat');
 //const axios = require('axios');
@@ -68,7 +69,6 @@ app.use(bodyParser({ extended: false }));
 // Create link to Angular build directory
 app.use(express.static(__dirname + '/dist/muvie'));
 app.use(express.static(__dirname + '/src/assets'));
-
 
 // Initialize the app.
 var server = app.listen(process.env.PORT || 8080, function () {
@@ -259,6 +259,27 @@ app.get('/*', function(req,res) {
 app.listen(process.env.PORT || 8080);
 */
 
+app.get("/api/sign-s3-visualz", async function (req, res) {
+    console.log('upload from visualz');
+    try {
+        let sign = await uploadFile.uploadFile(req);
+        res.write(JSON.stringify(sign));
+        res.end();
+    } catch (err) {
+        handleError(res, err, 'nope');
+    }
+});
+
+app.get("/api/sign-s3", async function (req, res) {
+    try {
+        let sign = await signS3.signS3(req);
+        res.write(JSON.stringify(sign));
+        res.end();
+    } catch (err) {
+        handleError(res, err, 'nope');
+    }
+});
+
 app.get("*", (req, res) => {
     //console.log('ALPHA');
     res.sendFile(__dirname + '/dist/muvie/index.html');	//    res.sendFile(__dirname + '/dist/muvie/index.html');
@@ -300,16 +321,6 @@ app.all('*', function (req, res, next) {
 //});
 
 //}
-
-app.get("/api/sign-s3", async function (req, res) {
-    try {
-        let sign = await signS3.signS3(req);
-        res.write(JSON.stringify(sign));
-        res.end();
-    } catch (err) {
-        handleError(res, err, 'nope');
-    }
-});
 
 app.post("/api/make", async function (req, res) {
     try {
