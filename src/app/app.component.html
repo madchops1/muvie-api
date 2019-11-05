@@ -11,6 +11,14 @@
         <button mat-button routerLink="/download">DOWNLOAD FREE</button>
         <!-- <button mat-button routerLink="/prices">PRICES</button> -->
 
+        <button mat-button [matMenuTriggerFor]="menu2">XCHANGE</button>
+        <mat-menu #menu2="matMenu">
+            <button mat-menu-item routerLink="/xchange">BROWSE SETS &amp; TRACKS</button>
+            <button mat-menu-item routerLink="/create">CREATE &amp; PUBLISH</button>
+            <!-- <button mat-menu-item routerLink="/contact">CONTACT</button> -->
+            <!--<button mat-menu-item routerLink="/book">BOOK DEMO</button>-->
+        </mat-menu>
+
         <button mat-button [matMenuTriggerFor]="menu1">ABOUT</button>
         <mat-menu #menu1="matMenu">
             <button mat-menu-item routerLink="/about">ABOUT</button>
@@ -38,13 +46,14 @@
 <router-outlet></router-outlet>
 
 <footer *ngIf="!interactive">
-    <a routerLink="/about">About</a> |
-    <a routerLink="/investors">Investors</a> |
-    <a routerLink="/support">Support</a> |
-    <a routerLink="/how-it-works">How It Works</a> |
-    <a routerLink="/terms-conditions">Terms &amp; Conditions</a> |
-    <a routerLink="/privacy-policy">Privacy Policy</a> |
-    <a href="https://www.instagram.com/visualzapp/" target="_blank">Instagram</a>
+    <a routerLink="/about">About</a> &nbsp;&nbsp;|&nbsp;&nbsp;
+    <a routerLink="/events">Events</a> &nbsp;&nbsp;|&nbsp;&nbsp;
+    <a routerLink="/support">Support</a> &nbsp;&nbsp;|&nbsp;&nbsp;
+    <a routerLink="/how-it-works">How It Works</a> &nbsp;&nbsp;|&nbsp;&nbsp;
+    <a routerLink="/investors">Investors</a> &nbsp;&nbsp;|&nbsp;&nbsp;
+    <a href="https://www.instagram.com/visualzapp/" target="_blank">Instagram</a> &nbsp;&nbsp;|&nbsp;&nbsp;
+    <a routerLink="/terms-conditions">Terms &amp; Conditions</a> &nbsp;&nbsp;|&nbsp;&nbsp;
+    <a routerLink="/privacy-policy">Privacy Policy</a>
     <!--
     <a routerLink="/artist-partners">Artist Partnership</a> |
     <a routerLink="/venue-partners">Venue Partnership</a> |
