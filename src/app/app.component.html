@@ -11,6 +11,14 @@
         <button mat-button routerLink="/download">DOWNLOAD FREE</button>
         <!-- <button mat-button routerLink="/prices">PRICES</button> -->
 
+        <button mat-button [matMenuTriggerFor]="menu1">ABOUT</button>
+        <mat-menu #menu1="matMenu">
+            <button mat-menu-item routerLink="/about">ABOUT</button>
+            <button mat-menu-item routerLink="/events">EVENTS</button>
+            <button mat-menu-item routerLink="/investors">INVESTORS</button>
+            <!-- <button mat-menu-item routerLink="/contact">CONTACT</button> -->
+            <!--<button mat-menu-item routerLink="/book">BOOK DEMO</button>-->
+        </mat-menu>
         <!--
         <a routerLink="/support">SUPPORT</a>
         <a routerLink="/how-it-works">HOW IT WORKS</a>
