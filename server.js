@@ -1,6 +1,7 @@
 //Install express server
 var sslRedirect = require('heroku-ssl-redirect');
 const express = require('express');
+const helmet = require('helmet');
 const formidableMiddleware = require('express-formidable');
 const bodyParser = require("body-parser");
 const concat = require('./api/concat');
@@ -55,6 +56,14 @@ const app = express();
 if (process.env.ENVIRONMENT == 'production') {
     app.use(sslRedirect());
 }
+
+app.use(helmet());
+
+app.use(helmet.frameguard({
+    action: 'allow-from',
+    domain: 'http://localhost'
+}));
+
 
 //var http = require('http').Server(app);
 //app.use(bodyParser.json());
