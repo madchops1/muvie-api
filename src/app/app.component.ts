@@ -19,6 +19,7 @@ export class AppComponent {
                 console.log('route', val);
                 this.currentRoute = val.url;
                 if (
+                    this.currentRoute.includes('welcome') ||
                     this.currentRoute.includes('crowdscreen') ||
                     this.currentRoute.includes('crowdcam') ||
                     this.currentRoute.includes('laserz') ||

@@ -20,6 +20,7 @@ import { FanScreenComponent } from './fan-screen/fan-screen.component';
 import { RemoteCamComponent } from './remote-cam/remote-cam.component';
 import { RemoteQueComponent } from './remote-que/remote-que.component';
 import { LaserzComponent } from './laserz/laserz.component';
+import { WelcomeComponent } from './welcome/welcome.component';
 
 const routes: Routes = [
     { path: '', component: VisualzComponent },
@@ -38,7 +39,8 @@ const routes: Routes = [
     { path: 'crowdscreen/:mid', component: FanScreenComponent },
     { path: 'remote-cam/:mid', component: RemoteCamComponent },
     { path: 'remote-que/:mid', component: RemoteQueComponent },
-    { path: 'laserz/:mid', component: LaserzComponent }
+    { path: 'laserz/:mid', component: LaserzComponent },
+    { path: 'welcome/:v', component: WelcomeComponent }
 
     //{ path: 'movie', component: NewMovieComponent },
     //{ path: 'filter', component: FilterComponent },

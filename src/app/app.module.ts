@@ -37,6 +37,7 @@ import { RemoteCamComponent } from './remote-cam/remote-cam.component';
 import { RemoteQueComponent } from './remote-que/remote-que.component';
 import { LaserzComponent } from './laserz/laserz.component';
 import { HtwComponent } from './htw/htw.component';
+import { WelcomeComponent } from './welcome/welcome.component';
 
 const config: SocketIoConfig = { url: environment.ioUrl, options: { autoConnect: false } };
 
@@ -63,7 +64,8 @@ const config: SocketIoConfig = { url: environment.ioUrl, options: { autoConnect:
         RemoteCamComponent,
         RemoteQueComponent,
         LaserzComponent,
-        HtwComponent
+        HtwComponent,
+        WelcomeComponent
     ],
     imports: [
         BrowserModule,

@@ -8,6 +8,7 @@ const concat = require('./api/concat');
 const signS3 = require('./api/sign-s3');
 const uploadFile = require('./api/uploadFile');
 const make = require('./api/make');
+const convertToMp4 = require('./api/convertToMp4');
 //const authSeat = require('./api/authSeat');
 //const axios = require('axios');
 const request = require('request');
@@ -61,7 +62,7 @@ app.use(helmet());
 
 app.use(helmet.frameguard({
     action: 'allow-from',
-    domain: 'http://localhost'
+    domain: 'file://'
 }));
 
 
@@ -335,11 +336,9 @@ app.post("/api/make", async function (req, res) {
     try {
         console.log('calling api make', req.fields);
         let makeVideo = await make.Make(req);
-
         res.header('Access-Control-Allow-Origin', '*');
         res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS');
         res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization, Content-Length, X-Requested-With');
-
         res.write(JSON.stringify(makeVideo));
         res.end();
     } catch (err) {
@@ -355,7 +354,6 @@ app.get("/api/concat", function (req, res) {
             res.header('Access-Control-Allow-Origin', '*');
             res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS');
             res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization, Content-Length, X-Requested-With');
-
             res.status(200).json();
         },
             function (err) {
@@ -364,6 +362,20 @@ app.get("/api/concat", function (req, res) {
             });
     } catch (err) {
 
+    }
+});
+
+app.post("/api/convertToMp4", function (req, res) {
+    try {
+        console.log('calling api convertToMp4', req.fields);
+        let convertVideo = await convertToMp4.ConvertToMp4(req);
+        res.header('Access-Control-Allow-Origin', '*');
+        res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS');
+        res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization, Content-Length, X-Requested-With');
+        res.write(JSON.stringify(convertVideo));
+        res.end();
+    } catch (err) {
+        handleError(res, err, 'nope');
     }
 });
 
