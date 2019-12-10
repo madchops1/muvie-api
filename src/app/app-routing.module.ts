@@ -23,6 +23,7 @@ import { RemoteCamComponent } from './remote-cam/remote-cam.component';
 import { RemoteQueComponent } from './remote-que/remote-que.component';
 import { LaserzComponent } from './laserz/laserz.component';
 import { WelcomeComponent } from './welcome/welcome.component';
+import { ProfileComponent } from './profile/profile.component';
 
 const routes: Routes = [
     { path: '', component: VisualzComponent },
@@ -43,6 +44,7 @@ const routes: Routes = [
     { path: 'remote-que/:mid', component: RemoteQueComponent },
     { path: 'laserz/:mid', component: LaserzComponent },
     { path: 'welcome/:v', component: WelcomeComponent },
+    { path: 'profile', component: ProfileComponent }
 
     // { path: 'movie', component: NewMovieComponent },
     // { path: 'filter', component: FilterComponent },

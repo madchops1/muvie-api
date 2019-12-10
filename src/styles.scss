@@ -393,8 +393,8 @@ header {
             //font-size: 12px;
             //width: 300px;
             //margin-top: 10px;
-
         }
+
         a, button {
             color: #333;
             //display: inline-block;
@@ -402,7 +402,16 @@ header {
             //font-size: 14px;
             //margin: 10px 0px 0px 0px;
             //padding: 20px;
+        }
 
+        .mat-raised-button {
+            color: #fff !important; 
+            padding: 0px 10px;
+            margin-left: 10px;
+        }
+
+        .mat-button {
+            padding: 0px 10px;
         }
     }
 

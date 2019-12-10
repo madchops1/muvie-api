@@ -40,13 +40,19 @@
             <!--<button mat-menu-item routerLink="/book">BOOK DEMO</button>-->
         </mat-menu>
 
-        <button class="btn btn-primary btn-margin" *ngIf="!auth.loggedIn" (click)="auth.login()">
-            Log In
+        <button mat-raised-button class="btn btn-primary btn-margin" *ngIf="!auth.loggedIn" (click)="auth.login()">
+            LOG IN
         </button>
 
-        <button class="btn btn-primary btn-margin" *ngIf="auth.loggedIn" (click)="auth.logout()">
-            Log Out
+        <button mat-button [matMenuTriggerFor]="menu3" *ngIf="auth.loggedIn" class="btn btn-primary btn-margin">
+            USER NAME
         </button>
+        <mat-menu #menu3="matMenu">
+            <button mat-menu-item routerLink="/profile">ACCOUNT</button>
+            <button mat-menu-item (click)="auth.logout()">LOGOUT</button>
+        </mat-menu>
+
+
     </div>
     <div class="clearfix"></div>
 </header>

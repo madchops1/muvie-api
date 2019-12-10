@@ -37,6 +37,7 @@ import { RemoteQueComponent } from './remote-que/remote-que.component';
 import { LaserzComponent } from './laserz/laserz.component';
 import { HtwComponent } from './htw/htw.component';
 import { WelcomeComponent } from './welcome/welcome.component';
+import { ProfileComponent } from './profile/profile.component';
 
 const config: SocketIoConfig = { url: environment.ioUrl, options: { autoConnect: false } };
 
@@ -64,7 +65,8 @@ const config: SocketIoConfig = { url: environment.ioUrl, options: { autoConnect:
         RemoteQueComponent,
         LaserzComponent,
         HtwComponent,
-        WelcomeComponent
+        WelcomeComponent,
+        ProfileComponent
     ],
     imports: [
         BrowserModule,
