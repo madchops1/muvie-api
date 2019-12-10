@@ -269,6 +269,19 @@ app.get('/*', function(req,res) {
 app.listen(process.env.PORT || 8080);
 */
 
+
+app.get('/api/env', function (req, res) {
+    res.header('Access-Control-Allow-Origin', '*');
+    res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS');
+    res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization, Content-Length, X-Requested-With');
+
+    const { AUTH0_CLIENT_ID, AUTH0_DOMAIN } = process.env;
+    if (!AUTH0_CLIENT_ID && !AUTH0_DOMAIN) {
+        return res.status(400).json({ message: 'No env set.' });
+    }
+    res.json({ AUTH0_CLIENT_ID, AUTH0_DOMAIN });
+});
+
 app.get("/api/sign-s3-visualz", async function (req, res) {
     console.log('upload from visualz');
     try {
@@ -365,7 +378,7 @@ app.get("/api/concat", function (req, res) {
     }
 });
 
-app.post("/api/convertToMp4", function (req, res) {
+app.post("/api/convertToMp4", async function (req, res) {
     try {
         console.log('calling api convertToMp4', req.fields);
         let convertVideo = await convertToMp4.ConvertToMp4(req);

@@ -1,9 +1,11 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
-//import { UploadComponent } from './upload/upload.component';
-//import { TestComponent } from './test/test.component';
-//import { NewMovieComponent } from './new-movie/new-movie.component';
-//import { FilterComponent } from './filter/filter.component';
+
+// import { UploadComponent } from './upload/upload.component';
+// import { TestComponent } from './test/test.component';
+// import { NewMovieComponent } from './new-movie/new-movie.component';
+// import { FilterComponent } from './filter/filter.component';
+
 import { VisualzComponent } from './visualz/visualz.component';
 import { SupportComponent } from './support/support.component';
 import { BuyComponent } from './buy/buy.component';
@@ -40,12 +42,12 @@ const routes: Routes = [
     { path: 'remote-cam/:mid', component: RemoteCamComponent },
     { path: 'remote-que/:mid', component: RemoteQueComponent },
     { path: 'laserz/:mid', component: LaserzComponent },
-    { path: 'welcome/:v', component: WelcomeComponent }
+    { path: 'welcome/:v', component: WelcomeComponent },
 
-    //{ path: 'movie', component: NewMovieComponent },
-    //{ path: 'filter', component: FilterComponent },
-    //{ path: 'upload', component: UploadComponent },
-    //{ path: 'test', component: TestComponent }
+    // { path: 'movie', component: NewMovieComponent },
+    // { path: 'filter', component: FilterComponent },
+    // { path: 'upload', component: UploadComponent },
+    // { path: 'test', component: TestComponent }
 ];
 
 @NgModule({

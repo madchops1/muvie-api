@@ -39,6 +39,14 @@
             <!-- <button mat-menu-item routerLink="/contact">CONTACT</button> -->
             <!--<button mat-menu-item routerLink="/book">BOOK DEMO</button>-->
         </mat-menu>
+
+        <button class="btn btn-primary btn-margin" *ngIf="!auth.loggedIn" (click)="auth.login()">
+            Log In
+        </button>
+
+        <button class="btn btn-primary btn-margin" *ngIf="auth.loggedIn" (click)="auth.logout()">
+            Log Out
+        </button>
     </div>
     <div class="clearfix"></div>
 </header>

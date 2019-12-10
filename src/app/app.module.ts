@@ -8,7 +8,6 @@ import { FormsModule } from '@angular/forms';
 import { AppRoutingModule } from './app-routing.module';
 import { DeviceDetectorModule } from 'ngx-device-detector';
 
-
 import { AppComponent } from './app.component';
 import { UploadComponent } from './upload/upload.component';
 import { TestComponent } from './test/test.component';
