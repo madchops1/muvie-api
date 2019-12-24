@@ -14,7 +14,7 @@ const convertToMp4 = require('./api/convertToMp4');
 const request = require('request');
 const fs = require('fs');
 const AWS = require('aws-sdk');
-
+const visualzLatest = '1.3.1';
 //var enforce = require('express-sslify');
 //console.log('env', process.env.STRIPE_TEST_KEY);
 
@@ -280,6 +280,14 @@ app.get('/api/env', function (req, res) {
         return res.status(400).json({ message: 'No env set.' });
     }
     res.json({ AUTH0_CLIENT_ID, AUTH0_DOMAIN });
+});
+
+app.get('/api/latest', function (req, res) {
+    res.header('Access-Control-Allow-Origin', '*');
+    res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS');
+    res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization, Content-Length, X-Requested-With');
+    console.log('LATEST', 'DELTA');
+    res.json({ "version": visualzLatest });
 });
 
 app.get("/api/sign-s3-visualz", async function (req, res) {

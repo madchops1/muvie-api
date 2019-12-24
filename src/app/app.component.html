@@ -45,7 +45,7 @@
         </button>
 
         <button mat-button [matMenuTriggerFor]="menu3" *ngIf="auth.loggedIn" class="btn btn-primary btn-margin">
-            USER NAME
+            <img [src]="auth.userProfile$.source._value.picture" /> {{ auth.userProfile$.source._value.given_name }}
         </button>
         <mat-menu #menu3="matMenu">
             <button mat-menu-item routerLink="/profile">ACCOUNT</button>

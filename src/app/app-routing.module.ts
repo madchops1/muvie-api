@@ -24,6 +24,7 @@ import { RemoteQueComponent } from './remote-que/remote-que.component';
 import { LaserzComponent } from './laserz/laserz.component';
 import { WelcomeComponent } from './welcome/welcome.component';
 import { ProfileComponent } from './profile/profile.component';
+import { AuthGuard } from './auth.guard';
 
 const routes: Routes = [
     { path: '', component: VisualzComponent },
@@ -44,8 +45,11 @@ const routes: Routes = [
     { path: 'remote-que/:mid', component: RemoteQueComponent },
     { path: 'laserz/:mid', component: LaserzComponent },
     { path: 'welcome/:v', component: WelcomeComponent },
-    { path: 'profile', component: ProfileComponent }
-
+    {
+        path: 'profile',
+        component: ProfileComponent,
+        canActivate: [AuthGuard]
+    }
     // { path: 'movie', component: NewMovieComponent },
     // { path: 'filter', component: FilterComponent },
     // { path: 'upload', component: UploadComponent },

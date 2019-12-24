@@ -11,9 +11,16 @@ export class AppComponent {
     title = 'VISUALZ';
     currentRoute = '';
     interactive: any = false;
-
+    userProfile: any;
     // detect the route
     constructor(private route: ActivatedRoute, private router: Router, private auth: AuthService) {
+
+        console.log('auth', auth);
+
+        //if (auth.loggedIn) {
+        //    this.userProfile = auth.userProfile$;
+        //    console.log('userProfile', this.userProfile);
+        //}
 
         // Handle mobile visualz pages
         router.events.subscribe((val) => {
