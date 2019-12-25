@@ -286,8 +286,8 @@ app.get('/api/latest', function (req, res) {
     res.header('Access-Control-Allow-Origin', '*');
     res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS');
     res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization, Content-Length, X-Requested-With');
-    console.log('LATEST', 'DELTA');
-    res.json({ "version": visualzLatest });
+    //console.log('LATEST', 'DELTA');
+    res.status(200).json({ "version": visualzLatest });
 });
 
 app.get("/api/sign-s3-visualz", async function (req, res) {
