@@ -11,12 +11,12 @@
         <button mat-button routerLink="/download">DOWNLOAD FREE</button>
         <!-- <button mat-button routerLink="/prices">PRICES</button> -->
 
-        <button mat-button [matMenuTriggerFor]="menu2">XCHANGE</button>
+        <button mat-button [matMenuTriggerFor]="menu2">MARKET</button>
         <mat-menu #menu2="matMenu">
             <button mat-menu-item routerLink="/xchange">BROWSE SETS &amp; TRACKS</button>
             <button mat-menu-item routerLink="/create">CREATE &amp; PUBLISH</button>
             <!-- <button mat-menu-item routerLink="/contact">CONTACT</button> -->
-            <!--<button mat-menu-item routerLink="/book">BOOK DEMO</button>-->
+            <!-- <button mat-menu-item routerLink="/book">BOOK DEMO</button> -->
         </mat-menu>
 
         <button mat-button [matMenuTriggerFor]="menu1">ABOUT</button>
@@ -25,7 +25,7 @@
             <button mat-menu-item routerLink="/events">EVENTS</button>
             <button mat-menu-item routerLink="/investors">INVESTORS</button>
             <!-- <button mat-menu-item routerLink="/contact">CONTACT</button> -->
-            <!--<button mat-menu-item routerLink="/book">BOOK DEMO</button>-->
+            <!-- <button mat-menu-item routerLink="/book">BOOK DEMO</button> -->
         </mat-menu>
         <!--
         <a routerLink="/support">SUPPORT</a>
@@ -36,8 +36,13 @@
             <button mat-menu-item routerLink="/how-it-works">LEARN</button>
             <button mat-menu-item routerLink="/resources">RESOURCES</button>
             <button mat-menu-item routerLink="/support">COMMUNITY</button>
+            <button mat-menu-item [matMenuTriggerFor]="menuT">TOOLS</button>
+            <mat-menu #menuT="matMenu">
+                <button mat-menu-item routerLink="/mp4-converter">GIF TO MP4</button>
+                <button mat-menu-item routerLink="/movie">MUSIC VIDEO CREATOR</button>
+            </mat-menu>
             <!-- <button mat-menu-item routerLink="/contact">CONTACT</button> -->
-            <!--<button mat-menu-item routerLink="/book">BOOK DEMO</button>-->
+            <!-- <button mat-menu-item routerLink="/book">BOOK DEMO</button> -->
         </mat-menu>
 
         <button mat-raised-button class="btn btn-primary btn-margin" *ngIf="!auth.loggedIn" (click)="auth.login()">

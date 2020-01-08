@@ -41,6 +41,11 @@ export class NewMovieComponent implements OnInit, OnDestroy {
         private router: Router) { }
 
     ngOnInit() {
+
+
+        // Connect to ws
+        this.socketService.connect('website');
+
         this._anythingSub = this.socketService.anything.subscribe(item => {
             console.log('anything sub', item)
         });

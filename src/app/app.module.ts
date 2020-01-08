@@ -38,6 +38,7 @@ import { LaserzComponent } from './laserz/laserz.component';
 import { HtwComponent } from './htw/htw.component';
 import { WelcomeComponent } from './welcome/welcome.component';
 import { ProfileComponent } from './profile/profile.component';
+import { Mp4ConverterComponent } from './mp4-converter/mp4-converter.component';
 
 const config: SocketIoConfig = { url: environment.ioUrl, options: { autoConnect: false } };
 
@@ -66,7 +67,8 @@ const config: SocketIoConfig = { url: environment.ioUrl, options: { autoConnect:
         LaserzComponent,
         HtwComponent,
         WelcomeComponent,
-        ProfileComponent
+        ProfileComponent,
+        Mp4ConverterComponent
     ],
     imports: [
         BrowserModule,

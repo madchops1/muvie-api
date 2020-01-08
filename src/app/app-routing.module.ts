@@ -3,7 +3,7 @@ import { Routes, RouterModule } from '@angular/router';
 
 // import { UploadComponent } from './upload/upload.component';
 // import { TestComponent } from './test/test.component';
-// import { NewMovieComponent } from './new-movie/new-movie.component';
+import { NewMovieComponent } from './new-movie/new-movie.component';
 // import { FilterComponent } from './filter/filter.component';
 
 import { VisualzComponent } from './visualz/visualz.component';
@@ -25,6 +25,7 @@ import { LaserzComponent } from './laserz/laserz.component';
 import { WelcomeComponent } from './welcome/welcome.component';
 import { ProfileComponent } from './profile/profile.component';
 import { AuthGuard } from './auth.guard';
+import { Mp4ConverterComponent } from './mp4-converter/mp4-converter.component';
 
 const routes: Routes = [
     { path: '', component: VisualzComponent },
@@ -49,8 +50,9 @@ const routes: Routes = [
         path: 'profile',
         component: ProfileComponent,
         canActivate: [AuthGuard]
-    }
-    // { path: 'movie', component: NewMovieComponent },
+    },
+    { path: 'mp4-converter', component: Mp4ConverterComponent },
+    { path: 'movie', component: NewMovieComponent },
     // { path: 'filter', component: FilterComponent },
     // { path: 'upload', component: UploadComponent },
     // { path: 'test', component: TestComponent }
