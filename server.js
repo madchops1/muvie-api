@@ -9,6 +9,7 @@ const signS3 = require('./api/sign-s3');
 const uploadFile = require('./api/uploadFile');
 const make = require('./api/make');
 const convertToMp4 = require('./api/convertToMp4');
+const extractFrame = require('./api/extractFrame');
 const gifToMp4 = require('./api/gifToMp4');
 //const authSeat = require('./api/authSeat');
 //const axios = require('axios');
@@ -408,6 +409,19 @@ app.post("/api/gifToMp4", async function (req, res) {
         res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS');
         res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization, Content-Length, X-Requested-With');
         res.status(200).json(convertGif);
+    } catch (err) {
+        handleError(res, err, 'nope');
+    }
+});
+
+app.post("/api/extractFrame", async function (req, res) {
+    try {
+        console.log('calling api extractFrame');
+        let getFrame = await extractFrame.ExtractFrame(req);
+        res.header('Access-Control-Allow-Origin', '*');
+        res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS');
+        res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization, Content-Length, X-Requested-With');
+        res.status(200).json(getFrame);
     } catch (err) {
         handleError(res, err, 'nope');
     }
