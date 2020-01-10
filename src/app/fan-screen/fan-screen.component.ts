@@ -68,13 +68,16 @@ export class FanScreenComponent implements OnInit {
 
         // Get crowdscreen data from ws
         this._getCrowdScreen = this.socketService.getCrowdScreen.subscribe(data => {
-            
-            if(!this.takingPic) {
-                console.log('receiving getCrowdScreen', data);
-                this.crowdScreenBackgroundColor = data.backgroundColor;
-                this.crowdScreenFunction = data.function;
-                this.crowdScreenIntensity = data.intensity;
-                this.torch = data.torch;
+            console.log('receiving getCrowdScreen', data);
+
+            if (!this.takingPic) {
+
+                if (data.function) {
+                    this.crowdScreenBackgroundColor = data.backgroundColor;
+                    this.crowdScreenFunction = data.function;
+                    this.crowdScreenIntensity = data.intensity;
+                    this.torch = data.torch;
+                }
 
                 this.applyConstraints();
 
@@ -99,7 +102,7 @@ export class FanScreenComponent implements OnInit {
                         this.applyConstraints();
                     }, intervalTime);
                 }
-                this.setCamera('environment');
+                //this.setCamera('environment');
             }
         });
         this.refreshCrowdScreen();
@@ -187,6 +190,7 @@ export class FanScreenComponent implements OnInit {
 
         setTimeout(() => {
             this.video.srcObject = this.stream;// = window.URL.createObjectURL(stream);
+            //this.video.context
             this.video.onloadeddata = () => {
                 //console.log('Video data loaded');
                 //console.log(this.video.videoWidth, this.video.videoHeight);
@@ -194,6 +198,8 @@ export class FanScreenComponent implements OnInit {
                 this.canvas.width = this.video.videoWidth;
                 this.canvas.height = this.video.videoHeight;
                 this.context = this.canvas.getContext('2d');
+                //this.context.translate(this.video.videoWidth, 0);
+                //this.context.scale(-1, 1);
             };
 
             this.video.play();

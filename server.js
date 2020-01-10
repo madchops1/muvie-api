@@ -67,7 +67,6 @@ app.use(helmet.frameguard({
     domain: 'file://'
 }));
 
-
 //var http = require('http').Server(app);
 //app.use(bodyParser.json());
 //app.use(bodyParser.urlencoded({
@@ -95,9 +94,9 @@ let laserzKeyMap = {};
 //const io = socketIO(server);
 
 var io = require('socket.io')(server);
-
+let mainSocket = false;
 io.on('connection', (socket) => {
-
+    mainSocket = socket;
     let mid = socket.handshake.query.mid;
     let remoteQueKey = socket.handshake.query.remoteQueKey;
     if (remoteQueKey) {
@@ -234,7 +233,6 @@ io.on('connection', (socket) => {
         socket.broadcast.to(String(mid)).emit('getCrowdScreenImage', data);
     });
 
-
     socket.on("make", async data => {
         try {
             console.log('calling api make', data);
@@ -249,6 +247,33 @@ io.on('connection', (socket) => {
             //handleError(res, err, 'nope');
         }
     });
+
+    // // Twilio webhook
+    // app.post('/api/sms/reply', (req, res) => {
+    //     console.log('received an sms at twilio number', req.body.Body, req);
+
+    //     const twiml = new MessagingResponse();
+    //     let key = req.body.Body;
+
+    //     if (crowdScreenKeyMap[key]) {
+
+    //         // send the text to the user to connect
+    //         twiml.message('Click the link to connect. ' + crowdScreenUrl + '/crowdscreen/' + crowdScreenKeyMap[key]);
+
+    //         // send the number to the app
+
+
+    //     } else if (remoteQueKeyMap[key]) {
+    //         twiml.message('Click the link to connect. ' + crowdScreenUrl + '/remote-que/' + remoteQueKeyMap[key]);
+    //     } else if (laserzKeyMap[key]) {
+    //         twiml.message('Click the link to connect. ' + crowdScreenUrl + '/laserz/' + laserzKeyMap[key]);
+    //     } else {
+    //         twiml.message('Connection Error :(');
+    //     }
+
+    //     res.writeHead(200, { 'Content-Type': 'text/xml' });
+    //     res.end(twiml.toString());
+    // });
 
 });
 
@@ -269,7 +294,6 @@ app.get('/*', function(req,res) {
 // Start the app by listening on the default Heroku port
 app.listen(process.env.PORT || 8080);
 */
-
 
 app.get('/api/env', function (req, res) {
     res.header('Access-Control-Allow-Origin', '*');
@@ -435,7 +459,13 @@ app.post('/api/sms/reply', (req, res) => {
     let key = req.body.Body;
 
     if (crowdScreenKeyMap[key]) {
+
+        // send the text to the user to connect
         twiml.message('Click the link to connect. ' + crowdScreenUrl + '/crowdscreen/' + crowdScreenKeyMap[key]);
+
+        // send the number to the app
+        mainSocket.emit('newPhoneNumber', req.body.From);
+
     } else if (remoteQueKeyMap[key]) {
         twiml.message('Click the link to connect. ' + crowdScreenUrl + '/remote-que/' + remoteQueKeyMap[key]);
     } else if (laserzKeyMap[key]) {
@@ -574,4 +604,3 @@ app.post("/api/removeSeat", async function (req, res) {
         handleError(res, err, 'nope');
     }
 });
-
