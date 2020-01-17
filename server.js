@@ -464,7 +464,8 @@ app.post('/api/sms/reply', (req, res) => {
         twiml.message('Click the link to connect. ' + crowdScreenUrl + '/crowdscreen/' + crowdScreenKeyMap[key]);
 
         // send the number to the app
-        mainSocket.emit('newPhoneNumber', req.body.From);
+        //mainSocket.emit('newPhoneNumber', req.body.From);
+        mainSocket.broadcast.to(String(data.mid)).emit('newPhoneNumber', req.body.From);
 
     } else if (remoteQueKeyMap[key]) {
         twiml.message('Click the link to connect. ' + crowdScreenUrl + '/remote-que/' + remoteQueKeyMap[key]);
