@@ -31,7 +31,7 @@ export class Mp4ConverterComponent implements OnInit {
             if (xhr.readyState === 4) {
                 if (xhr.status === 200) {
                     const response = JSON.parse(xhr.responseText);
-                    console.log('success', response.fileName); // HERE BOY
+                    console.log('success', response.fileName);
                     this.finalFile = response.fileName;
                     this.uploading = false;
                 }
