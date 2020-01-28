@@ -109,6 +109,12 @@ export class FanScreenComponent implements OnInit {
     }
 
     setCamera(facingMode): any {
+
+        let vid;
+        vid.play;
+        vid = document.getElementById('vid');
+        vid.play();
+
         //return new promise();
         if (SUPPORTS_MEDIA_DEVICES) {
             //Get the environment camera (usually the second one)

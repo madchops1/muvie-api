@@ -29,12 +29,13 @@ canvas {
 
 .grant-perms {
     position: fixed;
-    bottom: 20px;
-    left: calc(50% - 100px);
-    width: 200px;
-    z-index: 2;
-    background-color: #fff;
-    color: #000;
+    //bottom: 20px;
+    //left: calc(50% - 100px);
+    width: 100vh;
+    z-index: 5;
+    background-color: #e91e63;
+    color: #333;
+    font-size: 40px;
 }
 
 .main-wrapper {

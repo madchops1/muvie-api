@@ -16,7 +16,7 @@ const gifToMp4 = require('./api/gifToMp4');
 const request = require('request');
 const fs = require('fs');
 const AWS = require('aws-sdk');
-const visualzLatest = '1.3.1';
+const visualzLatest = '2.0.0';
 //var enforce = require('express-sslify');
 //console.log('env', process.env.STRIPE_TEST_KEY);
 
@@ -458,6 +458,8 @@ app.post('/api/sms/reply', (req, res) => {
     const twiml = new MessagingResponse();
     let key = req.body.Body;
 
+
+
     if (crowdScreenKeyMap[key]) {
 
         // send the text to the user to connect
@@ -465,7 +467,7 @@ app.post('/api/sms/reply', (req, res) => {
 
         // send the number to the app
         //mainSocket.emit('newPhoneNumber', req.body.From);
-        mainSocket.broadcast.to(String(data.mid)).emit('newPhoneNumber', req.body.From);
+        mainSocket.broadcast.to(String(crowdScreenKeyMap[key])).emit('newPhoneNumber', req.body.From);
 
     } else if (remoteQueKeyMap[key]) {
         twiml.message('Click the link to connect. ' + crowdScreenUrl + '/remote-que/' + remoteQueKeyMap[key]);
