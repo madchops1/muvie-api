@@ -17,6 +17,8 @@ const request = require('request');
 const fs = require('fs');
 const AWS = require('aws-sdk');
 const visualzLatest = '2.0.0';
+const kill = []; // array of versions eg. ['2.0.0']
+const killMsg = 'This version is dead.';
 //var enforce = require('express-sslify');
 //console.log('env', process.env.STRIPE_TEST_KEY);
 
@@ -90,6 +92,7 @@ var server = app.listen(process.env.PORT || 8080, function () {
 let crowdScreenKeyMap = {};
 let remoteQueKeyMap = {};
 let laserzKeyMap = {};
+let phoneListHolder = [];
 
 //const io = socketIO(server);
 
@@ -118,12 +121,15 @@ io.on('connection', (socket) => {
         for (let key in crowdScreenKeyMap) {
             let roomMid = crowdScreenKeyMap[key];
             socket.broadcast.to(String(mid)).emit('ping');
+            //let clients = io.sockets.clients(String(mid)); // all users from room
+            //console.log('CONNECTIONS', mid, clients);
+
         }
 
-        for (let key in laserzKeyMap) {
-            let roomMid = laserzKeyMap[key];
-            socket.broadcast.to(String(mid)).emit('ping');
-        }
+        //for (let key in laserzKeyMap) {
+        //    let roomMid = laserzKeyMap[key];
+        //    socket.broadcast.to(String(mid)).emit('ping');
+        //}
 
     }, 4000);
 
@@ -138,23 +144,23 @@ io.on('connection', (socket) => {
 
     // receive the laserz request from VISUALZ
     // and pass it on to the website
-    socket.on("sendLaserz", async data => {
-        console.log('server received sendLaserz');
-        let laserzKey = data.key;
-        if (laserzKey) {
-            if (!laserzKeyMap[laserzKey]) {
-                laserzKeyMap[laserzKey] = data.mid;
-            }
-        }
-        socket.broadcast.to(String(data.mid)).emit('getLaserz', data);
-    });
+    // socket.on("sendLaserz", async data => {
+    //     console.log('server received sendLaserz');
+    //     let laserzKey = data.key;
+    //     if (laserzKey) {
+    //         if (!laserzKeyMap[laserzKey]) {
+    //             laserzKeyMap[laserzKey] = data.mid;
+    //         }
+    //     }
+    //     socket.broadcast.to(String(data.mid)).emit('getLaserz', data);
+    // });
 
-    // receive a refresh laserz request from the networked device / site
-    // and pass it on to the VISUALZ app.
-    socket.on("refreshLaserz", async data => {
-        console.log('server received refreshLaserz');
-        socket.broadcast.to(String(mid)).emit('refreshLaserzRequest', data);
-    });
+    // // receive a refresh laserz request from the networked device / site
+    // // and pass it on to the VISUALZ app.
+    // socket.on("refreshLaserz", async data => {
+    //     console.log('server received refreshLaserz');
+    //     socket.broadcast.to(String(mid)).emit('refreshLaserzRequest', data);
+    // });
 
     // receive the remote que request from VISUALZ
     // and pass it on to the website
@@ -191,23 +197,43 @@ io.on('connection', (socket) => {
     });
 
     // Get the crowd screen from VISUALZ 
+    // Maps the key to the room mid
     // and send it the website
     socket.on("sendCrowdScreen", async data => {
-        console.log('server received sendCrowdScreen', crowdScreenKeyMap);
+        console.log('server received sendCrowdScreen', crowdScreenKeyMap, data);
         let crowdScreenKey = data.key;
         if (crowdScreenKey) {
             if (!crowdScreenKeyMap[crowdScreenKey]) {
                 crowdScreenKeyMap[crowdScreenKey] = data.mid;
+                phoneListHolder[data.mid] = [];
             }
         }
         socket.broadcast.to(String(mid)).emit('getCrowdScreen', data);
+
+        //let clients = //''io.sockets.clients(String(mid)); // all users from room
+        io.of('/').adapter.clients([String(mid)], (err, clients) => {
+            console.log('CONNECTIONS', mid, clients);
+            socket.broadcast.to(String(mid)).emit('clientCount', clients.length);
+        });
+
     });
 
     // receive a refresh crowd screen request from the web server
     // and pass it on to the VISUALZ APP
     socket.on("refreshCrowdScreen", async data => {
+
         console.log('server received refreshCrowdScreen');
-        socket.broadcast.to(String(mid)).emit('refreshCrowdScreenRequest', data);
+
+        io.of('/').adapter.clients([String(mid)], (err, clients) => {
+            console.log('CONNECTIONS', mid, clients);
+            socket.broadcast.to(String(mid)).emit('refreshCrowdScreenRequest', clients.length);
+        });
+
+        //socket.broadcast.to(String(mid)).emit('refreshCrowdScreenRequest', data);
+
+
+        // let clients = io.sockets.clients(String(mid)); // all users from room
+        // console.log('CONNECTIONS', mid, clients);
     });
 
     // receive an auth request from the remote que 
@@ -313,6 +339,17 @@ app.get('/api/latest', function (req, res) {
     res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization, Content-Length, X-Requested-With');
     //console.log('LATEST', 'DELTA');
     res.status(200).json({ "version": visualzLatest });
+});
+
+app.get('/api/kill', function (req, res) {
+    res.header('Access-Control-Allow-Origin', '*');
+    res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS');
+    res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization, Content-Length, X-Requested-With');
+    //console.log('LATEST', 'ECHO');
+    res.status(200).json({
+        "kill": kill,
+        "killMsg": killMsg
+    });
 });
 
 app.get("/api/sign-s3-visualz", async function (req, res) {
@@ -459,7 +496,7 @@ app.post('/api/sms/reply', (req, res) => {
     let key = req.body.Body;
 
 
-
+    // Crowdscreen connect
     if (crowdScreenKeyMap[key]) {
 
         // send the text to the user to connect
@@ -467,13 +504,23 @@ app.post('/api/sms/reply', (req, res) => {
 
         // send the number to the app
         //mainSocket.emit('newPhoneNumber', req.body.From);
+        //phoneListHolder[String(crowdScreenKeyMap[key])].push = req.body.From;
         mainSocket.broadcast.to(String(crowdScreenKeyMap[key])).emit('newPhoneNumber', req.body.From);
 
-    } else if (remoteQueKeyMap[key]) {
+    }
+
+    // Remote Connect
+    else if (remoteQueKeyMap[key]) {
         twiml.message('Click the link to connect. ' + crowdScreenUrl + '/remote-que/' + remoteQueKeyMap[key]);
-    } else if (laserzKeyMap[key]) {
-        twiml.message('Click the link to connect. ' + crowdScreenUrl + '/laserz/' + laserzKeyMap[key]);
-    } else {
+    }
+
+    // Laserz
+    // else if (laserzKeyMap[key]) {
+    //     twiml.message('Click the link to connect. ' + crowdScreenUrl + '/laserz/' + laserzKeyMap[key]);
+    // } 
+
+    // Error
+    else {
         twiml.message('Connection Error :(');
     }
 

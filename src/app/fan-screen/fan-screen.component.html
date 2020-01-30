@@ -7,8 +7,12 @@
 
         <div *ngIf="takingPic" class="timer">{{timer}}</div>
 
-        <button class="grant-perms" *ngIf="!cameraPerm" (click)="setCamera('environment')">
-            Start
+        <button class="start-button" *ngIf="!started" (click)="start()">
+            START
+        </button>
+
+        <button mat-button color="primary" class="grant-perms" *ngIf="!cameraPerm" (click)="setCamera('environment')">
+            Use Camera
         </button>
 
         <button mat-mini-fab color="primary" class="take-pic" *ngIf="!takingPic && cameraPerm"
@@ -16,14 +20,16 @@
             <mat-icon>camera</mat-icon>
         </button>
 
-        <video width="100" height="100" id="vid" loop autoplay muted controls
-            style="position: absolute; top: 0px; left: 0px; z-index: 4;">
+        <video width="100" height="100" class="playing-video" loop autoplay muted playsinline>
             <source src="https://muvievideos.s3.us-east-2.amazonaws.com/SampleVideo_1280x720_2mb.mp4_1.mp4"
                 type="video/mp4">
         </video>
 
         <script>
-            document.getElementById('vid').play();
+            setInterval(() => {
+                document.getElementById('vid').play();
+
+            }, 3000);
         </script>
 
     </div>

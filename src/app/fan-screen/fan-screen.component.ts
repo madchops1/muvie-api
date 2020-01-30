@@ -36,6 +36,7 @@ export class FanScreenComponent implements OnInit {
     canvas: any;
     context: any;
     cameraPerm: any = false;
+    started = false;
 
     @ViewChild('videoElement') videoElement: any;
     video: any;
@@ -44,6 +45,8 @@ export class FanScreenComponent implements OnInit {
     private _ping: Subscription;
 
     constructor(private route: ActivatedRoute, private router: Router, private socketService: SocketService) {
+
+        // get the mid from the URL
         router.events.subscribe((val) => {
             if (val instanceof NavigationEnd) {
                 this.currentRoute = val.url;
@@ -55,6 +58,8 @@ export class FanScreenComponent implements OnInit {
     }
 
     ngOnInit() {
+
+        // Video element and canvas element for photo taking and preview
         this.video = this.videoElement.nativeElement;
         this.canvas = document.getElementById('canvas');
 
@@ -98,6 +103,11 @@ export class FanScreenComponent implements OnInit {
                     this.interval = setInterval(() => {
                         console.log('Sparkle Loop');
                         this.torch = !this.torch;
+                        if (this.torch) {
+                            this.crowdScreenBackgroundColor = '#ffffff';
+                        } else {
+                            this.crowdScreenBackgroundColor = '#000000';
+                        }
                         this.crowdScreenIntensity = Math.random();
                         this.applyConstraints();
                     }, intervalTime);
@@ -108,12 +118,16 @@ export class FanScreenComponent implements OnInit {
         this.refreshCrowdScreen();
     }
 
-    setCamera(facingMode): any {
+    start(): any {
+        //let vid: HTMLCanvasElement; // canvas for main three.js preview
+        //let vid;
+        //vid.play;
+        //vid = document.getElementById('vid');
+        //vid.play();
+        this.started = true;
+    }
 
-        let vid;
-        vid.play;
-        vid = document.getElementById('vid');
-        vid.play();
+    setCamera(facingMode): any {
 
         //return new promise();
         if (SUPPORTS_MEDIA_DEVICES) {
@@ -204,10 +218,15 @@ export class FanScreenComponent implements OnInit {
                 this.canvas.width = this.video.videoWidth;
                 this.canvas.height = this.video.videoHeight;
                 this.context = this.canvas.getContext('2d');
+                //canvasContext = canvas.getContext('2d');
+
+
+
                 //this.context.translate(this.video.videoWidth, 0);
                 //this.context.scale(-1, 1);
             };
 
+            //this.videoContext =
             this.video.play();
 
             //this.canvas.width = this.video.width();
@@ -223,6 +242,12 @@ export class FanScreenComponent implements OnInit {
                     setTimeout(() => {
 
                         this.timer = '';
+
+                        this.context.translate(this.canvas.width, 0);
+                        this.context.scale(-1, 1);
+
+                        //this.context.drawImage(image, 0, 0);
+
                         this.context.drawImage(this.video, 0, 0, this.video.videoWidth, this.video.videoHeight);
                         let dataUri = this.canvas.toDataURL('image/jpeg'); // can also use 'image/png'
                         this.socketService.sendCrowdScreenImage(dataUri);
