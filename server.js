@@ -16,9 +16,95 @@ const gifToMp4 = require('./api/gifToMp4');
 const request = require('request');
 const fs = require('fs');
 const AWS = require('aws-sdk');
+const Async = require('async');
+
+const fetch = require('node-fetch');
+global.fetch = fetch;
+
+const Unsplash = require('unsplash-js').default;
+const toJson = require('unsplash-js').toJson;
+
 const visualzLatest = '2.0.0';
 const kill = []; // array of versions eg. ['2.0.0']
 const killMsg = 'This version is dead.';
+
+const baseUrl = 'https://visualz-1.s3.us-east-2.amazonaws.com';
+const videoLibrary = [
+    // Beeple
+    {
+        name: 'beeple',
+        link: 'http://beeple-crap.com',
+        imageUrl: 'https://static.wixstatic.com/media/a64726_ce7a64e6ade34b549d0b3d06963bead9~mv2.jpg/v1/fill/w_263,h_292,al_c,q_80,usm_0.66_1.00_0.01/a64726_ce7a64e6ade34b549d0b3d06963bead9~mv2.webp',
+        collections: [
+            {
+                name: 'manifest',
+                downloadUrl: '',
+                videos: []
+            },
+            {
+                name: 'ubersketch',
+                downloadUrl: '',
+                videos: []
+            },
+            // {
+            //     name: 'resolume',
+            //     downloadUrl: '',
+            //     videos: []
+            // },
+            // {
+            //     name: 'four-color-process',
+            //     downloadUrl: '',
+            //     videos: []
+            // },
+            // {
+            //     name: 'brainfeeder-vol1',
+            //     downloadUrl: '',
+            //     videos: []
+            // },
+            // {
+            //     name: 'other',
+            //     downloadUrl: '',
+            //     videos: []
+            // }
+        ]
+    },
+    // // Catmac
+    // {
+    //     name: 'Catmac',
+    //     link: 'https://vimeo.com/channels/vjfree',
+    //     collections: [
+    //         {
+    //             name: 'All Videos',
+    //             videos: []
+    //         }
+    //     ]
+    // },
+    // // Switzon
+    // {
+    //     name: 'Switzon S. Wigfall III',
+    //     collections: [
+    //         {
+    //             name: 'Supreme Cyphers vol.1',
+    //             videos: []
+    //         },
+    //         {
+    //             name: 'Supreme Cyphers vol.2',
+    //             menu: []
+    //         }
+    //     ]
+    // },
+    // // RPTV
+    // {
+    //     name: 'RPTV',
+    //     link: '',
+    //     collections: [
+    //         {
+
+    //         }
+    //     ]
+    // }
+];                          // video library holder
+
 //var enforce = require('express-sslify');
 //console.log('env', process.env.STRIPE_TEST_KEY);
 
@@ -28,6 +114,12 @@ dotenv.config();
 
 console.log('env', process.env);
 //console.log('Environment', process.env.ENVIRONMENT);
+
+// Unsplash
+const unsplash = new Unsplash({
+    accessKey: process.env.UNSPLASH_ACCESS_KEY,
+    secretKey: process.env.UNSPLASH_SECRET_KEY
+});
 
 // Twilio
 const accountSid = process.env.TWILIO_SID;
@@ -54,6 +146,24 @@ const s3 = new AWS.S3({
     accessKeyId: process.env.AWS_ACCESS_KEY,
     secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY
 });
+
+// List directories in a directory
+function listDirectories(directory = 'video-library/') {
+    return new Promise((resolve, reject) => {
+        const s3params = {
+            Bucket: 'visualz-1',
+            MaxKeys: 20,
+            Delimiter: '/',
+            Prefix: directory
+        };
+        s3.listObjectsV2(s3params, (err, data) => {
+            if (err) {
+                reject(err);
+            }
+            resolve(data);
+        });
+    });
+}
 
 const app = express();
 
@@ -321,6 +431,7 @@ app.get('/*', function(req,res) {
 app.listen(process.env.PORT || 8080);
 */
 
+// Get the environment
 app.get('/api/env', function (req, res) {
     res.header('Access-Control-Allow-Origin', '*');
     res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS');
@@ -333,6 +444,7 @@ app.get('/api/env', function (req, res) {
     res.json({ AUTH0_CLIENT_ID, AUTH0_DOMAIN });
 });
 
+// Get the latest version
 app.get('/api/latest', function (req, res) {
     res.header('Access-Control-Allow-Origin', '*');
     res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS');
@@ -341,6 +453,7 @@ app.get('/api/latest', function (req, res) {
     res.status(200).json({ "version": visualzLatest });
 });
 
+// Get the kill command
 app.get('/api/kill', function (req, res) {
     res.header('Access-Control-Allow-Origin', '*');
     res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS');
@@ -352,6 +465,66 @@ app.get('/api/kill', function (req, res) {
     });
 });
 
+// Get the video library
+app.get('/api/videos', function (req, res) {
+    res.header('Access-Control-Allow-Origin', '*');
+    res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS');
+    res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization, Content-Length, X-Requested-With');
+
+    videoLibrary.forEach((artist) => {
+        artist.collections.forEach((collection) => {
+            let path = 'video-library/' + artist.name + '/' + collection.name + '/'
+            listDirectories(path).then((contents) => {
+                console.log('CHUCKY', contents);
+                contents.Contents.shift();
+                collection.videos = contents.Contents;
+            });
+        });
+    });
+
+    setTimeout(() => {
+        res.status(200).json(videoLibrary);
+    }, 2000);
+});
+
+// Get photos from unsplash
+app.get('/api/photos', function (req, res) {
+    res.header('Access-Control-Allow-Origin', '*');
+    res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS');
+    res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization, Content-Length, X-Requested-With');
+
+    console.log('REQ', req.query.tag);
+
+    unsplash.photos.getRandomPhoto(String(req.query.tag))
+        .then(toJson)
+        .then(json => {
+            res.write(JSON.stringify(json));
+            res.end();
+        })
+        .catch(err => {
+            console.log('err', err);
+        });
+});
+
+// // Get directories
+// app.get('/api/dirs', function (req, res) {
+//     res.header('Access-Control-Allow-Origin', '*');
+//     res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS');
+//     res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization, Content-Length, X-Requested-With');
+
+//     let dir;
+//     if (req.query.dir) {
+//         dir = req.query.dir;
+//     } else {
+//         dir = 'video-library/'
+//     }
+
+//     listDirectories(dir).then((dirs) => {
+//         res.status(200).json(dirs);
+//     });
+// })
+
+// Sign s3 visualz
 app.get("/api/sign-s3-visualz", async function (req, res) {
     console.log('upload from visualz');
     try {
@@ -363,6 +536,7 @@ app.get("/api/sign-s3-visualz", async function (req, res) {
     }
 });
 
+// Sign s3 muvie
 app.get("/api/sign-s3", async function (req, res) {
     try {
         let sign = await signS3.signS3(req);
@@ -373,6 +547,7 @@ app.get("/api/sign-s3", async function (req, res) {
     }
 });
 
+// Website Entrypoint
 app.get("*", (req, res) => {
     //console.log('ALPHA');
     res.sendFile(__dirname + '/dist/muvie/index.html');	//    res.sendFile(__dirname + '/dist/muvie/index.html');
