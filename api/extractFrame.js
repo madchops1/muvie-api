@@ -13,30 +13,28 @@ const extractFrame = require('ffmpeg-extract-frame');
 
 let getFrame = (req) => {
     return new Promise(async function (resolve, reject) {
-
-        console.log('ALPHA', req.body);
-
+        //console.log('ALPHA', req.body);
         let filePath = req.body['file-name'];
         let fileName = path.basename(filePath);
         let setName = req.body['set-name'];
         let mid = req.body['mid'];
         let outputFile = 'frame_' + fileName.replace("mp4", "jpg");
         S3_BUCKET = req.body['bucket'];
-
-        console.log('BETA', filePath, fileName, setName, mid);
+        //console.log('BETA', filePath, fileName, setName, mid);
         try {
-
             await extractFrame({
-                input: filePath,
+                input: encodeURI(filePath),
                 output: 'src/assets/' + outputFile,
                 offset: 1000 // seek offset in milliseconds
             });
-
+            console.log('BETA', outputFile);
             resolve(outputFile);
-
-        } catch (err) {
+            return;
+        }
+        catch (err) {
             console.log('err', err);
             reject(err);
+            return;
         }
         // ffmpeg(filePath)
         //     .inputFormat('gif')
@@ -53,9 +51,7 @@ let getFrame = (req) => {
         //         console.log('resolve conversion', outputFile);
         //         resolve(outputFile);
         //     });
-
-        console.log('BETA', outputFile);
-
+        //
     });
 }
 
@@ -99,12 +95,14 @@ let ExtractFrame = (req) => {
         try {
 
             async.series([
+                // Get the frame from the file
                 function (callback) {
                     getFrame(req).then(function (res) {
                         filePath = res;
                         callback(null, 'success');
                     });
                 },
+                // Copy the frame image to s3
                 function (callback) {
                     console.log('ECHO', filePath);
                     let dest;

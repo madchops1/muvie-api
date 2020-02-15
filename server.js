@@ -46,6 +46,11 @@ const videoLibrary = [
                 downloadUrl: '',
                 videos: []
             },
+            {
+                name: 'brainfeeder',
+                downloadUrl: '',
+                videos: []
+            }
             // {
             //     name: 'resolume',
             //     downloadUrl: '',
@@ -57,17 +62,29 @@ const videoLibrary = [
             //     videos: []
             // },
             // {
-            //     name: 'brainfeeder-vol1',
-            //     downloadUrl: '',
-            //     videos: []
-            // },
-            // {
             //     name: 'other',
             //     downloadUrl: '',
             //     videos: []
             // }
         ]
     },
+    {
+        name: 'random clips',
+        link: '',
+        imageUrl: '',
+        collections: [
+            {
+                name: 'other',
+                downloadUrl: '',
+                videos: []
+            },
+            {
+                name: 'soul train',
+                downloadUrl: '',
+                videos: []
+            }
+        ]
+    }
     // // Catmac
     // {
     //     name: 'Catmac',
