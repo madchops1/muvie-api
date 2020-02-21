@@ -24,6 +24,8 @@ global.fetch = fetch;
 const Unsplash = require('unsplash-js').default;
 const toJson = require('unsplash-js').toJson;
 
+const Pexels = require('node-pexels').Client;
+
 const visualzLatest = '2.0.0';
 const kill = []; // array of versions eg. ['2.0.0']
 const killMsg = 'This version is dead.';
@@ -137,6 +139,8 @@ const unsplash = new Unsplash({
     accessKey: process.env.UNSPLASH_ACCESS_KEY,
     secretKey: process.env.UNSPLASH_SECRET_KEY
 });
+
+const pexels = new Pexels(process.env.PEXELS_API_KEY);
 
 // Twilio
 const accountSid = process.env.TWILIO_SID;
@@ -512,15 +516,31 @@ app.get('/api/photos', function (req, res) {
 
     console.log('REQ', req.query.tag);
 
-    unsplash.photos.getRandomPhoto(String(req.query.tag))
-        .then(toJson)
-        .then(json => {
-            res.write(JSON.stringify(json));
+    // PEXELS API
+    pexels.search(req.query.tag, 1, Math.floor(Math.random() * 1000) + 1)
+        .then((results) => {
+            if (results.photos.length == 0) {
+                handleError(res, err, 'nope');
+            }
+            res.write(JSON.stringify(results.photos[0]));
             res.end();
         })
-        .catch(err => {
-            console.log('err', err);
+        .catch((error) => {
+            // Something bad happened
+            console.error(error);
         });
+
+    // UNSPLASH API
+    // unsplash.photos.getRandomPhoto(String(req.query.tag))
+    //     .then(toJson)
+    //     .then(json => {
+    //         res.write(JSON.stringify(json));
+    //         res.end();
+    //     })
+    //     .catch(err => {
+    //         console.log('err', err);
+    //     });
+
 });
 
 // // Get directories
