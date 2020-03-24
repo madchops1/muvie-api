@@ -257,11 +257,6 @@ io.on('connection', (socket) => {
 
         }
 
-        //for (let key in laserzKeyMap) {
-        //    let roomMid = laserzKeyMap[key];
-        //    socket.broadcast.to(String(mid)).emit('ping');
-        //}
-
     }, 4000);
 
     socket.on("pong", () => {
@@ -273,25 +268,10 @@ io.on('connection', (socket) => {
         socket.emit("testclient", value);
     });
 
-    // receive the laserz request from VISUALZ
-    // and pass it on to the website
-    // socket.on("sendLaserz", async data => {
-    //     console.log('server received sendLaserz');
-    //     let laserzKey = data.key;
-    //     if (laserzKey) {
-    //         if (!laserzKeyMap[laserzKey]) {
-    //             laserzKeyMap[laserzKey] = data.mid;
-    //         }
-    //     }
-    //     socket.broadcast.to(String(data.mid)).emit('getLaserz', data);
-    // });
-
-    // // receive a refresh laserz request from the networked device / site
-    // // and pass it on to the VISUALZ app.
-    // socket.on("refreshLaserz", async data => {
-    //     console.log('server received refreshLaserz');
-    //     socket.broadcast.to(String(mid)).emit('refreshLaserzRequest', data);
-    // });
+    socket.on("peerId", value => {
+        console.log('server received peerId', value);
+        socket.broadcast.to(String(value.mid)).emit('peerIdUpdate', value);
+    });
 
     // receive the remote que request from VISUALZ
     // and pass it on to the website
@@ -520,13 +500,17 @@ app.get('/api/photos', function (req, res) {
     pexels.search(req.query.tag, 1, Math.floor(Math.random() * 1000) + 1)
         .then((results) => {
             if (results.photos.length == 0) {
-                handleError(res, err, 'nope');
+
+                throw 'err';
+                //handleError(res, '', 'nope resultos');
+                //return;
             }
             res.write(JSON.stringify(results.photos[0]));
             res.end();
         })
         .catch((error) => {
             // Something bad happened
+            handleError(res, error, 'nope');
             console.error(error);
         });
 

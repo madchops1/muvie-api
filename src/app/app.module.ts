@@ -39,6 +39,8 @@ import { HtwComponent } from './htw/htw.component';
 import { WelcomeComponent } from './welcome/welcome.component';
 import { ProfileComponent } from './profile/profile.component';
 import { Mp4ConverterComponent } from './mp4-converter/mp4-converter.component';
+import { RemoteScreenComponent } from './remote-screen/remote-screen.component';
+import { LiveStreamComponent } from './live-stream/live-stream.component';
 
 const config: SocketIoConfig = { url: environment.ioUrl, options: { autoConnect: false } };
 
@@ -68,7 +70,9 @@ const config: SocketIoConfig = { url: environment.ioUrl, options: { autoConnect:
         HtwComponent,
         WelcomeComponent,
         ProfileComponent,
-        Mp4ConverterComponent
+        Mp4ConverterComponent,
+        RemoteScreenComponent,
+        LiveStreamComponent
     ],
     imports: [
         BrowserModule,

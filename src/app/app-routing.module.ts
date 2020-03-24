@@ -24,6 +24,8 @@ import { RemoteQueComponent } from './remote-que/remote-que.component';
 import { LaserzComponent } from './laserz/laserz.component';
 import { WelcomeComponent } from './welcome/welcome.component';
 import { ProfileComponent } from './profile/profile.component';
+import { RemoteScreenComponent } from './remote-screen/remote-screen.component';
+import { LiveStreamComponent } from './live-stream/live-stream.component';
 import { AuthGuard } from './auth.guard';
 import { Mp4ConverterComponent } from './mp4-converter/mp4-converter.component';
 
@@ -53,6 +55,9 @@ const routes: Routes = [
     },
     { path: 'mp4-converter', component: Mp4ConverterComponent },
     { path: 'movie', component: NewMovieComponent },
+    { path: 'remote-screen/:pid/:mid', component: RemoteScreenComponent },
+    { path: 'live/:key', component: LiveStreamComponent }
+
     // { path: 'filter', component: FilterComponent },
     // { path: 'upload', component: UploadComponent },
     // { path: 'test', component: TestComponent }

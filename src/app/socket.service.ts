@@ -74,4 +74,9 @@ export class SocketService {
         console.log('send crowdscreen image', dataUri);
         this.socket.emit('sendCrowdScreenImage', dataUri);
     }
+
+    peerId(data): any {
+        console.log('send peerId to api socket', data);
+        this.socket.emit('peerId', data)
+    }
 }
