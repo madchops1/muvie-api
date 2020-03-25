@@ -22,12 +22,11 @@ export class AppComponent {
         //    console.log('userProfile', this.userProfile);
         //}
 
-        // Handle mobile visualz pages
+        // Removes the header, etc.....
         router.events.subscribe((val) => {
-            // see also 
             if (val instanceof NavigationEnd) {
-                console.log('route', val);
                 this.currentRoute = val.url;
+                console.log('route', this.currentRoute);
                 if (
                     this.currentRoute.includes('welcome') ||
                     this.currentRoute.includes('crowdscreen') ||

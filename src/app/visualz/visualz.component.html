@@ -1,8 +1,8 @@
 <div class="wrapper pink">
     <div class="main">
-        <h1>VISUALZ for DJs</h1>
+        <h1>Realtime Audio Reactive Graphics</h1>
         <h2>
-            Free cutting edge realtime audio-reactive visual software for DJs, VJs, Artists, and Venues.
+            Free visual software for live events &amp; streams. Hey DJs, VJs, Artists, and Venues.
         </h2>
         <a routerLink="/download" class="download">DOWNLOAD FREE</a>
     </div>
@@ -35,9 +35,8 @@
             </div>
 
             <div *ngIf="deviceInfo.os != 'Mac'" class="clearfix">
-                <a href="https://visualz-1.s3.us-east-2.amazonaws.com/VISUALZ-installer.rar" target="_blank"
-                    mat-raised-button (click)="downloadWindows()" class="pink button">
-                    Download Free
+                <a disabled="disabled" mat-raised-button class="pink button">
+                    Currently Unavailable
                 </a>
                 <img class="windows" src="../../assets/images/windows.png" />
             </div>

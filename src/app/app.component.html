@@ -1,3 +1,6 @@
+<div *ngIf="!interactive" class="msg">
+    VISUALZ 2.0.0 is coming in April with more features, fx, screens, &amp; streams!
+</div>
 <header *ngIf="!interactive">
     <a routerLink="/" class="logo">VISUALZ</a>
     <div class="nav">
@@ -7,33 +10,34 @@
         <!--<a routerLink="/filter">Filter</a>-->
 
         <button mat-button routerLink="/">HOME</button>
-        <!-- <button mat-button routerLink="/about">ABOUT</button> -->
+
         <button mat-button routerLink="/download">DOWNLOAD FREE</button>
+
         <!-- <button mat-button routerLink="/prices">PRICES</button> -->
 
-        <button mat-button [matMenuTriggerFor]="menu2">MARKET</button>
+        <!-- <button mat-button [matMenuTriggerFor]="menu2">MARKET</button>
         <mat-menu #menu2="matMenu">
             <button mat-menu-item routerLink="/xchange">BROWSE SETS &amp; TRACKS</button>
             <button mat-menu-item routerLink="/create">CREATE &amp; PUBLISH</button>
-            <!-- <button mat-menu-item routerLink="/contact">CONTACT</button> -->
-            <!-- <button mat-menu-item routerLink="/book">BOOK DEMO</button> -->
-        </mat-menu>
+        </mat-menu> -->
 
+        <!-- 
         <button mat-button [matMenuTriggerFor]="menu1">ABOUT</button>
         <mat-menu #menu1="matMenu">
             <button mat-menu-item routerLink="/about">ABOUT</button>
             <button mat-menu-item routerLink="/events">EVENTS</button>
             <button mat-menu-item routerLink="/investors">INVESTORS</button>
-            <!-- <button mat-menu-item routerLink="/contact">CONTACT</button> -->
-            <!-- <button mat-menu-item routerLink="/book">BOOK DEMO</button> -->
-        </mat-menu>
+        </mat-menu> -->
+
         <!--
         <a routerLink="/support">SUPPORT</a>
         <a routerLink="/how-it-works">HOW IT WORKS</a>
         -->
+        <button mat-button routerLink="/start">LIVE STREAM (NEW)</button>
+
         <button mat-button [matMenuTriggerFor]="menu">HELP</button>
         <mat-menu #menu="matMenu">
-            <button mat-menu-item routerLink="/how-it-works">HELP</button>
+            <button mat-menu-item routerLink="/how-it-works">START HERE</button>
             <button mat-menu-item routerLink="/resources">RESOURCES</button>
             <button mat-menu-item routerLink="/support">COMMUNITY</button>
             <button mat-menu-item [matMenuTriggerFor]="menuT">TOOLS</button>
@@ -41,10 +45,9 @@
                 <button mat-menu-item routerLink="/mp4-converter">GIF TO MP4</button>
                 <!-- <button mat-menu-item routerLink="/movie">MUSIC VIDEO CREATOR</button> -->
             </mat-menu>
-            <!-- <button mat-menu-item routerLink="/contact">CONTACT</button> -->
-            <!-- <button mat-menu-item routerLink="/book">BOOK DEMO</button> -->
         </mat-menu>
 
+        <!-- 
         <button mat-raised-button class="btn btn-primary btn-margin" *ngIf="!auth.loggedIn" (click)="auth.login()">
             LOG IN
         </button>
@@ -55,8 +58,7 @@
         <mat-menu #menu3="matMenu">
             <button mat-menu-item routerLink="/profile">ACCOUNT</button>
             <button mat-menu-item (click)="auth.logout()">LOGOUT</button>
-        </mat-menu>
-
+        </mat-menu> -->
 
     </div>
     <div class="clearfix"></div>

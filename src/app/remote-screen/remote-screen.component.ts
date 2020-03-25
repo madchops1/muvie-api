@@ -103,7 +103,7 @@ export class RemoteScreenComponent implements OnInit {
 
         // Then await for a call
         this.peer.on('call', (call) => {
-            call.answer(); // answer the call, send the microphone audio back
+            call.answer(); // answer the call, send the microphone audio
             call.on('stream', function (stream) {
                 this.video = document.getElementById('externalVideo');
                 this.video.srcObject = stream;

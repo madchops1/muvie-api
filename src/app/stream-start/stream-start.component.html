@@ -1,0 +1,35 @@
+<div class="content-wrapper normal">
+    <div class="content-inner-wrapper">
+        <h1 class="center">Start or Join a Live Stream</h1>
+
+
+        <form>
+
+            <div class="center">
+                <mat-form-field class="example-full-width">
+                    <mat-label>Nickame or Code</mat-label>
+                    <input matInput placeholder="Ex. sam-white-set" ([ngModel])="code" value="">
+                </mat-form-field>
+            </div>
+
+            <div class="clearfix"></div>
+
+            <div class="bordered one">
+                <a (click)="start()" mat-raised-button class="pink button">
+                    Start
+                </a>
+            </div>
+
+            <div class="bordered two">
+                <a (click)="join()" mat-raised-button class="pink button">
+                    Join
+                </a>
+            </div>
+
+        </form>
+
+
+        <br><br><br><br><br><br>
+
+    </div>
+</div>

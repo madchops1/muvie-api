@@ -41,6 +41,7 @@ import { ProfileComponent } from './profile/profile.component';
 import { Mp4ConverterComponent } from './mp4-converter/mp4-converter.component';
 import { RemoteScreenComponent } from './remote-screen/remote-screen.component';
 import { LiveStreamComponent } from './live-stream/live-stream.component';
+import { StreamStartComponent } from './stream-start/stream-start.component';
 
 const config: SocketIoConfig = { url: environment.ioUrl, options: { autoConnect: false } };
 
@@ -72,7 +73,8 @@ const config: SocketIoConfig = { url: environment.ioUrl, options: { autoConnect:
         ProfileComponent,
         Mp4ConverterComponent,
         RemoteScreenComponent,
-        LiveStreamComponent
+        LiveStreamComponent,
+        StreamStartComponent
     ],
     imports: [
         BrowserModule,
