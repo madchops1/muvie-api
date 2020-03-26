@@ -1,3 +1,15 @@
+.buttons {
+    position: absolute;
+    z-index: 2;
+    top: 0px;
+    left: 0px;
+
+    button {
+        float: left;
+        margin-top: 10px;
+        margin-left: 10px;
+    }
+}
 
 #waveform {
     height: 64px;
@@ -15,6 +27,12 @@
     }
 }
 
+mat-toolbar {
+    position: absolute;
+    z-index: 2;
+    bottom: 100px;
+}
+
 .renderer-container {
     position: absolute;
     top: 0px;
@@ -26,11 +44,6 @@
     // display: flex;
     // justify-content: center;
     // align-items: center;
-}
-
-button {
-    position: absolute;
-    z-index: 2;
 }
 
 .mod-wrapper {
@@ -51,4 +64,17 @@ button {
 gridster .gridster-row, gridster .gridster-column {
     border: 0px !important;
     background: rgba(0,0,0, 0.3);
+}
+
+gridster {
+    background: #333 !important;
+    box-shadow: inset 0px 0px 5px -1px #000000 !important;
+}
+
+.webcam-video {
+    position: absolute;
+    z-index: 2;
+    width: 1px;
+    height: 1px;
+
 }

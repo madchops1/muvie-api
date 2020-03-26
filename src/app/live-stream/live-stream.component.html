@@ -1,4 +1,17 @@
-<button (click)="drawCanvas()">Redraw</button>
+<div class="buttons">
+    <button mat-raised-button ripple color="primary" (click)="drawCanvas()">Refresh</button>
+
+    <!-- <button mat-raised-button ripple color="primary" [matMenuTriggerFor]="menu2">
+        Artist: <strong>{{ videoLibrary[currentBrowseArtist].name | titlecase }}</strong>
+    </button>
+
+    <mat-menu #menu2="matMenu">
+        <button mat-menu-item (click)="currentBrowseArtist = i" *ngFor="let artist of videoLibrary; let i = index">
+            {{ artist.name | titlecase }}
+        </button>
+    </mat-menu> -->
+
+</div>
 
 <!-- Line in waveform -->
 <div id="waveform" #waveform></div>
@@ -11,7 +24,7 @@
     <canvas #rendererCanvas id="renderCanvas" crossorigin="anonymous"></canvas>
 </div>
 
-<!-- <video class="receiver-canvas" id="receiverCanvas" controls autoplay muted></video> -->
+<video class="webcam-video" id="webcamVideo" controls autoplay muted></video>
 
 <!-- Holder for three js, contains video elements for videoTexture, canvas for Text  -->
 <div *ngFor="let module of track.modules; let i = index" [hidden]="currentModule != i" class="raw-video">
@@ -28,6 +41,25 @@
         <canvas id="canvas-{{module.uuid}}"></canvas>
     </div>
 </div>
+
+<mat-toolbar class="pink">
+    <mat-toolbar-row class="main" id="main-toolbar">
+
+        <button title="Add Media" matRipple mat-mini-fab (click)="addModule(0)">
+            <mat-icon aria-label="Add Media">library_add</mat-icon>
+        </button>
+
+        <!-- Play/Pause -->
+        <button title="Make Video React to Audio" matRipple mat-mini-fab *ngIf="!playing" (click)="play()">
+            <mat-icon aria-label="Make Video React to Audio">hearing</mat-icon>
+        </button>
+
+        <button title="Stop Audio Reactivity" matRipple mat-mini-fab *ngIf="playing" (click)="stop()">
+            <mat-icon aria-label="Stop Audio Reactivity">not_interested</mat-icon>
+        </button>
+
+    </mat-toolbar-row>
+</mat-toolbar>
 
 <!-- Main/Basic Modules -->
 <div class="mod-wrapper">

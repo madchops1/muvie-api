@@ -1,5 +1,6 @@
 import { Component, OnInit, NgZone, ViewChild, ViewChildren, ElementRef } from '@angular/core';
 import Peer from 'peerjs';
+import { HttpClient } from '@angular/common/http';
 
 import { GridsterConfig, GridsterItem, DisplayGrid, GridType, GridsterItemComponentInterface } from 'angular-gridster2';
 import { ActivatedRoute, Router, NavigationEnd } from '@angular/router';
@@ -13,6 +14,9 @@ import { UtilityService } from '../utility.service';
 import { environment } from 'src/environments/environment';
 
 import * as THREE from 'three';
+
+import * as uuid from 'uuid/v4';
+
 
 
 THREE.CustomShader = {
@@ -1027,7 +1031,9 @@ interface CanvasElement extends HTMLCanvasElement {
     selector: 'app-live-stream',
     templateUrl: './live-stream.component.html',
     styleUrls: ['./live-stream.component.scss'],
-
+    host: {
+        '(window:resize)': 'onResize($event)'
+    }
 })
 
 export class LiveStreamComponent implements OnInit {
@@ -1073,11 +1079,14 @@ export class LiveStreamComponent implements OnInit {
     canvas: any;                // Deprecated canvas for the main p5 preview
     canvas2: any;               // canvas for the p5 audio analyzer
     canvas3: HTMLCanvasElement; // canvas for main three.js preview
+    video: any;                 // for the host video
+    videoSize: any;
 
     screenW: any;
     screenH: any;
 
     dontDraw: any = false;
+    clearFlag: any = false;
     sketchLoading: any = false;
     resizeId: any;
     animating = false;
@@ -1125,6 +1134,8 @@ export class LiveStreamComponent implements OnInit {
             ]
         }
     ];
+
+    moduleLimit: any = 12;
 
     // Beat/Measure Time Signature Stuff
     beat: any = 1;
@@ -1181,6 +1192,7 @@ export class LiveStreamComponent implements OnInit {
     __geometry: any; //  = new THREE.BoxGeometry(this.__boxSize, this.__boxSize, this.__boxSize);
     __material: any; // = new THREE.MeshNormalMaterial({ color: 0x00ff00 });
     __cube: any; // = new THREE.Mesh(this.__geometry, this.__material);
+    __texture: any;
 
     // Audio Visualizer
     volume: any = 0;
@@ -1211,9 +1223,18 @@ export class LiveStreamComponent implements OnInit {
 
     roomName: any;
 
-    interacted: any = false;
+    //interacted: any = false;
 
-    constructor(private ngZone: NgZone, private utilityService: UtilityService, private route: ActivatedRoute, private router: Router, private socketService: SocketService) {
+    //
+    //dontDraw: any = false;
+
+    constructor(
+        private ngZone: NgZone,
+        private utilityService: UtilityService,
+        private route: ActivatedRoute,
+        private router: Router,
+        private socketService: SocketService,
+        private httpClient: HttpClient) {
 
         router.events.subscribe((val) => {
             if (val instanceof NavigationEnd) {
@@ -1271,8 +1292,8 @@ export class LiveStreamComponent implements OnInit {
 
         if (!this.animating) { return false; }
 
-        this.__cube.rotation.x += 0.01
-        this.__cube.rotation.z += 0.01
+        //this.__cube.rotation.x += 0.01
+        //this.__cube.rotation.z += 0.01
 
         // Module name
         let moduleName = '';
@@ -1292,7 +1313,7 @@ export class LiveStreamComponent implements OnInit {
         }
 
         this.renderer.render(this.scene, this.camera);
-        //this.renderer.autoClear = false;
+        this.renderer.autoClear = false;
 
     }
 
@@ -1361,125 +1382,133 @@ export class LiveStreamComponent implements OnInit {
             this.pCamera = new THREE.PerspectiveCamera(70, this.screenW / this.screenH, 1, 3000);
             this.oCamera = new THREE.OrthographicCamera(this.screenW / - 2, this.screenW / 2, this.screenH / 2, this.screenH / - 2, 1, 3000);
 
-            this.camera = this.pCamera;
+            this.camera = this.oCamera;
             this.camera.position.z = 1000;
 
-            this.__boxSize = this.screenH / 2;
-            this.__geometry = new THREE.BoxGeometry(this.__boxSize, this.__boxSize, this.__boxSize);
-            this.__material = new THREE.MeshNormalMaterial({ color: 0x00ff00 });
-            this.__cube = new THREE.Mesh(this.__geometry, this.__material);
-            this.scene.add(this.__cube);
-            this.animating = true
-            resolve();
+            // this.__boxSize = this.screenH / 2;
+            // this.__geometry = new THREE.BoxGeometry(this.__boxSize, this.__boxSize, this.__boxSize);
+            // this.__material = new THREE.MeshNormalMaterial({ color: 0x00ff00 });
+            // this.__cube = new THREE.Mesh(this.__geometry, this.__material);
+            // this.scene.add(this.__cube);
+            this.addWebcamBox();
 
-            // // Setup
-            // if (this.track.modules.length > 0) {
+            //this.animating = true
+            //resolve();
 
-            //     setTimeout(() => {
+            // Setup
 
-            //         this.track.modules.forEach((module, index) => {
+            setTimeout(() => {
+                if (this.track.modules.length > 0) {
+                    this.track.modules.forEach((module, index) => {
 
-            //             // Mem/Cleanup remove the threeMedia object
-            //             if (this.threeMedia[module.uuid]) {
-            //                 this.threeMedia[module.uuid] = null;
-            //                 delete this.threeMedia[module.uuid];
-            //             }
+                        // Mem/Cleanup remove the threeMedia object
+                        if (this.threeMedia[module.uuid]) {
+                            this.threeMedia[module.uuid] = null;
+                            delete this.threeMedia[module.uuid];
+                        }
 
-            //             // Switch case for module definition and setup
-            //             switch (module.name) {
+                        // Switch case for module definition and setup
+                        switch (module.name) {
 
-            //                 // Media: Gif, Video, Image
-            //                 case 'Media':
-            //                     this.threeMedia[module.uuid] = this.mediaObject();
+                            // Media: Gif, Video, Image
+                            case 'Media':
+                                this.threeMedia[module.uuid] = this.mediaObject();
 
-            //                     // text FX needs a canvas for each module,
-            //                     // get the canvas and the context
-            //                     this.threeMedia[module.uuid].text.canvas = document.getElementById('canvas-' + module.uuid);
-            //                     this.threeMedia[module.uuid].text.context = this.threeMedia[module.uuid].text.canvas.getContext('2d');
+                                // text FX needs a canvas for each module,
+                                // get the canvas and the context
+                                this.threeMedia[module.uuid].text.canvas = document.getElementById('canvas-' + module.uuid);
+                                this.threeMedia[module.uuid].text.context = this.threeMedia[module.uuid].text.canvas.getContext('2d');
 
-            //                     // get the extension / fileType of the media
-            //                     let extension = this.utilityService.getFileType(module.settings.file);
-            //                     this.track.modules[index].settings.fileType = extension;
+                                // get the extension / fileType of the media
+                                let extension = this.utilityService.getFileType(module.settings.file);
+                                this.track.modules[index].settings.fileType = extension;
 
-            //                     // Switch case for file type
-            //                     if (extension) {
+                                // Switch case for file type
+                                if (extension) {
 
-            //                         //
-            //                         let ext = false;
-            //                         // special for photo
-            //                         if (extension.includes('com/photo')) {
-            //                             ext = extension;
-            //                         }
+                                    //
+                                    let ext = false;
+                                    // special for photo
+                                    if (extension.includes('com/photo')) {
+                                        ext = extension;
+                                    }
 
-            //                         switch (extension) {
+                                    switch (extension) {
 
-            //                             // Mp4: gifs, and videos
-            //                             case 'mp4':
-            //                                 let video = document.getElementById('video-' + module.uuid);
-            //                                 if (video) {
-            //                                     video['muted'] = true;
-            //                                     video['autoplay'] = true;
-            //                                     this.threeMedia[module.uuid].texture = new THREE.Texture(video);
-            //                                     this.threeMedia[module.uuid].geometry = new THREE.CubeGeometry(this.screenW, this.screenH, 100);
-            //                                     this.threeMedia[module.uuid].material = new THREE.MeshBasicMaterial({
-            //                                         map: this.threeMedia[module.uuid].texture
-            //                                     });
-            //                                     this.threeMedia[module.uuid].mesh = new THREE.Mesh(this.threeMedia[module.uuid].geometry, this.threeMedia[module.uuid].material);
+                                        // Mp4: gifs, and videos
+                                        case 'mp4':
+                                            let video = document.getElementById('video-' + module.uuid);
+                                            if (video) {
+                                                video['muted'] = true;
+                                                video['autoplay'] = true;
+                                                this.threeMedia[module.uuid].texture = new THREE.Texture(video);
+                                                this.threeMedia[module.uuid].geometry = new THREE.CubeGeometry(this.screenW, this.screenH, 100);
+                                                this.threeMedia[module.uuid].material = new THREE.MeshBasicMaterial({
+                                                    map: this.threeMedia[module.uuid].texture
+                                                });
+                                                this.threeMedia[module.uuid].mesh = new THREE.Mesh(this.threeMedia[module.uuid].geometry, this.threeMedia[module.uuid].material);
 
-            //                                     // Get block image
-            //                                     if (module.settings.blockImage == "") {
-            //                                         try {
-            //                                             this.apiGetBlockImage(module.settings.file, index);
-            //                                         } catch (err) {
-            //                                             console.log('err', err);
-            //                                         }
-            //                                     }
-            //                                 }
-            //                                 break;
+                                                // Get block image
+                                                if (module.settings.blockImage == "") {
+                                                    try {
+                                                        this.apiGetBlockImage(module.settings.file, index);
+                                                    } catch (err) {
+                                                        console.log('err', err);
+                                                    }
+                                                }
+                                            }
+                                            break;
 
-            //                             //case (extension.includes('com/photo') ? extension : false):
-            //                             case ext:
-            //                             case 'jpg':
-            //                             case 'jpeg':
-            //                             case 'png':
-            //                                 this.threeMedia[module.uuid].texture = new THREE.TextureLoader();
-            //                                 this.threeMedia[module.uuid].texture.load(module.settings.file, (texture) => {
-            //                                     this.threeMedia[module.uuid].geometry = new THREE.CubeGeometry(this.screenW, this.screenH, 100);
-            //                                     this.threeMedia[module.uuid].material = new THREE.MeshBasicMaterial({
-            //                                         map: texture
-            //                                     });
-            //                                     this.threeMedia[module.uuid].mesh = new THREE.Mesh(this.threeMedia[module.uuid].geometry, this.threeMedia[module.uuid].material);
-            //                                     this.threeMedia[module.uuid].loaded = true;
-            //                                 });
-            //                                 break;
+                                        //case (extension.includes('com/photo') ? extension : false):
+                                        case ext:
+                                        case 'jpg':
+                                        case 'jpeg':
+                                        case 'png':
+                                            this.threeMedia[module.uuid].texture = new THREE.TextureLoader();
+                                            this.threeMedia[module.uuid].texture.load(module.settings.file, (texture) => {
+                                                this.threeMedia[module.uuid].geometry = new THREE.CubeGeometry(this.screenW, this.screenH, 100);
+                                                this.threeMedia[module.uuid].material = new THREE.MeshBasicMaterial({
+                                                    map: texture
+                                                });
+                                                this.threeMedia[module.uuid].mesh = new THREE.Mesh(this.threeMedia[module.uuid].geometry, this.threeMedia[module.uuid].material);
+                                                this.threeMedia[module.uuid].loaded = true;
+                                            });
+                                            break;
 
-            //                             default:
+                                        default:
 
-            //                                 break;
-            //                         }
-            //                     }
-            //                     // reload if null
-            //                     else {
-            //                         //this.createScene(this.rendererCanvas);
-            //                         reject();
-            //                         return false;
-            //                     }
+                                            break;
+                                    }
+                                }
+                                // reload if null
+                                else {
+                                    //this.createScene(this.rendererCanvas);
+                                    reject();
+                                    return false;
+                                }
 
-            //                     break;
+                                break;
+                        }
+                    });
 
-
-            //             }
-            //         });
-            //         this.animating = true;
-            //         resolve();
-            //         return;
-            //     }, 1);
-            // }
-            // // Else
-            // else {
-            //     this.sketchLoading = false;
-            // }
+                }
+                // Else
+                else {
+                    this.sketchLoading = false;
+                }
+                this.animating = true;
+                resolve();
+                return;
+            }, 1);
         });
+    }
+
+    // drawCanas w/ timeout
+    delayDrawCanvas(t = 1000) {
+        this.sketchLoading = true;
+        setTimeout(() => {
+            this.drawCanvas();
+        }, t);
     }
 
     // drawcanas
@@ -1492,16 +1521,7 @@ export class LiveStreamComponent implements OnInit {
         //
         // Setup and run main three.js canvas
         //
-        this.createScene(this.rendererCanvas).then(() => {
-            // Only run the animate function one time and one time only
-            if (!this.threeLoaded) {
-                this.animate();
-            }
-        }, (err) => {
-            console.log('err', err);
-            this.drawCanvas();
-        });
-
+        this.video = document.getElementById('webcamVideo');
         //
         // Setup and run audio analyzer p5 canvas
         //
@@ -1511,6 +1531,43 @@ export class LiveStreamComponent implements OnInit {
             delete this.canvas2;
         }
         this.canvas2 = new p5(this.sketchInput);
+
+        // Setup and run the video
+        if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
+            var constraints = { video: { width: 1280, height: 720, facingMode: 'user' } };
+            navigator.mediaDevices.getUserMedia(constraints).then((stream) => {
+                // apply the stream to the video element used in the texture
+                this.video.srcObject = stream;
+                this.video.play();
+            });
+        }
+
+        this.createScene(this.rendererCanvas).then(() => {
+            // Only run the animate function one time and one time only
+            if (!this.threeLoaded) {
+                this.animate();
+            }
+        }, (err) => {
+            console.log('err', err);
+            this.drawCanvas();
+            return;
+        });
+
+
+    }
+
+    addWebcamBox(): any {
+
+        this.__boxSize = this.screenH / 2;
+        console.log('__boxSize', this.__boxSize);
+        this.__texture = new THREE.VideoTexture(this.video);
+        this.__geometry = new THREE.PlaneBufferGeometry(this.__boxSize, (this.__boxSize * 720 / 1280));
+        //geometry.scale(0.5, 0.5, 0.5);
+        this.__material = new THREE.MeshBasicMaterial({ map: this.__texture });
+        this.__cube = new THREE.Mesh(this.__geometry, this.__material);
+        this.scene.add(this.__cube);
+        this.__cube.position.z = 700;
+        this.__cube.position.y = 50;
     }
 
     initModGrid(): any {
@@ -1585,18 +1642,141 @@ export class LiveStreamComponent implements OnInit {
         });
     }
 
-    onResize(e): any {
-        //console.log('window resized', e);
-        this.sketchLoading = true;
 
-        // Three Stuff
-        //if (this.camera) {
-        //this.camera.aspect = this.screenW / this.screenH;
-        //this.camera.updateProjectionMatrix();
-        //console.log(this)
-        //this.renderer.setSize(this.screenW, this.screenH);
-        ////this.renderer.setSize(window.innerWidth, window.innerHeight);
-        //}
+    addModule(i, keyword = 'visuals', draw = true, fileObject: any = false): any {
+        this.sketchLoading = true; // Show loading spinner
+        this.clearFlag = true;
+
+        let p5uuid = uuid();
+        const basicModules = [
+            // Media module, gifs, videos, images
+            {
+                name: "Media",
+                icon: "add_to_photos",
+                x: 0,
+                y: 0,
+                cols: 1,
+                rows: 1,
+                loading: false,
+                engine: 'three',
+                settings: {
+                    file: '',
+                    searchGifs: true,
+                    browseVideos: true,
+                    searchImages: true,
+                    blockColor: '#CCCCCC',
+                    blockImage: '',
+                    fileObject: {},
+                    fileType: '',
+                    tag: keyword//,
+                    //imageDatGui: this.newImageDatGui()
+                },
+                threeFunction: 'playMediaModuleThree',
+                uuid: uuid(),
+                addCallback: (m) => {
+                    // Get a gif afer module add
+                    let res, err;
+                    this.track.modules[m].loading = true;
+                    this.getGif(keyword).then(res => {
+                        console.log('getGif', m, res.data);
+                        this.track.modules[m].settings.file = res.data.image_mp4_url + "?v=" + Math.random() + "&m=" + String(m);
+                        this.track.modules[m].settings.blockImage = res.data.fixed_height_small_still_url + "?v=" + Math.random() + "&m=" + String(m);
+                        this.track.modules[m].loading = false;
+                        if (draw) { this.delayDrawCanvas(500); }
+                        return;
+                    }, err => {
+                        console.log('err', err);
+                    });
+                }
+            }
+        ];
+
+        if (this.track.modules.length < this.moduleLimit) {
+
+            // get the module
+            const module = basicModules[i];
+
+            // handle fileObject
+            // if there is a file object replace the block image, etc...
+            //console.log('ALPHA', fileObject);
+            if (fileObject) {
+                if (fileObject.path !== "") {
+                    module.settings.file = fileObject.path;
+                    module.settings.blockImage = fileObject.path;
+                } else {
+                    module.settings.file = fileObject.name;
+                    module.settings.blockImage = fileObject.name;
+                }
+                module.settings.fileObject = fileObject;
+            }
+
+            // Find the open spot in between if there is one
+            // set x,y before the module is added
+            let x = 0;
+            let y = 0;
+            let emptyBetweenSpot = false;
+            for (let z = 0; z < this.track.modules.length; z++) {
+
+                let element = this.track.modules[z];
+                //console.log('spot', x, y, element);
+
+                if (element.x != x || element.y != y) {
+                    // empty between spot
+                    module.x = x;
+                    module.y = y;
+                    //console.log('empty spot', x, y);
+                    emptyBetweenSpot = true;
+                    break;
+                }
+
+                x++;
+                if (x == 12) { x = 0; y++; }
+
+                // set to the last module if no between spot
+                module.x = x;
+                module.y = y;
+            }
+
+            // add the module
+            this.track.modules.push(module);
+
+            // Compact the gui
+            this.compactModules();
+
+            // find m no matter where it is
+            x = module.x;
+            y = module.y;
+            let a = 0;
+            let m;
+            this.track.modules.forEach(element => {
+                if (element.x == x && element.y == y) {
+                    m = a;
+                }
+                a++;
+            });
+
+            if (module.addCallback) {
+                module.addCallback(m);
+            }
+
+            if (draw) {
+                this.sketchLoading = true;
+
+                // Select new module
+                setTimeout(() => {
+                    this.editModule(false, m);
+                }, 1);
+
+                // Redraw Canvas
+                this.drawCanvas();
+            }
+        }
+    }
+
+
+    onResize(e): any {
+        console.log('window resized', e);
+        this.sketchLoading = true;
         clearTimeout(this.resizeId);
         this.resizeId = setTimeout(() => {
             this.doneResizing(e);
@@ -1655,7 +1835,7 @@ export class LiveStreamComponent implements OnInit {
             //if (this.previewMode) { return false; }
             this.screenMicLoaded = false;
             mic.getSources(devices => {
-                console.log(devices);
+                //console.log(devices);
                 mic.setSource(0);
                 mic.start(success => {
                     //this.analyzer = new p5.FFT(0, 1024);
@@ -1663,8 +1843,8 @@ export class LiveStreamComponent implements OnInit {
                     this.analyzer.setInput(mic);
                     this.screenMicLoaded = true;
 
-                    console.log('mic', mic, mic.getLevel());
-                    console.log('ANALYZER', this.analyzer);
+                    //console.log('mic', mic, mic.getLevel());
+                    //console.log('ANALYZER', this.analyzer);
 
                     this.binCount = 1024; //this.analyzer.bins; // = 1024
                     levelBins = Math.floor(this.binCount / this.levelsCount); //number of bins in each level
@@ -1706,7 +1886,7 @@ export class LiveStreamComponent implements OnInit {
                 //var synth = new p5.MonoSynth();
                 //synth.play('A4', 0.5, 0, 0.2);
                 //}
-                console.log(s.getAudioContext().state);
+                //console.log(s.getAudioContext().state);
                 if (s.getAudioContext().state !== 'running') {
                     s.text('click to start audio', s.width / 2, s.height / 2);
                     s.getAudioContext().resume();
@@ -2121,5 +2301,86 @@ export class LiveStreamComponent implements OnInit {
         });
     }
 
+    getGif(tag): any {
+        let promise = new Promise((resolve, reject) => {
+            let res = { data: {} };
+            this.httpClient.get('http://api.giphy.com/v1/gifs/random?api_key=CW27AW0nlp5u0&tag=' + tag).subscribe((res) => {
+                if (res) {
+                    //console.log(res.data.images.original.url);
+                    //this.mixpanelService.track('Giphy Api Request');
+                    resolve(res);
+                }
+            });
+        });
+        return promise;
+    }
+
+    //
+    // Media Module Three.js
+    // Gifs, and all video formats are converted to mp4 so they all
+    // use this video module on the three.js side.
+    //
+    playMediaModuleThree(): any {
+        //this.statsUpdate();
+        let uuid = this.track.modules[this.currentModule].uuid;
+        let fileType = this.track.modules[this.currentModule].settings.fileType;
+        let loaded = this.threeMedia[uuid].loaded;
+
+        // Setup Scene
+        if (this.lastModule !== this.currentModule) {
+            console.log('SETUP playMediaModuleThree', this.track.modules[this.currentModule], this.threeMedia[uuid]);
+            // Clear Scene and Hide the Camera's View
+            this.scene.remove.apply(this.scene, this.scene.children);
+            this.camera.position.z = 0;
+            // Add the Webcam back
+            this.addWebcamBox();
+
+            // Add the Mesh
+            if (this.threeMedia[uuid] && this.threeMedia[uuid].mesh) {
+                this.scene.add(this.threeMedia[uuid].mesh);
+                //this.imageEffectsThreeSetup(uuid);
+            }
+
+            // Lastly Set the Camera's View
+            this.camera = this.oCamera;
+            this.camera.position.z = this.screenW; //* (this.screenW / this.screenH); //this.screenH - (this.screenH * .2);
+            this.camera.position.y = 0;
+            this.camera.updateProjectionMatrix();
+
+            // Update this, it is used for loading purposes
+            if (fileType !== 'mp4' && loaded) {
+                this.lastModule = this.currentModule;
+            } else if (fileType == 'mp4') {
+                this.lastModule = this.currentModule;
+            }
+        }
+
+        if (fileType !== 'mp4' && loaded) {
+            this.sketchLoading = false;
+        } else if (fileType == 'mp4') {
+            this.sketchLoading = false;
+        }
+
+        //if (this.threeMedia[uuid] && this.threeMedia[uuid].texture) {
+        this.imageEffectsThree(uuid);
+
+        // Update the texture for Mp4
+        //if (fileType == 'mp4') {
+        this.threeMedia[uuid].texture.needsUpdate = true;
+        //}
+        //}
+
+
+    }
+
+    imageEffectsThree(uuid): any {
+        //if (audioReactive) {
+        // let gotoScale = (this.volume * 1.2 + .1) * 2;
+        // this.scl += (gotoScale - this.scl) / 3;
+        // this.videoSize = this.screenH / 2 * this.scl;
+        // this.__cube.scale.x = this.__cube.scale.y = this.__cube.scale.z = this.videoSize;
+
+        //}
+    }
 
 }
