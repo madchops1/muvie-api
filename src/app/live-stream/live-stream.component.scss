@@ -11,13 +11,20 @@
     }
 }
 
+.raw-video {
+    width: 1px;
+    height: 1px;
+    position: absolute;
+    z-index: 0;
+}
+
 #waveform {
     height: 64px;
     width: 200px;
     //float: right;
     position: fixed;
     right: 0px;
-    z-index: 1;
+    z-index: 2;
     background-color: #111;
     //cursor: pointer;
 
@@ -33,6 +40,8 @@ mat-toolbar {
     bottom: 100px;
 }
 
+
+
 .renderer-container {
     position: absolute;
     top: 0px;
@@ -40,6 +49,7 @@ mat-toolbar {
     width: 100%;
     height: 100%;
     overflow: hidden;
+    z-index: 1;
 
     // display: flex;
     // justify-content: center;
@@ -52,7 +62,7 @@ mat-toolbar {
     height: 100px;
     position: absolute;
     bottom: 0px; 
-
+    z-index: 2;
 }
 
 .modules {
@@ -71,10 +81,39 @@ gridster {
     box-shadow: inset 0px 0px 5px -1px #000000 !important;
 }
 
+mat-button-toggle, gridster-item {
+    &:hover {
+        .button-holder {
+            display: block;
+        }
+    }
+}
+
+.button-holder {
+    //display: none;
+    position: absolute;
+    top: 0px;
+    right: 0px;
+
+    .mat-mini-fab {
+        margin-left: -15px;
+        border-radius: 20px !important;
+    }
+
+    button {
+        transform: scale(0.5);
+        float: right;
+    }
+}
+
 .webcam-video {
     position: absolute;
     z-index: 2;
     width: 1px;
     height: 1px;
 
+}
+
+.pink {
+    opacity: 0.85;
 }

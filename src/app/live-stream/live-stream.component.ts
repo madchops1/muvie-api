@@ -1188,6 +1188,8 @@ export class LiveStreamComponent implements OnInit {
     scl = 0;
     radius = 1000;
 
+    editingModuleSettings: any = false;
+
     __boxSize: any;
     __geometry: any; //  = new THREE.BoxGeometry(this.__boxSize, this.__boxSize, this.__boxSize);
     __material: any; // = new THREE.MeshNormalMaterial({ color: 0x00ff00 });
@@ -1222,6 +1224,7 @@ export class LiveStreamComponent implements OnInit {
     peerId: any = false;
 
     roomName: any;
+    userId: any;
 
     //interacted: any = false;
 
@@ -1251,7 +1254,24 @@ export class LiveStreamComponent implements OnInit {
 
     ngOnInit() {
 
+        //localStorage.setItem('dataSource', this.dataSource.length);
+        //and to print, you should use getItem
+        //console.log(localStorage.getItem('dataSource'));
+        this.userId = localStorage.getItem(this.roomName);
+        if (!this.userId) {
+            this.userId = uuid();
+            localStorage.setItem(this.roomName, this.userId);
+        }
+
+        console.log('userId', this.userId);
+
+        // Connect to websocket server
+        this.socketService.connect(this.roomName);
+
+        // Init Grid
         this.initModGrid();
+
+        // Draw Canvas
         this.drawCanvas();
 
     }
@@ -1311,6 +1331,8 @@ export class LiveStreamComponent implements OnInit {
             //this.scene.remove.apply(this.scene, this.scene.children);
             //this.renderer.setClearColor(0x000000, 0);
         }
+
+        this.imageEffectsThree();
 
         this.renderer.render(this.scene, this.camera);
         this.renderer.autoClear = false;
@@ -1385,18 +1407,9 @@ export class LiveStreamComponent implements OnInit {
             this.camera = this.oCamera;
             this.camera.position.z = 1000;
 
-            // this.__boxSize = this.screenH / 2;
-            // this.__geometry = new THREE.BoxGeometry(this.__boxSize, this.__boxSize, this.__boxSize);
-            // this.__material = new THREE.MeshNormalMaterial({ color: 0x00ff00 });
-            // this.__cube = new THREE.Mesh(this.__geometry, this.__material);
-            // this.scene.add(this.__cube);
             this.addWebcamBox();
 
-            //this.animating = true
-            //resolve();
-
             // Setup
-
             setTimeout(() => {
                 if (this.track.modules.length > 0) {
                     this.track.modules.forEach((module, index) => {
@@ -1558,7 +1571,7 @@ export class LiveStreamComponent implements OnInit {
 
     addWebcamBox(): any {
 
-        this.__boxSize = this.screenH / 2;
+        this.__boxSize = this.screenW / 2;
         console.log('__boxSize', this.__boxSize);
         this.__texture = new THREE.VideoTexture(this.video);
         this.__geometry = new THREE.PlaneBufferGeometry(this.__boxSize, (this.__boxSize * 720 / 1280));
@@ -1566,8 +1579,8 @@ export class LiveStreamComponent implements OnInit {
         this.__material = new THREE.MeshBasicMaterial({ map: this.__texture });
         this.__cube = new THREE.Mesh(this.__geometry, this.__material);
         this.scene.add(this.__cube);
-        this.__cube.position.z = 700;
-        this.__cube.position.y = 50;
+        this.__cube.position.z = 800;
+        //this.__cube.position.y = 50;
     }
 
     initModGrid(): any {
@@ -2362,7 +2375,7 @@ export class LiveStreamComponent implements OnInit {
         }
 
         //if (this.threeMedia[uuid] && this.threeMedia[uuid].texture) {
-        this.imageEffectsThree(uuid);
+        //this.imageEffectsThreeMedia(uuid);
 
         // Update the texture for Mp4
         //if (fileType == 'mp4') {
@@ -2373,14 +2386,53 @@ export class LiveStreamComponent implements OnInit {
 
     }
 
-    imageEffectsThree(uuid): any {
+    imageEffectsThree(): any {
         //if (audioReactive) {
+        // Shape Volume Scale
+        let gotoScale = (this.volume * 1.2 + .1) * 2;
+        this.scl += (gotoScale - this.scl) / 3;
+        //console.log(this.scl);
+        if (this.scl <= 1.0) { this.scl = 1.0; }
+        this.__cube.scale.x = this.__cube.scale.y = this.__cube.scale.z = this.scl;
+
         // let gotoScale = (this.volume * 1.2 + .1) * 2;
         // this.scl += (gotoScale - this.scl) / 3;
         // this.videoSize = this.screenH / 2 * this.scl;
         // this.__cube.scale.x = this.__cube.scale.y = this.__cube.scale.z = this.videoSize;
 
         //}
+    }
+
+    removeModule(e, i, draw = true) {
+        //console.log('Remove Module', i);
+        this.clearFlag = true;
+        this.track.modules.splice(i, 1);
+        if (this.track.modules.length) {
+            this.compactModules();
+            if (this.track.modules.length > i) {
+                //this.currentModule = i;
+                this.editModule(false, i);
+            } else {
+                this.editModule(false, this.track.modules.length - 1);
+                //this.currentModule = ;
+            }
+        }
+        // If no modules anymore
+        else {
+            this.playing = false; // if playing stop
+            //this.initImageDatGui(); // call any init dat gui function to clear the datgui panel
+        }
+        if (draw) {
+            this.drawCanvas();
+        }
+    }
+
+    toggleModuleSettings(i): any {
+        if (i) {
+            this.currentModule = i;
+            this.editModule(false, i);
+        }
+        this.editingModuleSettings = !this.editingModuleSettings;
     }
 
 }

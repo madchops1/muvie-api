@@ -13,6 +13,77 @@
 
 </div>
 
+<!-- Module Settings -->
+<!-- <div class="module-settings" *ngIf="editingModuleSettings">
+    <div *ngIf="track.modules[currentModule]">
+        <div class="preferences-title">
+            {{ track.modules[currentModule].name }}
+            <br>
+            Module {{ currentModule | number }}
+            <br>
+            {{ track.modules[currentModule].uuid }}
+        </div>
+        <div *ngFor="let key of objectKeys(tracks[currentTrack].modules[currentModule].settings)">
+
+            <div *ngIf="key == 'file'">
+
+                <div class="filepath" *ngIf="tracks[currentTrack].modules[currentModule].settings[key] != ''"
+                    title="{{ tracks[currentTrack].modules[currentModule].settings[key] }}">
+                    File Path: {{tracks[currentTrack].modules[currentModule].settings[key] | truncate : 20 }}
+                </div>
+
+                <img *ngIf="tracks[currentTrack].modules[currentModule].settings[key] && tracks[currentTrack].modules[currentModule].name == 'Image'"
+                    src="{{tracks[currentTrack].modules[currentModule].settings[key]}}" class="setting-image" />
+
+                <button mat-raised-button (click)="uploadervideo.click()">Browse Files</button>
+
+                <input type="file" [hidden]="true" #uploadervideo (change)="uploadVideoFile($event, key)" />
+
+                <button *ngIf="tracks[currentTrack].modules[currentModule].settings[key] !== ''" mat-raised-button
+                    (click)="removeFile($event,key)" class="settings-button">Remove File</button>
+            </div>
+
+            <div *ngIf="key == 'rotation' || key == 'textSize'">
+                <label *ngIf="key == 'textSize'">Text Size</label>
+                <label *ngIf="key == 'rotation'">Degrees</label>
+                <input type="number" [value]="tracks[currentTrack].modules[currentModule].settings[key]"
+                    (change)="changeRotation($event, key)" />
+            </div>
+
+            <div *ngIf="key == 'text'" class="preferences-item">
+                <label>{{ key | titlecase }}</label>
+                <input type="text" [value]="tracks[currentTrack].modules[currentModule].settings[key]"
+                    (change)="changeText($event, key)" />
+            </div>
+
+            <div class="preferences-item" *ngIf="key == 'searchGifs'">
+                <button mat-raised-button (click)="toggleSearchGifs()">
+                    Search Gifs
+                </button>
+            </div>
+
+            <div class="preferences-item" *ngIf="key == 'searchImages'">
+                <button mat-raised-button (click)="toggleSearchImages()" *ngIf="key == 'searchImages'">
+                    Search Images
+                </button>
+            </div>
+
+            <div class="preferences-item" *ngIf="key == 'browseVideos'">
+                <button mat-raised-button (click)="toggleBrowseVideos()" *ngIf="key == 'browseVideos'">
+                    Browse Video Library
+                </button>
+            </div>
+
+            <div *ngIf="key == 'number'">
+                <label>Number</label>
+                <input type="text" disabled="disabled"
+                    [value]="tracks[currentTrack].modules[currentModule].settings[key]" />
+            </div>
+
+        </div>
+    </div>
+</div> -->
+
 <!-- Line in waveform -->
 <div id="waveform" #waveform></div>
 
