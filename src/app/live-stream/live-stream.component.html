@@ -1,3 +1,53 @@
-<p>
-  live-stream works!
-</p>
+<button (click)="drawCanvas()">Redraw</button>
+
+<!-- Line in waveform -->
+<div id="waveform" #waveform></div>
+
+<!-- Loading Overlay, overlays preview window only -->
+<div class="loading-sketch" [hidden]="!sketchLoading"></div>
+
+<!-- Three preview area -->
+<div id="renderContainer" class="renderer-container" #rendererContainer>
+    <canvas #rendererCanvas id="renderCanvas" crossorigin="anonymous"></canvas>
+</div>
+
+<!-- <video class="receiver-canvas" id="receiverCanvas" controls autoplay muted></video> -->
+
+<!-- Holder for three js, contains video elements for videoTexture, canvas for Text  -->
+<div *ngFor="let module of track.modules; let i = index" [hidden]="currentModule != i" class="raw-video">
+
+    <!-- Video -->
+    <video id="video-{{module.uuid}}" crossOrigin="anonymous"
+        *ngIf="module.name == 'Media' && module.settings.file && module.settings.fileType == 'mp4'" controls autoplay
+        playsinline loop muted>
+        <source src="{{module.settings.file}}" type='video/mp4'>
+    </video>
+
+    <!-- Children (canvas) -->
+    <div id="children-{{module.uuid}}">
+        <canvas id="canvas-{{module.uuid}}"></canvas>
+    </div>
+</div>
+
+<!-- Main/Basic Modules -->
+<div class="mod-wrapper">
+    <div class="modules">
+        <gridster [options]="modOptions">
+            <gridster-item [item]="module" (mousedown)="editModule($event, i)"
+                [ngClass]="{'selected': currentModule == i}"
+                [ngStyle]="{'background-color': module.name == 'Color' ? module.settings.backgroundColor : module.settings.blockColor, 'background-size': 'cover', 'background-position': 'center', 'background-image': 'url('+module.settings.blockImage+''}"
+                *ngFor="let module of track.modules; let i = index">
+                <mat-icon>{{module.icon}}</mat-icon>
+                <div class="button-holder">
+                    <button mat-mini-fab (mousedown)="removeModule($event, i)">
+                        <mat-icon>delete</mat-icon>
+                    </button>
+                    <button mat-mini-fab (mousedown)="toggleModuleSettings()">
+                        <mat-icon>settings_applications</mat-icon>
+                    </button>
+                    <span *ngIf="true == false">{{i + 1}}</span>
+                </div>
+            </gridster-item>
+        </gridster>
+    </div>
+</div>

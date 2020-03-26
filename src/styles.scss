@@ -12,6 +12,16 @@ body {
     overflow-x: hidden;
 }
 
+gridster .gridster-row, gridster .gridster-column {
+    border: 0px !important;
+    background: rgba(0,0,0, 0.3);
+}
+
+gridster {
+    background: #333;
+    box-shadow: inset 0px 0px 5px -1px #000000;
+}
+
 .msg {
     display: block;
     text-align: center;

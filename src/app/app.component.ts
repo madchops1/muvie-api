@@ -34,7 +34,8 @@ export class AppComponent {
                     this.currentRoute.includes('laserz') ||
                     this.currentRoute.includes('remote-cam') ||
                     this.currentRoute.includes('remote-que') ||
-                    this.currentRoute.includes('remote-screen')
+                    this.currentRoute.includes('remote-screen') ||
+                    this.currentRoute.includes('live')
                 ) {
                     this.interactive = true;
                 } else {

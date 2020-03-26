@@ -15,16 +15,9 @@ export class RemoteScreenComponent implements OnInit {
     currentRoute: any = '';
     peer: any = null;
     video: any;
-    //url: any = window.document.URL.split('#');
-    //windowId: any = url[1];
-    //idArray: any = windowId.split(':');
-    //env: any = idArray[1];
-    //wsUrl: any = 'https://www.visualzstudio.com'; // production
     mid: any;
     remotePeerId: any;
-    //socket: any;
     peerId: any = false;
-    //numericId: any = idArray[3];
 
     constructor(private route: ActivatedRoute, private router: Router, private socketService: SocketService) {
         router.events.subscribe((val) => {
@@ -46,47 +39,7 @@ export class RemoteScreenComponent implements OnInit {
 
         // create the peer and wait for a call
         this.connectPeer();
-        // if (env == 'dev') {
-        //     wsUrl = 'https://visualz.ngrok.io';
-        // }
 
-        // connectSocket();
-
-        // function connectSocket() {
-        //     socket = io(wsUrl);
-        //     socket.io.opts.query = { mid: mid };
-        //     //socket.emit('test', { mid: mid });
-        // }
-
-        // function connectPeer() {
-        //     peer = new Peer();
-        //     peer.on('open', (id) => {
-        //         console.log('My peer ID is: ' + id);
-        //         socket.emit('peerId', { windowId: numericId, peerId: id, mid: mid });
-        //     });
-        //     peer.on('call', function (call) {
-        //         call.answer(); // answer the call
-        //         call.on('stream', function (stream) {
-        //             video = document.getElementById('externalVideo');
-        //             video.srcObject = stream;
-        //         });
-        //     });
-        //     peer.on('close', () => {
-        //         this.peer = null;
-        //         connectPeer();
-        //     });
-        //     peer.on('disconnected', () => {
-        //         if (this.peer) {
-        //             this.peer.reconnect();
-        //         } else {
-        //             connectPeer();
-        //         }
-        //     });
-        //     peer.on('error', (err) => {
-        //         console.log('PEER ERR', err);
-        //         connectPeer(windowId);
-        //     });
-        // }
 
     }
 

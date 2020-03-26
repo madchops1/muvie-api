@@ -4,8 +4,12 @@
 
 export const environment = {
     production: false,
-    //ioUrl: 'http://localhost:8080',
     ioUrl: 'https://visualz.ngrok.io',
+    websiteUrl: 'https://visualz.ngrok.io',
+    ioUrlB: 'http://localhost:8080',
+    twilioNumber: '(224) 877-7729',
+    bucket: 'visualz-1',
+    imageResizeEndpoint: 'https://d10x0r1n47colw.cloudfront.net',
     crowdScreenBucket: 'crowdscreen'
 };
 
