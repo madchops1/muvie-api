@@ -26,7 +26,7 @@ gridster {
     display: block;
     text-align: center;
     background-color: #333;
-    color: #fff;
+    color: #e91e63;
     padding: 10px;
     letter-spacing: 2px;
 }
@@ -164,6 +164,7 @@ p {
     padding: 100px 40px 140px;
     overflow-x: hidden;
     //background-color: #fff;
+    min-height: calc(100vh - 320px);
 
     &.small-bottom {
         padding-bottom: 80px;
@@ -350,8 +351,13 @@ footer{
     padding: 20px 20px 20px 20px;
     font-size: 10px;
     line-height: 20px;
+    background-image: url(https://media3.giphy.com/media/Z4ITmGFsXV19C/giphy.gif?cid=ecf05e4708fb976853e5ae8bf08f47f9d64c57c7f529edee&rid=giphy.gif);
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-size: 4000%;
+    background-position: bottom;
 
-    margin-top: -40px;
+    //margin-top: -40px;
     
     a {
         color: #fff;

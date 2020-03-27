@@ -31,6 +31,8 @@ const kill = []; // array of versions eg. ['2.0.0']
 const killMsg = 'This version is dead.';
 
 const baseUrl = 'https://visualz-1.s3.us-east-2.amazonaws.com';
+
+// video library holder
 const videoLibrary = [
     // Beeple
     {
@@ -122,7 +124,7 @@ const videoLibrary = [
     //         }
     //     ]
     // }
-];                          // video library holder
+];
 
 //var enforce = require('express-sslify');
 //console.log('env', process.env.STRIPE_TEST_KEY);
@@ -220,10 +222,28 @@ var server = app.listen(process.env.PORT || 8080, function () {
     console.log("App now running on port", port);
 });
 
+function newGuest() {
+    return {
+        id: ''
+    };
+}
+
+function newLiveStreamRoom() {
+    return {
+        id: '',
+        host: false,
+        name: '',
+        description: '',
+        email: '',
+        guests: []
+    }
+}
+
 let crowdScreenKeyMap = {};
 let remoteQueKeyMap = {};
 let laserzKeyMap = {};
 let phoneListHolder = [];
+let liveStreamRooms = [];
 
 //const io = socketIO(server);
 
@@ -233,9 +253,40 @@ io.on('connection', (socket) => {
     mainSocket = socket;
     let mid = socket.handshake.query.mid;
     let remoteQueKey = socket.handshake.query.remoteQueKey;
+    let roomName = socket.handshake.query.roomName;
+    let userId = socket.handshake.query.userId;
+    let peerId = socket.handshake.query.peerId;
+
     if (remoteQueKey) {
         if (!remoteQueKeyMap[remoteQueKey]) {
             remoteQueKeyMap[remoteQueKey] = mid;
+        }
+    }
+
+    if (roomName) {
+
+        // new room
+        // - set the host
+        // - set the peerId
+        if (!liveStreamRooms[mid]) {
+
+            // Create the room
+            liveStreamRooms[mid] = newLiveStreamRoom();
+
+            // Create the host
+            liveStreamRooms[mid].host = userId;
+            liveStreamRooms[mid].hostPeer = peerId;
+
+        }
+        // room exists
+        // - this is is the host coming back to the room, or opening a second window.......
+        else if (userId == liveStreamRooms[mid].host) {
+            //...
+        }
+        // room exists
+        // - this is a guest coming to the room 
+        else {
+            // ...
         }
     }
 
@@ -384,6 +435,15 @@ io.on('connection', (socket) => {
             //handleError(res, err, 'nope');
         }
     });
+
+    //
+    // Livestream Socket Stuff
+    //
+    // socket.on("hostCheck", async data => {
+    //     console.log('server received host check');
+    //     socket.broadcast.to(String(mid)).emit('getCrowdScreenImage', data);
+    // });
+
 
     // // Twilio webhook
     // app.post('/api/sms/reply', (req, res) => {
@@ -568,6 +628,25 @@ app.get("/api/sign-s3", async function (req, res) {
     }
 });
 
+// Am I host, for livestream
+app.get('/api/livestream/amihost', async (req, res) => {
+    console.log('received a get request to amihost', req.query);
+    try {
+        let uid = req.query.userId;
+        let roomName = req.query.roomName;
+        if (liveStreamRooms[roomName] && liveStreamRooms[roomName].host == uid) {
+            res.write(JSON.stringify({ host: true }));
+        } else {
+            res.write(JSON.stringify({ host: false }));
+        }
+        res.end();
+    }
+    catch (err) {
+        handleError(res, err, 'nope')
+    }
+
+});
+
 // Website Entrypoint
 app.get("*", (req, res) => {
     //console.log('ALPHA');
@@ -687,39 +766,29 @@ app.post("/api/extractFrame", async function (req, res) {
 // Twilio webhook
 app.post('/api/sms/reply', (req, res) => {
     console.log('received an sms at twilio number', req.body.Body);
-
     const twiml = new MessagingResponse();
     let key = req.body.Body;
-
-
     // Crowdscreen connect
     if (crowdScreenKeyMap[key]) {
-
         // send the text to the user to connect
         twiml.message('Click the link to connect. ' + crowdScreenUrl + '/crowdscreen/' + crowdScreenKeyMap[key]);
-
         // send the number to the app
         //mainSocket.emit('newPhoneNumber', req.body.From);
         //phoneListHolder[String(crowdScreenKeyMap[key])].push = req.body.From;
         mainSocket.broadcast.to(String(crowdScreenKeyMap[key])).emit('newPhoneNumber', req.body.From);
-
     }
-
     // Remote Connect
     else if (remoteQueKeyMap[key]) {
         twiml.message('Click the link to connect. ' + crowdScreenUrl + '/remote-que/' + remoteQueKeyMap[key]);
     }
-
     // Laserz
     // else if (laserzKeyMap[key]) {
     //     twiml.message('Click the link to connect. ' + crowdScreenUrl + '/laserz/' + laserzKeyMap[key]);
     // } 
-
     // Error
     else {
         twiml.message('Connection Error :(');
     }
-
     res.writeHead(200, { 'Content-Type': 'text/xml' });
     res.end(twiml.toString());
 });

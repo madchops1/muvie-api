@@ -1,4 +1,4 @@
-import { Component, OnInit, NgZone, ViewChild, ViewChildren, ElementRef } from '@angular/core';
+import { Component, OnInit, NgZone, ViewChild, ViewChildren, HostListener, ElementRef } from '@angular/core';
 import Peer from 'peerjs';
 import { HttpClient } from '@angular/common/http';
 
@@ -13,11 +13,18 @@ import 'p5/lib/addons/p5.dom';
 import { UtilityService } from '../utility.service';
 import { environment } from 'src/environments/environment';
 
+export enum KEY_CODE {
+    ESC = 27,
+    ENTER = 12,
+    LEFT = 37,
+    UP = 38,
+    RIGHT = 39,
+    DOWN = 40
+}
+
 import * as THREE from 'three';
 
 import * as uuid from 'uuid/v4';
-
-
 
 THREE.CustomShader = {
 
@@ -1041,6 +1048,40 @@ export class LiveStreamComponent implements OnInit {
     @ViewChild('rendererContainer') rendererContainer: ElementRef; // three container
     @ViewChild('rendererCanvas') rendererCanvas: any; // three canvas
 
+    @HostListener('window:keydown', ['$event'])
+
+    keyEvent(event: KeyboardEvent) {
+        let moduleCount = this.track.modules.length;
+        let i;
+
+        switch (event.keyCode) {
+            case KEY_CODE.ESC:
+                if (this.searchGifs) { this.toggleSearchGifs(); }
+                this.closeAllOverlays();
+                break;
+
+            case KEY_CODE.LEFT:
+                console.log('Left');
+                if (this.currentModule == 0) {
+                    this.editModule(false, moduleCount - 1)
+                } else {
+                    i = this.currentModule - 1;
+                    this.editModule(false, i);
+                }
+                break;
+
+            case KEY_CODE.RIGHT:
+                console.log('Right');
+                if (this.currentModule == moduleCount - 1) {
+                    this.editModule(false, 0);
+                } else {
+                    i = this.currentModule + 1;
+                    this.editModule(false, i);
+                }
+                break;
+        }
+    }
+
     // Environment stuff
     public websiteUrl: any = environment.websiteUrl;
     public environment: any = environment;
@@ -1059,6 +1100,7 @@ export class LiveStreamComponent implements OnInit {
     };
 
     currentModule = 0;
+    editingModule = 0;
     lastModule = 1000000;
 
     basicModules: any = [
@@ -1072,9 +1114,13 @@ export class LiveStreamComponent implements OnInit {
         }
     ];
 
+    objectKeys: any = Object.keys;  // used in view for something
+
     // Module Grid
     modOptions: GridsterConfig;
     modGrid: Array<GridsterItem>;
+
+    mediaStream: any;
 
     canvas: any;                // Deprecated canvas for the main p5 preview
     canvas2: any;               // canvas for the p5 audio analyzer
@@ -1090,7 +1136,7 @@ export class LiveStreamComponent implements OnInit {
     sketchLoading: any = false;
     resizeId: any;
     animating = false;
-    playing: any = false;
+    playing: any = true;
     pause: any = false;
 
     // For three js
@@ -1102,6 +1148,7 @@ export class LiveStreamComponent implements OnInit {
     threeLoaded = false;
 
     frameId;
+    everythingLoaded: any = false;
 
     // threeMedia
     threeMedia: any = [];
@@ -1225,6 +1272,10 @@ export class LiveStreamComponent implements OnInit {
 
     roomName: any;
     userId: any;
+    host: any = false;
+
+    hostVideoHidden: any = false;
+    guestVideoHidden: any = false;
 
     //interacted: any = false;
 
@@ -1264,16 +1315,105 @@ export class LiveStreamComponent implements OnInit {
         }
 
         console.log('userId', this.userId);
-
-        // Connect to websocket server
-        this.socketService.connect(this.roomName);
-
-        // Init Grid
         this.initModGrid();
 
-        // Draw Canvas
-        this.drawCanvas();
+        // Init Grid
+        this.createPeer().then(() => {
 
+            // Connect to websocket server
+            this.socketService.connect(this.roomName, true, this.userId, this.peerId);
+
+            // Am I host
+            this.amIHost(this.roomName, this.userId).then(() => {
+
+                this.everythingLoaded = true;
+
+                // 
+                if (!this.host) {
+
+                    // call Host here 
+                    this.hostVideoHidden = true;
+
+                }
+                else {
+
+                    // Draw Canvas
+                    this.guestVideoHidden = false;
+                    this.drawCanvas();
+
+                }
+
+            }, (err) => {
+                console.log('Beta err', err);
+            });
+
+        }, (err) => {
+            console.log('Alpha err', err);
+        });
+
+    }
+
+    amIHost(roomName, uid): any {
+        return new Promise((resolve, reject) => {
+
+            // this.host = true;
+            // resolve();
+            // return;
+
+            this.httpClient.get('/api/livestream/amihost?roomName=' + roomName + '&userId=' + uid).subscribe((res) => {
+                console.log('res', res);
+                if (res) {
+                    //console.log(res.data.images.original.url);
+                    //this.mixpanelService.track('Giphy Api Request');
+                    this.host = true;
+                    resolve(res);
+                } else {
+                    this.errorTryAgain();
+                    reject();
+                }
+            }, (err) => {
+                reject();
+                this.errorTryAgain();
+            });
+        });
+    }
+
+    errorTryAgain() {
+        alert('There was a problem. Please try again in a moment.');
+    }
+
+    createPeer() {
+        //this.peer = null;
+        return new Promise((resolve, reject) => {
+            this.peer = new Peer();
+            this.peer.on('open', (id) => {
+                console.log('My peer ID is: ' + id);
+                this.peerId = id;
+                resolve(id);
+            });
+            this.peer.on('call', (call) => {
+                // send audio to TODO...
+                let cnvs: any = document.getElementById('renderCanvas');
+                this.mediaStream = cnvs.captureStream();
+                call.answer(this.mediaStream); // answer the call
+                // call.on('stream', function (stream) {
+                //     video = document.getElementById('externalVideo');
+                //     video.srcObject = stream;
+                // });
+            });
+            this.peer.on('close', () => {
+                //this.peer = null;
+                this.peerId = false;
+            });
+            this.peer.on('disconnected', () => {
+                this.peer.reconnect();
+            });
+            this.peer.on('error', (err) => {
+                console.log('PEER ERR', err);
+                //alert(err);
+                this.peerId = false;
+            });
+        });
     }
 
     // Create a media object for three.js
@@ -1526,7 +1666,7 @@ export class LiveStreamComponent implements OnInit {
 
     // drawcanas
     drawCanvas(): any {
-
+        if (!this.everythingLoaded) { return false; }
         if (this.dontDraw) { this.dontDraw = false; return; }
         console.log('Draw Canvas');
         this.sketchLoading = true;
@@ -1535,15 +1675,7 @@ export class LiveStreamComponent implements OnInit {
         // Setup and run main three.js canvas
         //
         this.video = document.getElementById('webcamVideo');
-        //
-        // Setup and run audio analyzer p5 canvas
-        //
-        if (this.canvas2) {
-            this.canvas2.remove();
-            this.canvas2 = null;
-            delete this.canvas2;
-        }
-        this.canvas2 = new p5(this.sketchInput);
+
 
         // Setup and run the video
         if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
@@ -1562,16 +1694,27 @@ export class LiveStreamComponent implements OnInit {
             }
         }, (err) => {
             console.log('err', err);
+            //alert('There was an error. Try clicking refresh, or reloading the page.');
             this.drawCanvas();
             return;
         });
+
+        //
+        // Setup and run audio analyzer p5 canvas
+        //
+        if (this.canvas2) {
+            this.canvas2.remove();
+            this.canvas2 = null;
+            delete this.canvas2;
+        }
+        this.canvas2 = new p5(this.sketchInput);
 
 
     }
 
     addWebcamBox(): any {
 
-        this.__boxSize = this.screenW / 2;
+        this.__boxSize = this.screenW / 1.5;
         console.log('__boxSize', this.__boxSize);
         this.__texture = new THREE.VideoTexture(this.video);
         this.__geometry = new THREE.PlaneBufferGeometry(this.__boxSize, (this.__boxSize * 720 / 1280));
@@ -1579,7 +1722,7 @@ export class LiveStreamComponent implements OnInit {
         this.__material = new THREE.MeshBasicMaterial({ map: this.__texture });
         this.__cube = new THREE.Mesh(this.__geometry, this.__material);
         this.scene.add(this.__cube);
-        this.__cube.position.z = 800;
+        this.__cube.position.z = 100;
         //this.__cube.position.y = 50;
     }
 
@@ -1851,6 +1994,7 @@ export class LiveStreamComponent implements OnInit {
                 //console.log(devices);
                 mic.setSource(0);
                 mic.start(success => {
+                    console.log('Mic Start');
                     //this.analyzer = new p5.FFT(0, 1024);
                     this.analyzer = new p5.FFT(0, 1024);
                     this.analyzer.setInput(mic);
@@ -1880,7 +2024,7 @@ export class LiveStreamComponent implements OnInit {
                     if (this.timer) { clearInterval(this.timer); }
                     this.timer = setInterval(this.onBPMBeat, this.msecsAvg);
                 }, error => {
-                    console.log('err', error);
+                    console.log('Mic Err', error);
                     micLoaded = false;
                     this.screenMicLoaded = true;
                 });
@@ -1900,11 +2044,14 @@ export class LiveStreamComponent implements OnInit {
                 //synth.play('A4', 0.5, 0, 0.2);
                 //}
                 //console.log(s.getAudioContext().state);
-                if (s.getAudioContext().state !== 'running') {
-                    s.text('click to start audio', s.width / 2, s.height / 2);
-                    s.getAudioContext().resume();
-                }
-                else if (micLoaded) {
+
+                //if (s.getAudioContext().state !== 'running') {
+                //    s.text('click to start audio', s.width / 2, s.height / 2);
+                //    s.getAudioContext().resume();
+                //}
+                //else 
+
+                if (micLoaded) {
 
                     //console.log('micLoaded');
 
@@ -2317,7 +2464,7 @@ export class LiveStreamComponent implements OnInit {
     getGif(tag): any {
         let promise = new Promise((resolve, reject) => {
             let res = { data: {} };
-            this.httpClient.get('http://api.giphy.com/v1/gifs/random?api_key=CW27AW0nlp5u0&tag=' + tag).subscribe((res) => {
+            this.httpClient.get('https://api.giphy.com/v1/gifs/random?api_key=CW27AW0nlp5u0&tag=' + tag).subscribe((res) => {
                 if (res) {
                     //console.log(res.data.images.original.url);
                     //this.mixpanelService.track('Giphy Api Request');
@@ -2419,7 +2566,7 @@ export class LiveStreamComponent implements OnInit {
         }
         // If no modules anymore
         else {
-            this.playing = false; // if playing stop
+            //this.playing = false; // if playing stop
             //this.initImageDatGui(); // call any init dat gui function to clear the datgui panel
         }
         if (draw) {
@@ -2427,12 +2574,105 @@ export class LiveStreamComponent implements OnInit {
         }
     }
 
-    toggleModuleSettings(i): any {
+    toggleModuleSettings(e, i): any {
         if (i) {
-            this.currentModule = i;
-            this.editModule(false, i);
+            //this.currentModule = i;
+            //this.editModule(false, i);
+            this.editingModule = i;
         }
         this.editingModuleSettings = !this.editingModuleSettings;
+    }
+
+    toggleSearchGifs() {
+        if (this.searchTag == 'pattern') { this.searchTag = 'visuals' };
+        this.searchGifs = !this.searchGifs;
+        if (this.searchGifs && !this.gifResults.length) {
+            this.search();
+        }
+    }
+
+    // Close all the overlays
+    // This is not @FUTUREPROOF, so check back and make
+    // sure all overlays are included
+    closeAllOverlays(): any {
+        this.searchGifs = false;
+        this.searchImages = false;
+        this.browseVideos = false;
+        this.editingModuleSettings = false;
+    }
+
+    search() {
+        console.log('Search', this.searchTag);
+
+        // Gif Search
+        if (this.searchGifs) {
+
+            // Clear the gifs
+            this.gifResults = [];
+
+            // Get 9 other gifs
+            for (let i = 0; i < 9; i++) {
+                this.getGif(this.searchTag).then(res => {
+
+                    console.log(res);
+                    let gifObject = {
+                        gif: res.data.fixed_height_downsampled_url + "?v=" + Math.random() + "&m=" + String(this.currentModule),
+                        still: res.data.fixed_height_small_still_url + "?v=" + Math.random() + "&m=" + String(this.currentModule),
+                        mp4: res.data.image_mp4_url + "?v=" + Math.random() + "&m=" + String(this.currentModule)
+                    };
+
+                    this.gifResults.push(gifObject);
+
+                }, err => {
+                    console.log('err', err);
+                });
+            }
+        }
+
+        // // Image Search
+        // else if (this.searchImages) {
+
+
+
+        //     // Clear the gifs
+        //     this.imageResults = [];
+
+        //     // Get 9 other images
+        //     for (let i = 0; i < 9; i++) {
+        //         this.getImage(this.searchTag).then(res => {
+        //             console.log(res);
+
+        //             let imageObject = {
+        //                 image: res.src.large,
+        //                 still: res.src.small,
+        //                 html: res.url,
+        //                 username: res.photographer,
+        //                 profile: res.photographer_url
+        //             };
+
+        //             // let imageObject = {
+        //             //     image: res.urls.raw,
+        //             //     still: res.urls.thumb,
+        //             //     html: res.links.html,
+        //             //     username: res.user.username,
+        //             //     profile: res.user.links.html
+        //             // };
+        //             this.imageResults.push(imageObject);
+        //         });
+        //     }
+        // }
+    }
+
+    swapGif(i) {
+        //this.tracks[this.currentTrack].modules[this.currentModule].settings.remoteFile = this.gifResults[i].mp4;
+        this.track.modules[this.editingModule].settings.file = "";// this.gifResults[i].mp4;
+        setTimeout(() => {
+            this.track.modules[this.editingModule].settings.file = this.gifResults[i].mp4;
+            this.track.modules[this.editingModule].settings.blockImage = this.gifResults[i].still;
+            this.track.modules[this.editingModule].loading = false;
+            this.drawCanvas();
+            this.toggleSearchGifs();
+        }, 1);
     }
 
 }
