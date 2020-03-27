@@ -1086,7 +1086,7 @@ export class LiveStreamComponent implements OnInit {
     public websiteUrl: any = environment.websiteUrl;
     public environment: any = environment;
     public apiUrl: any = environment.ioUrl;
-
+    info: any = true;
     track: any = {
         name: "Track 1",
         modules: [],
@@ -2643,6 +2643,11 @@ export class LiveStreamComponent implements OnInit {
         this.searchImages = false;
         this.browseVideos = false;
         this.editingModuleSettings = false;
+        this.info = false;
+    }
+
+    toggleInfo(): any {
+        this.info = !this.info;
     }
 
     search() {

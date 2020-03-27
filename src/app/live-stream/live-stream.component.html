@@ -1,6 +1,8 @@
-<div class="buttons" [hidden]="!host">
-    <button mat-raised-button ripple color="primary" (click)="drawCanvas()">Refresh</button>
-
+<div class="buttons">
+    <!-- <button mat-raised-button ripple color="primary" (click)="drawCanvas()">Refresh</button> -->
+    <button title="Info" matRipple mat-mini-fab (click)="toggleInfo()">
+        <mat-icon aria-label="Info">info</mat-icon>
+    </button>
     <!-- <button mat-raised-button ripple color="primary" [matMenuTriggerFor]="menu2">
         Artist: <strong>{{ videoLibrary[currentBrowseArtist].name | titlecase }}</strong>
     </button>
@@ -19,27 +21,45 @@
 </a>
 
 <!-- Set Settings Overlay -->
-<div class="settings-overlay"
-    *ngIf="editingTrackSettings || editingSetSettings || editingModuleSettings || generatingSet"
-    (click)="closeAllOverlays()">
+<div class="settings-overlay" *ngIf="info || editingSetSettings || editingModuleSettings" (click)="closeAllOverlays()">
     &nbsp;.
 </div>
 
-<div class="welcom" *ngIf="welcome">
-    <h1>Visualz Live Stream Stage <i>beta</i></h1>
-    <p *ngIf="host">
-        <ol>
-            <li>You are the host of this stage.</li>
-            <li>Add visual scenes to your backdrop of your stage.</li>
-            <li>The scenes will automatilly change with the audio from your mic/line-in.</li>
-            <li>Share the url address of this page with your viewers.</li>
-        </ol>
-        <p>
-            This has only been tested on chrome for the time being. So please be cautious of other browsers.
-            New features, functionality, effects, and bugfixes will be added often!
-        </p>
+<div class="info" *ngIf="info">
+    <h1>About Visualz Live Stream Stage v1.0.0</h1>
+
+    <h2>Hosts:</h2>
+    <ol>
+        <li>You are the host of this stage.</li>
+        <li>Add visual scenes to your backdrop of your stage.</li>
+        <li>The scenes will automatilly change with the audio from your mic/line-in.</li>
+        <li>Share the url address of this page with your viewers.</li>
+    </ol>
+
+    <h2>Guests:</h2>
+    <ol>
+        <li>You are a guest of this stage.</li>
+        <li>Share the url address of this page with your friends.</li>
+        <li>Have fun.</li>
+    </ol>
+
+    <h1>Share URL</h1>
+    <input type="text" value="http://www.visualzStudio.com/live/{{roomName}}" />
+
+    <p>
+        This is in beta. This has only been tested on chrome for the time being. So please be cautious of other
+        browsers.
+        New features, functionality, effects, and bugfixes will be added often!
     </p>
+
+    <p>
+        By using this page you agree to the terms &amp; conditions and privacy policy of this site.
+    </p>
+
+    <button mat-raised-button ripple color="primary" (click)="toggleInfo()">I Agree, Lets Go</button>
+
 </div>
+
 
 <!-- Module Settings -->
 <div class="settings-dialog" *ngIf="editingModuleSettings">
