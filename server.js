@@ -630,12 +630,22 @@ app.get("/api/sign-s3", async function (req, res) {
 
 // Am I host, for livestream
 app.get('/api/livestream/amihost', async (req, res) => {
+    res.header('Access-Control-Allow-Origin', '*');
+    res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS');
+    res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization, Content-Length, X-Requested-With');
+
     console.log('received a get request to amihost', req.query);
     try {
         let uid = req.query.userId;
         let roomName = req.query.roomName;
+        let peerId = req.query.peerId;
+
         // if the user is host
         if (liveStreamRooms[roomName] && liveStreamRooms[roomName].host == uid) {
+            // update the host peerId
+            liveStreamRooms[roomName].hostPeer = peerId;
+
+            //
             res.write(JSON.stringify({ host: true }));
         }
         // if the user is guest

@@ -1324,38 +1324,69 @@ export class LiveStreamComponent implements OnInit {
             // Connect to websocket server
             this.socketService.connect(this.roomName, true, this.userId, this.peerId);
 
+
+            console.log('connected');
+
+
             console.log('Who am I?');
+            setTimeout(() => {
+                // Am I host
+                this.amIHost(this.roomName, this.userId, this.peerId).then(() => {
 
-            // Am I host
-            this.amIHost(this.roomName, this.userId).then(() => {
+                    this.everythingLoaded = true;
 
-                this.everythingLoaded = true;
+                    // No I am not a host
+                    if (!this.host) {
 
-                // No I am not a host
-                if (!this.host) {
+                        // As a guest call Host here 
+                        console.log('I am a guest.');
+                        this.hostVideoHidden = true;
+                        this.guestVideoHidden = false;
 
-                    // As a guest call Host here 
-                    console.log('I am a guest.');
-                    this.hostVideoHidden = true;
-                    this.guestVideoHidden = false;
+                        this.callHostAndStream(this.hostPeerId);
 
-                    this.callHostAndStream(this.hostPeerId);
+                    }
+                    // Yes I am the host
+                    else {
 
-                }
-                // Yes I am the host
-                else {
+                        // Draw Canvas
+                        console.log('I am the host.');
+                        this.hostVideoHidden = false;
+                        this.guestVideoHidden = true;
 
-                    // Draw Canvas
-                    console.log('I am the host.');
-                    this.hostVideoHidden = false;
-                    this.guestVideoHidden = true;
-                    this.drawCanvas();
+                        //
+                        // Setup and run main three.js canvas
+                        //
+                        this.video = document.getElementById('webcamVideo');
+                        // Setup and run the video
+                        if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
+                            var constraints = { video: { width: 1280, height: 720, facingMode: 'user' } };
+                            navigator.mediaDevices.getUserMedia(constraints).then((stream) => {
+                                // apply the stream to the video element used in the texture
+                                this.video.srcObject = stream;
+                                this.video.play();
+                            });
+                        }
 
-                }
+                        //
+                        // Setup and run audio analyzer p5 canvas
+                        //
+                        if (this.canvas2) {
+                            this.canvas2.remove();
+                            this.canvas2 = null;
+                            delete this.canvas2;
+                        }
+                        this.canvas2 = new p5(this.sketchInput);
 
-            }, (err) => {
-                console.log('Beta err', err);
-            });
+                        this.drawCanvas();
+
+                    }
+
+                }, (err) => {
+                    console.log('Beta err', err);
+                });
+
+            }, 500);
 
         }, (err) => {
             console.log('Alpha err', err);
@@ -1363,14 +1394,14 @@ export class LiveStreamComponent implements OnInit {
 
     }
 
-    amIHost(roomName, uid): any {
+    amIHost(roomName, uid, peerId): any {
         return new Promise((resolve, reject) => {
 
             // this.host = false;
             // resolve();
             // return;
 
-            this.httpClient.get('/api/livestream/amihost?roomName=' + roomName + '&userId=' + uid).subscribe((res: any) => {
+            this.httpClient.get(this.environment.ioUrl + '/api/livestream/amihost?roomName=' + roomName + '&userId=' + uid + '&peerId=' + peerId).subscribe((res: any) => {
                 console.log('res', res);
                 if (res) {
                     //console.log(res.data.images.original.url);
@@ -1452,18 +1483,19 @@ export class LiveStreamComponent implements OnInit {
             this.peer.on('disconnected', () => {
                 this.peer.reconnect();
             });
-            this.peer.on('error', (err: String) => {
+            this.peer.on('error', (err) => {
                 this.peerId = false;
 
                 console.log('PEER ERR', err);
-                if (err.includes('Server has reached its concurrent user limit')) {
-                    this.errorLimit();
-                    return;
-                }
 
-                if (err.indexOf('Get'))
+                // if (err.includes('Server has reached its concurrent user limit')) {
+                //     this.errorLimit();
+                //     return;
+                // }
 
-                    this.errorTryAgain();
+                //if (err.indexOf('Get'))
+
+                //this.errorTryAgain();
                 //alert(err);
             });
         });
@@ -1724,21 +1756,7 @@ export class LiveStreamComponent implements OnInit {
         console.log('Draw Canvas');
         this.sketchLoading = true;
 
-        //
-        // Setup and run main three.js canvas
-        //
-        this.video = document.getElementById('webcamVideo');
 
-
-        // Setup and run the video
-        if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
-            var constraints = { video: { width: 1280, height: 720, facingMode: 'user' } };
-            navigator.mediaDevices.getUserMedia(constraints).then((stream) => {
-                // apply the stream to the video element used in the texture
-                this.video.srcObject = stream;
-                this.video.play();
-            });
-        }
 
         this.createScene(this.rendererCanvas).then(() => {
             // Only run the animate function one time and one time only
@@ -1752,15 +1770,7 @@ export class LiveStreamComponent implements OnInit {
             return;
         });
 
-        //
-        // Setup and run audio analyzer p5 canvas
-        //
-        if (this.canvas2) {
-            this.canvas2.remove();
-            this.canvas2 = null;
-            delete this.canvas2;
-        }
-        this.canvas2 = new p5(this.sketchInput);
+
 
 
     }
@@ -1770,7 +1780,7 @@ export class LiveStreamComponent implements OnInit {
         this.__boxSize = this.screenW / 1.5;
         console.log('__boxSize', this.__boxSize);
         this.__texture = new THREE.VideoTexture(this.video);
-        this.__texture = THREE.LinearFilter;
+        //this.__texture = THREE.LinearFilter;
         this.__geometry = new THREE.PlaneBufferGeometry(this.__boxSize, (this.__boxSize * 720 / 1280));
         //geometry.scale(0.5, 0.5, 0.5);
         this.__material = new THREE.MeshBasicMaterial({ map: this.__texture });
@@ -1847,7 +1857,7 @@ export class LiveStreamComponent implements OnInit {
     editModule(e, i): any {
         this.ngZone.runOutsideAngular(() => {
 
-            console.log('MODULE', this.track.modules[this.currentModule]);
+            //console.log('MODULE', this.track.modules[this.currentModule]);
             this.currentModule = i;
 
         });
