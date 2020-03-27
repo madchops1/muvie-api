@@ -1393,6 +1393,10 @@ export class LiveStreamComponent implements OnInit {
         alert('There was a problem. Please try again in a moment.');
     }
 
+    errorLimit() {
+        alert('Server has reached its user limit. Please try again in a moment.');
+    }
+
     callHostAndStream(id) {
         return new Promise((resolve, reject) => {
             // Setup and run the video
@@ -1432,8 +1436,8 @@ export class LiveStreamComponent implements OnInit {
                 // send audio to TODO...
                 let cnvs: any = document.getElementById('renderCanvas');
                 this.mediaStream = cnvs.captureStream();
-                console.log(this.mic.mediaStream, this.mic.stream)
-                this.mediaStream.addTrack(this.mic.stream[0]);
+                console.log(this.mic.mediaStream, this.mic.stream, this.mic.stream.getAudioTracks());
+                this.mediaStream.addTrack(this.mic.stream.getAudioTracks()[0]);
                 call.answer(this.mediaStream); // answer the call, send the stream...
                 console.log('Answered Call!');
                 // call.on('stream', function (stream) {
@@ -1450,6 +1454,10 @@ export class LiveStreamComponent implements OnInit {
             });
             this.peer.on('error', (err) => {
                 console.log('PEER ERR', err);
+                if (err.includes('Server has reached its concurrent user limit')) {
+                    this.errorTryAgain();
+                    this.errorLimit();
+                }
                 //alert(err);
                 this.peerId = false;
             });

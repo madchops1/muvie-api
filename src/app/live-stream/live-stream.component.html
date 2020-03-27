@@ -25,6 +25,22 @@
     &nbsp;.
 </div>
 
+<div class="welcom" *ngIf="welcome">
+    <h1>Visualz Live Stream Stage <i>beta</i></h1>
+    <p *ngIf="host">
+        <ol>
+            <li>You are the host of this stage.</li>
+            <li>Add visual scenes to your backdrop of your stage.</li>
+            <li>The scenes will automatilly change with the audio from your mic/line-in.</li>
+            <li>Share the url address of this page with your viewers.</li>
+        </ol>
+        <p>
+            This has only been tested on chrome for the time being. So please be cautious of other browsers.
+            New features, functionality, effects, and bugfixes will be added often!
+        </p>
+    </p>
+</div>
+
 <!-- Module Settings -->
 <div class="settings-dialog" *ngIf="editingModuleSettings">
 
