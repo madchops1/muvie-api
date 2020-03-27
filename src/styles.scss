@@ -12,6 +12,25 @@ body {
     overflow-x: hidden;
 }
 
+gridster .gridster-row, gridster .gridster-column {
+    border: 0px !important;
+    background: rgba(0,0,0, 0.3);
+}
+
+gridster {
+    background: #333 !important;
+    box-shadow: inset 0px 0px 5px -1px #000000 !important;
+}
+
+.msg {
+    display: block;
+    text-align: center;
+    background-color: #333;
+    color: #e91e63;
+    padding: 10px;
+    letter-spacing: 2px;
+}
+
 h1 {
     margin-bottom: 40px;
 }
@@ -105,7 +124,7 @@ p {
         float: left;
 
         h1 {
-            font-size: 100px;
+            font-size: 80px;
             margin: 40px 0 0 0px;
 
             @media (max-width: $breakpoint-mobile) {
@@ -145,6 +164,7 @@ p {
     padding: 100px 40px 140px;
     overflow-x: hidden;
     //background-color: #fff;
+    min-height: calc(100vh - 320px);
 
     &.small-bottom {
         padding-bottom: 80px;
@@ -331,8 +351,13 @@ footer{
     padding: 20px 20px 20px 20px;
     font-size: 10px;
     line-height: 20px;
+    background-image: url(https://media3.giphy.com/media/Z4ITmGFsXV19C/giphy.gif?cid=ecf05e4708fb976853e5ae8bf08f47f9d64c57c7f529edee&rid=giphy.gif);
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-size: 4000%;
+    background-position: bottom;
 
-    margin-top: -40px;
+    //margin-top: -40px;
     
     a {
         color: #fff;
@@ -393,8 +418,8 @@ header {
             //font-size: 12px;
             //width: 300px;
             //margin-top: 10px;
-
         }
+
         a, button {
             color: #333;
             //display: inline-block;
@@ -402,7 +427,22 @@ header {
             //font-size: 14px;
             //margin: 10px 0px 0px 0px;
             //padding: 20px;
+        }
 
+        .mat-raised-button {
+            color: #fff !important; 
+            padding: 0px 10px;
+            margin-left: 10px;
+        }
+
+        .mat-button {
+            padding: 0px 10px;
+
+            img {
+                width: 30px;
+                height: 30px;
+                border-radius: 15px;
+            }
         }
     }
 

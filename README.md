@@ -1,3 +1,10 @@
+__      _______  _____ _    _         _      ______
+\ \    / /_   _|/ ____| |  | |  /\   | |    |___  /
+ \ \  / /  | | | (___ | |  | | /  \  | |       / / 
+  \ \/ /   | |  \___ \| |  | |/ /\ \ | |      / /  
+   \  /   _| |_ ____) | |__| / ____ \| |____ / /__ 
+    \/   |_____|_____/ \____/_/    \_\______/_____|
+                                                   
 # Muvie / Visualz Website
 
 This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 7.3.6.

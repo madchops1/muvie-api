@@ -1,3 +1,6 @@
+<div *ngIf="!interactive" class="msg">
+    VISUALZ 2.0.0 is coming in April with more features, fx, screens, &amp; streams!
+</div>
 <header *ngIf="!interactive">
     <a routerLink="/" class="logo">VISUALZ</a>
     <div class="nav">
@@ -7,22 +10,56 @@
         <!--<a routerLink="/filter">Filter</a>-->
 
         <button mat-button routerLink="/">HOME</button>
-        <!-- <button mat-button routerLink="/about">ABOUT</button> -->
+
         <button mat-button routerLink="/download">DOWNLOAD FREE</button>
+
         <!-- <button mat-button routerLink="/prices">PRICES</button> -->
+
+        <!-- <button mat-button [matMenuTriggerFor]="menu2">MARKET</button>
+        <mat-menu #menu2="matMenu">
+            <button mat-menu-item routerLink="/xchange">BROWSE SETS &amp; TRACKS</button>
+            <button mat-menu-item routerLink="/create">CREATE &amp; PUBLISH</button>
+        </mat-menu> -->
+
+        <!-- 
+        <button mat-button [matMenuTriggerFor]="menu1">ABOUT</button>
+        <mat-menu #menu1="matMenu">
+            <button mat-menu-item routerLink="/about">ABOUT</button>
+            <button mat-menu-item routerLink="/events">EVENTS</button>
+            <button mat-menu-item routerLink="/investors">INVESTORS</button>
+        </mat-menu> -->
 
         <!--
         <a routerLink="/support">SUPPORT</a>
         <a routerLink="/how-it-works">HOW IT WORKS</a>
         -->
-        <button mat-button [matMenuTriggerFor]="menu">LEARN &amp; SUPPORT</button>
+        <button mat-button routerLink="/start">LIVE STREAM (NEW)</button>
+
+        <button mat-button [matMenuTriggerFor]="menu">HELP</button>
         <mat-menu #menu="matMenu">
-            <button mat-menu-item routerLink="/how-it-works">LEARN</button>
+            <button mat-menu-item routerLink="/how-it-works">START HERE</button>
             <button mat-menu-item routerLink="/resources">RESOURCES</button>
             <button mat-menu-item routerLink="/support">COMMUNITY</button>
-            <!-- <button mat-menu-item routerLink="/contact">CONTACT</button> -->
-            <!--<button mat-menu-item routerLink="/book">BOOK DEMO</button>-->
+            <button mat-menu-item [matMenuTriggerFor]="menuT">TOOLS</button>
+            <mat-menu #menuT="matMenu">
+                <button mat-menu-item routerLink="/mp4-converter">GIF TO MP4</button>
+                <!-- <button mat-menu-item routerLink="/movie">MUSIC VIDEO CREATOR</button> -->
+            </mat-menu>
         </mat-menu>
+
+        <!-- 
+        <button mat-raised-button class="btn btn-primary btn-margin" *ngIf="!auth.loggedIn" (click)="auth.login()">
+            LOG IN
+        </button>
+
+        <button mat-button [matMenuTriggerFor]="menu3" *ngIf="auth.loggedIn" class="btn btn-primary btn-margin">
+            <img [src]="auth.userProfile$.source._value.picture" /> {{ auth.userProfile$.source._value.given_name }}
+        </button>
+        <mat-menu #menu3="matMenu">
+            <button mat-menu-item routerLink="/profile">ACCOUNT</button>
+            <button mat-menu-item (click)="auth.logout()">LOGOUT</button>
+        </mat-menu> -->
+
     </div>
     <div class="clearfix"></div>
 </header>
@@ -30,11 +67,14 @@
 <router-outlet></router-outlet>
 
 <footer *ngIf="!interactive">
-    <a routerLink="/support">Support</a> |
-    <a routerLink="/how-it-works">How It Works</a> |
-    <a routerLink="/terms-conditions">Terms &amp; Conditions</a> |
-    <a routerLink="/privacy-policy">Privacy Policy</a> |
-    <a href="https://www.instagram.com/visualzapp/" target="_blank">Instagram</a>
+    <!-- <a routerLink="/about">About</a> &nbsp;&nbsp;|&nbsp;&nbsp; -->
+    <!-- <a routerLink="/events">Events</a> &nbsp;&nbsp;|&nbsp;&nbsp; -->
+    <a routerLink="/how-it-works">Start Here</a> &nbsp;&nbsp;|&nbsp;&nbsp;
+    <a routerLink="/support">Support</a> &nbsp;&nbsp;|&nbsp;&nbsp;
+    <!-- <a routerLink="/investors">Investors</a> &nbsp;&nbsp;|&nbsp;&nbsp; -->
+    <a href="https://www.instagram.com/visualzapp/" target="_blank">Instagram</a> &nbsp;&nbsp;|&nbsp;&nbsp;
+    <a routerLink="/terms-conditions">Terms &amp; Conditions</a> &nbsp;&nbsp;|&nbsp;&nbsp;
+    <a routerLink="/privacy-policy">Privacy Policy</a>
     <!--
     <a routerLink="/artist-partners">Artist Partnership</a> |
     <a routerLink="/venue-partners">Venue Partnership</a> |
@@ -42,7 +82,9 @@
     <a routerLink="https://www.instagram.com/visualzapp/">Instagram</a>
     -->
     <br>
-    &copy; VISUALZ 1.2.2 Copyright 2019. All Rights Reserved.
+    &copy; VISUALZ Copyright 2019. All Rights Reserved.
+    <br>
+    Current v1.2.2
     <br>
     Created by <a href="https://karl.pb.studio" target="_blank">Karl</a>
 </footer>

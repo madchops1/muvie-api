@@ -1,0 +1,71 @@
+$breakpoint-mobile: 768px;
+
+.djgif {
+    background-image: url(https://media3.giphy.com/media/Z4ITmGFsXV19C/giphy.gif?cid=ecf05e4708fb976853e5ae8bf08f47f9d64c57c7f529edee&rid=giphy.gif);
+    background-size: cover;
+    background-repeat: no-repeat;
+}
+
+.bigs {
+    font-size: 50px !important;
+    margin: 0px;
+}
+
+.bigtext {
+    font-size: 30px;
+    text-transform: uppercase;
+    padding: 20px;
+}
+
+.dark {
+    background-color: rgba(0,0,0,0.6);
+    padding: 40px;
+}
+
+.white {
+    background: #fff;
+}
+
+input {
+    color: #fff;
+}
+
+a.button {
+    color: #ffffff !important;
+}
+
+.bordered {
+
+    &.one {
+        text-align: right;
+    }
+
+    &.two {
+        text-align: left;
+    }
+
+    //border: 1px #999 dashed;
+    border-radius: 3px;
+    padding: 20px 20px 0px 20px;
+    margin: 0 20px;
+    display: block;
+    width: calc(50% - 85px);
+    
+    //text-align:center;
+    float: left;
+
+    @media (max-width: $breakpoint-mobile) {
+        width: calc(250px);
+        float: none;
+        margin: 20px auto;
+        text-align:center;
+
+    }
+
+    color: #fff;
+
+    a {
+        color: #999;
+    }
+
+}

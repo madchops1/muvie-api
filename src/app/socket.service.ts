@@ -24,8 +24,8 @@ export class SocketService {
 
     constructor(private socket: Socket) { }
 
-    connect(mid): any {
-        this.socket.ioSocket.io.opts.query = { mid: mid } //new options
+    connect(mid, roomName = false, userId = false, peerId = false): any {
+        this.socket.ioSocket.io.opts.query = { mid: mid, roomName: roomName, userId: userId, peerId: peerId } //new options
         this.socket.connect(); //manually connection
     }
 
@@ -73,5 +73,10 @@ export class SocketService {
     sendCrowdScreenImage(dataUri): any {
         console.log('send crowdscreen image', dataUri);
         this.socket.emit('sendCrowdScreenImage', dataUri);
+    }
+
+    peerId(data): any {
+        console.log('send peerId to api socket', data);
+        this.socket.emit('peerId', data)
     }
 }

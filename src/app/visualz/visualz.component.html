@@ -1,8 +1,8 @@
 <div class="wrapper pink">
     <div class="main">
-        <h1>VISUALZ for DJs</h1>
+        <h1>Realtime Audio Reactive Graphics</h1>
         <h2>
-            Free cutting edge realtime audio-reactive visual software for DJs, VJs, Artists, and Venues.
+            Free visual software for live events &amp; streams. Hey DJs, VJs, Artists, and Venues.
         </h2>
         <a routerLink="/download" class="download">DOWNLOAD FREE</a>
     </div>
@@ -25,19 +25,18 @@
         <div class="download-area">
 
             <img src="../../assets/images/icon.ico" class="ico" />
-            
+
             <div *ngIf="deviceInfo.os == 'Mac'" class="clearfix">
-                <a href="https://visualz-1.s3.us-east-2.amazonaws.com/Visualz-1.2.2.dmg" target="_blank" mat-raised-button
-                    (click)="downloadMac()" class="pink button">
+                <a href="https://visualz-1.s3.us-east-2.amazonaws.com/Visualz-1.2.2.dmg" target="_blank"
+                    mat-raised-button (click)="downloadMac()" class="pink button">
                     Download Free
                 </a>
                 <img class="mac" src="../../assets/images/macos.png" />
             </div>
 
             <div *ngIf="deviceInfo.os != 'Mac'" class="clearfix">
-                <a href="https://visualz-1.s3.us-east-2.amazonaws.com/VISUALZ-installer.rar" target="_blank" mat-raised-button
-                    (click)="downloadWindows()" class="pink button">
-                    Download Free
+                <a disabled="disabled" mat-raised-button class="pink button">
+                    Currently Unavailable
                 </a>
                 <img class="windows" src="../../assets/images/windows.png" />
             </div>
@@ -46,14 +45,16 @@
         <div class="release-notes">
             <h1>VISUALZ</h1>
             <p>
-                Visualz brings real-time audio responsiveness and video composition into one place to create great visuals that go to your music's beat. Whether 
-                you are a dj newb or a pro create visuals easily. 
+                Visualz brings real-time audio responsiveness and video composition into one place to create great
+                visuals that go to your music's beat. Whether
+                you are a dj newb or a pro create visuals easily.
             </p>
 
             <div class="big-only">
                 <h2>What's New in Version 1.2.2</h2>
                 <ul>
-                    <li>Released 9/27/2019 version 1.2.2 is the first time Visualz has been available for Mac OSx. Yay!</li>
+                    <li>Released 9/27/2019 version 1.2.2 is the first time Visualz has been available for Mac OSx. Yay!
+                    </li>
                     <li>Crowdscreen fan cam selfie feature is live.</li>
                     <li>Crowdscreen Link changed to just Crowdscreen.</li>
                     <li>Updates to remote control.</li>
@@ -77,16 +78,17 @@
 <div class="content-wrapper white feature">
     <div class="content-inner-wrapper main-feature">
         <img src="../../assets/images/projection.jpg" />
-        <div class="feature-text"> 
+        <div class="feature-text">
             <mat-icon aria-hidden="false" aria-label="FanCam" class="ico wide">cast_connected</mat-icon>
-            <h1>Projection</h1>
-            <h2>Visuals that change to the beat of your music</h2>
+            <h1>Graphics</h1>
+            <h2>Visualizations to the beat of your music</h2>
             <div class="big-only">
                 <p>
-                    Visualz is a tool for creating projections that automatically sync and change with the music in realtime.
+                    Visualz is a tool for creating visual compositions that automatically sync and change with music in
+                    realtime.
                 </p>
                 <p>
-                    Immediately create an awesome experience at your show, event, or party with a visual composition that bumps. 
+                    Immediately make your event a better experience.
                 </p>
             </div>
         </div>
@@ -98,17 +100,18 @@
 <div class="content-wrapper white feature">
     <div class="content-inner-wrapper main-feature">
         <img src="../../assets/images/crowdcam.jpg" />
-        <div class="feature-text"> 
+        <div class="feature-text">
             <mat-icon aria-hidden="false" aria-label="FanCam" class="ico">camera_front</mat-icon>
             <h1>FanCam</h1>
             <h2>Audience selfies sent to the wall in real time</h2>
             <div class="big-only">
                 <p>
-                    The FanCam feature is revolutionary for the visuals space. Now your audience can interact by taking a selfie. 
-                    The image is then sent directly to the projection or wall. 
+                    The FanCam feature is revolutionary for the visuals space. Now your audience can interact by taking
+                    a selfie.
+                    The image is then sent directly to the projection or wall.
                 </p>
                 <p>
-                    Until now this has been complicated and very expensive. Visualz makes it turn-key for free ;) 
+                    Until now this has been complicated and very expensive. Visualz makes it turn-key for free ;)
                 </p>
             </div>
         </div>
@@ -120,20 +123,21 @@
 <div class="content-wrapper white feature">
     <div class="content-inner-wrapper main-feature">
         <img src="../../assets/images/crowdscreen.jpg" />
-        <div class="feature-text"> 
+        <div class="feature-text">
             <mat-icon aria-hidden="false" aria-label="CrowdScreen" class="ico">mobile_screen_share</mat-icon>
             <h1>CrowdScreen</h1>
             <h2>Mobile device flashlight and screen control</h2>
             <div class="big-only">
                 <p>
-                    The CrowdScreen feature is cutting-edge technology for the lighting industry. 
+                    The CrowdScreen feature is cutting-edge technology for the lighting industry.
                     Create amazing visual experiences by incorporating hunderends and thousands of devices.
                 </p>
                 <p>
-                    As with the FanCam this is usually complicated and expensive, requiring hardware. Visualz makes it as easy as clicking a button. Still free.
+                    As with the FanCam this is usually complicated and expensive, requiring hardware. Visualz makes it
+                    as easy as clicking a button. Still free.
                 </p>
             </div>
-        </div>        
+        </div>
     </div>
 </div>
 
@@ -215,29 +219,53 @@
     <app-htw style="margin:120px auto; display: block;"></app-htw>
 </div>
 
+<!-- XCHANGE 
+<header class="skew big-only">
+    <h2>THE XCHANGE</h2>
+</header>
+<div class="content-wrapper white feature">
+    <div class="content-inner-wrapper main-feature">
+        <img src="../../assets/images/projection.jpg" />
+        <div class="feature-text">
+            <mat-icon aria-hidden="false" aria-label="XCHANGE" class="ico wide">store</mat-icon>
+            <h1>THE XCHANGE</h1>
+            <h2>Find visuals for your set</h2>
+            <div class="big-only">
+                <p>
+                    The XCHANGE is where you find visual sets and tracks pre-made by vjs and artists
+                    available to download and use immedeately.
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+<header class="skew white"></header>
+-->
+
+<!-- DISQUS
 <header class="skew big-only">
     <h2>What Do You Want In v1.3.0 (the next version)</h2>
 </header>
-
 <div class="content-wrapper white feature">
     <div class="content-inner-wrapper main-feature">
 
-            <div id="disqus_thread" style="margin:200px auto;"></div>
+        <div id="disqus_thread" style="margin:200px auto;"></div>
     </div>
-</div>
+</div>-->
 
 <header class="skew">
     <h2>Artist Collaborators</h2>
 </header>
 <div class="content-wrapper dark small-bottom">
     <div class="">
-        
+
         <mat-card class="example-card">
             <mat-card-header>
                 <mat-card-title>Sam White</mat-card-title>
                 <mat-card-subtitle>DJ [Chicago]</mat-card-subtitle>
             </mat-card-header>
-            <img mat-card-image src="https://i1.sndcdn.com/avatars-000334629285-bpkurv-t200x200.jpg" alt="Sam White">
+            <img mat-card-image src="https://visualz-1.s3.us-east-2.amazonaws.com/default-images/samwhite.jpg"
+                alt="Sam White">
             <mat-card-actions>
                 <a href="https://samwhitemusic.com/" target="_blank" mat-button>More Info</a>
             </mat-card-actions>
@@ -270,7 +298,8 @@
                 <mat-card-title>Mark Wolff</mat-card-title>
                 <mat-card-subtitle>DJ [Chicago]</mat-card-subtitle>
             </mat-card-header>
-            <img mat-card-image src="https://i1.sndcdn.com/avatars-000612464100-qf9pzz-t200x200.jpg" alt="Mark Wolff">
+            <img mat-card-image src="https://visualz-1.s3.us-east-2.amazonaws.com/default-images/markwolff.jpg"
+                alt="Mark Wolff">
             <mat-card-actions>
                 <a href="https://soundcloud.com/markwolffmusic/" target="_blank" mat-button>More Info</a>
             </mat-card-actions>
@@ -281,8 +310,7 @@
                 <mat-card-title>Johnny Nonstop</mat-card-title>
                 <mat-card-subtitle>DJ [Chicago]</mat-card-subtitle>
             </mat-card-header>
-            <img mat-card-image
-                src="https://scontent.find1-1.fna.fbcdn.net/v/t1.0-0/p552x414/12718189_1006056269481326_4952101631155024436_n.jpg?_nc_cat=105&_nc_oc=AQl9EpiaNWpK0z9T5IXTKKzmUzuXQ7IrXhmCPlZK0OCbEpcgkdfLZKDHOSRvGhQ0YqU&_nc_ht=scontent.find1-1.fna&oh=a9301ea82bdaff1d5e37a85eb6399cc0&oe=5DFF1144"
+            <img mat-card-image src="https://visualz-1.s3.us-east-2.amazonaws.com/default-images/johnnynonstop.jpg"
                 alt="Johnny Nonstop">
             <mat-card-actions>
                 <a href="https://www.facebook.com/johnnynonstop/" target="_blank" mat-button>More Info</a>
@@ -294,9 +322,7 @@
                 <mat-card-title>Zack Joseph</mat-card-title>
                 <mat-card-subtitle>DJ [Chicago]</mat-card-subtitle>
             </mat-card-header>
-            <img mat-card-image
-                src="https://i1.sndcdn.com/avatars-000343177915-enbmz2-t200x200.jpg"
-                alt="Zack Joseph">
+            <img mat-card-image src="https://i1.sndcdn.com/avatars-000343177915-enbmz2-t200x200.jpg" alt="Zack Joseph">
             <mat-card-actions>
                 <a href="https://www.facebook.com/zj2870" target="_blank" mat-button>More Info</a>
             </mat-card-actions>
@@ -307,8 +333,7 @@
                 <mat-card-title>Nick Quicktastic</mat-card-title>
                 <mat-card-subtitle>DJ [Chicago]</mat-card-subtitle>
             </mat-card-header>
-            <img mat-card-image
-                src="https://scontent-ort2-2.cdninstagram.com/vp/88d8f288f9df1e87ded6d5a47ada1d04/5E45DC0B/t51.2885-19/s320x320/67145873_432528487357419_8463760023485415424_n.jpg?_nc_ht=scontent-ort2-2.cdninstagram.com"
+            <img mat-card-image src="https://visualz-1.s3.us-east-2.amazonaws.com/default-images/nickmccoord.jpg"
                 alt="Nick Quicktastic">
             <mat-card-actions>
                 <a href="https://www.stylinoutnetwork.com/quicktastic" target="_blank" mat-button>More Info</a>

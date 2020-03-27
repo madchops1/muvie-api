@@ -1,17 +1,130 @@
 //Install express server
 var sslRedirect = require('heroku-ssl-redirect');
 const express = require('express');
+const helmet = require('helmet');
 const formidableMiddleware = require('express-formidable');
 const bodyParser = require("body-parser");
 const concat = require('./api/concat');
 const signS3 = require('./api/sign-s3');
 const uploadFile = require('./api/uploadFile');
 const make = require('./api/make');
+const convertToMp4 = require('./api/convertToMp4');
+const extractFrame = require('./api/extractFrame');
+const gifToMp4 = require('./api/gifToMp4');
 //const authSeat = require('./api/authSeat');
 //const axios = require('axios');
 const request = require('request');
 const fs = require('fs');
 const AWS = require('aws-sdk');
+const Async = require('async');
+
+const fetch = require('node-fetch');
+global.fetch = fetch;
+
+const Unsplash = require('unsplash-js').default;
+const toJson = require('unsplash-js').toJson;
+
+const Pexels = require('node-pexels').Client;
+
+const visualzLatest = '2.0.0';
+const kill = []; // array of versions eg. ['2.0.0']
+const killMsg = 'This version is dead.';
+
+const baseUrl = 'https://visualz-1.s3.us-east-2.amazonaws.com';
+
+// video library holder
+const videoLibrary = [
+    // Beeple
+    {
+        name: 'beeple',
+        link: 'http://beeple-crap.com',
+        imageUrl: 'https://static.wixstatic.com/media/a64726_ce7a64e6ade34b549d0b3d06963bead9~mv2.jpg/v1/fill/w_263,h_292,al_c,q_80,usm_0.66_1.00_0.01/a64726_ce7a64e6ade34b549d0b3d06963bead9~mv2.webp',
+        collections: [
+            {
+                name: 'manifest',
+                downloadUrl: '',
+                videos: []
+            },
+            {
+                name: 'ubersketch',
+                downloadUrl: '',
+                videos: []
+            },
+            {
+                name: 'brainfeeder',
+                downloadUrl: '',
+                videos: []
+            }
+            // {
+            //     name: 'resolume',
+            //     downloadUrl: '',
+            //     videos: []
+            // },
+            // {
+            //     name: 'four-color-process',
+            //     downloadUrl: '',
+            //     videos: []
+            // },
+            // {
+            //     name: 'other',
+            //     downloadUrl: '',
+            //     videos: []
+            // }
+        ]
+    },
+    {
+        name: 'random clips',
+        link: '',
+        imageUrl: '',
+        collections: [
+            {
+                name: 'other',
+                downloadUrl: '',
+                videos: []
+            },
+            {
+                name: 'soul train',
+                downloadUrl: '',
+                videos: []
+            }
+        ]
+    }
+    // // Catmac
+    // {
+    //     name: 'Catmac',
+    //     link: 'https://vimeo.com/channels/vjfree',
+    //     collections: [
+    //         {
+    //             name: 'All Videos',
+    //             videos: []
+    //         }
+    //     ]
+    // },
+    // // Switzon
+    // {
+    //     name: 'Switzon S. Wigfall III',
+    //     collections: [
+    //         {
+    //             name: 'Supreme Cyphers vol.1',
+    //             videos: []
+    //         },
+    //         {
+    //             name: 'Supreme Cyphers vol.2',
+    //             menu: []
+    //         }
+    //     ]
+    // },
+    // // RPTV
+    // {
+    //     name: 'RPTV',
+    //     link: '',
+    //     collections: [
+    //         {
+
+    //         }
+    //     ]
+    // }
+];
 
 //var enforce = require('express-sslify');
 //console.log('env', process.env.STRIPE_TEST_KEY);
@@ -22,6 +135,14 @@ dotenv.config();
 
 console.log('env', process.env);
 //console.log('Environment', process.env.ENVIRONMENT);
+
+// Unsplash
+const unsplash = new Unsplash({
+    accessKey: process.env.UNSPLASH_ACCESS_KEY,
+    secretKey: process.env.UNSPLASH_SECRET_KEY
+});
+
+const pexels = new Pexels(process.env.PEXELS_API_KEY);
 
 // Twilio
 const accountSid = process.env.TWILIO_SID;
@@ -49,12 +170,37 @@ const s3 = new AWS.S3({
     secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY
 });
 
+// List directories in a directory
+function listDirectories(directory = 'video-library/') {
+    return new Promise((resolve, reject) => {
+        const s3params = {
+            Bucket: 'visualz-1',
+            MaxKeys: 20,
+            Delimiter: '/',
+            Prefix: directory
+        };
+        s3.listObjectsV2(s3params, (err, data) => {
+            if (err) {
+                reject(err);
+            }
+            resolve(data);
+        });
+    });
+}
+
 const app = express();
 
 // enable ssl redirect
 if (process.env.ENVIRONMENT == 'production') {
     app.use(sslRedirect());
 }
+
+app.use(helmet());
+
+app.use(helmet.frameguard({
+    action: 'allow-from',
+    domain: 'file://'
+}));
 
 //var http = require('http').Server(app);
 //app.use(bodyParser.json());
@@ -76,21 +222,71 @@ var server = app.listen(process.env.PORT || 8080, function () {
     console.log("App now running on port", port);
 });
 
+function newGuest() {
+    return {
+        id: ''
+    };
+}
+
+function newLiveStreamRoom() {
+    return {
+        id: '',
+        host: false,
+        name: '',
+        description: '',
+        email: '',
+        guests: []
+    }
+}
+
 let crowdScreenKeyMap = {};
 let remoteQueKeyMap = {};
 let laserzKeyMap = {};
+let phoneListHolder = [];
+let liveStreamRooms = [];
 
 //const io = socketIO(server);
 
 var io = require('socket.io')(server);
-
+let mainSocket = false;
 io.on('connection', (socket) => {
-
+    mainSocket = socket;
     let mid = socket.handshake.query.mid;
     let remoteQueKey = socket.handshake.query.remoteQueKey;
+    let roomName = socket.handshake.query.roomName;
+    let userId = socket.handshake.query.userId;
+    let peerId = socket.handshake.query.peerId;
+
     if (remoteQueKey) {
         if (!remoteQueKeyMap[remoteQueKey]) {
             remoteQueKeyMap[remoteQueKey] = mid;
+        }
+    }
+
+    if (roomName) {
+
+        // new room
+        // - set the host
+        // - set the peerId
+        if (!liveStreamRooms[mid]) {
+
+            // Create the room
+            liveStreamRooms[mid] = newLiveStreamRoom();
+
+            // Create the host
+            liveStreamRooms[mid].host = userId;
+            liveStreamRooms[mid].hostPeer = peerId;
+
+        }
+        // room exists
+        // - this is is the host coming back to the room, or opening a second window.......
+        else if (userId == liveStreamRooms[mid].host) {
+            //...
+        }
+        // room exists
+        // - this is a guest coming to the room 
+        else {
+            // ...
         }
     }
 
@@ -107,11 +303,9 @@ io.on('connection', (socket) => {
         for (let key in crowdScreenKeyMap) {
             let roomMid = crowdScreenKeyMap[key];
             socket.broadcast.to(String(mid)).emit('ping');
-        }
+            //let clients = io.sockets.clients(String(mid)); // all users from room
+            //console.log('CONNECTIONS', mid, clients);
 
-        for (let key in laserzKeyMap) {
-            let roomMid = laserzKeyMap[key];
-            socket.broadcast.to(String(mid)).emit('ping');
         }
 
     }, 4000);
@@ -125,24 +319,9 @@ io.on('connection', (socket) => {
         socket.emit("testclient", value);
     });
 
-    // receive the laserz request from VISUALZ
-    // and pass it on to the website
-    socket.on("sendLaserz", async data => {
-        console.log('server received sendLaserz');
-        let laserzKey = data.key;
-        if (laserzKey) {
-            if (!laserzKeyMap[laserzKey]) {
-                laserzKeyMap[laserzKey] = data.mid;
-            }
-        }
-        socket.broadcast.to(String(data.mid)).emit('getLaserz', data);
-    });
-
-    // receive a refresh laserz request from the networked device / site
-    // and pass it on to the VISUALZ app.
-    socket.on("refreshLaserz", async data => {
-        console.log('server received refreshLaserz');
-        socket.broadcast.to(String(mid)).emit('refreshLaserzRequest', data);
+    socket.on("peerId", value => {
+        console.log('server received peerId', value);
+        socket.broadcast.to(String(value.mid)).emit('peerIdUpdate', value);
     });
 
     // receive the remote que request from VISUALZ
@@ -180,23 +359,43 @@ io.on('connection', (socket) => {
     });
 
     // Get the crowd screen from VISUALZ 
+    // Maps the key to the room mid
     // and send it the website
     socket.on("sendCrowdScreen", async data => {
-        console.log('server received sendCrowdScreen', crowdScreenKeyMap);
+        console.log('server received sendCrowdScreen', crowdScreenKeyMap, data);
         let crowdScreenKey = data.key;
         if (crowdScreenKey) {
             if (!crowdScreenKeyMap[crowdScreenKey]) {
                 crowdScreenKeyMap[crowdScreenKey] = data.mid;
+                phoneListHolder[data.mid] = [];
             }
         }
         socket.broadcast.to(String(mid)).emit('getCrowdScreen', data);
+
+        //let clients = //''io.sockets.clients(String(mid)); // all users from room
+        io.of('/').adapter.clients([String(mid)], (err, clients) => {
+            console.log('CONNECTIONS', mid, clients);
+            socket.broadcast.to(String(mid)).emit('clientCount', clients.length);
+        });
+
     });
 
     // receive a refresh crowd screen request from the web server
     // and pass it on to the VISUALZ APP
     socket.on("refreshCrowdScreen", async data => {
+
         console.log('server received refreshCrowdScreen');
-        socket.broadcast.to(String(mid)).emit('refreshCrowdScreenRequest', data);
+
+        io.of('/').adapter.clients([String(mid)], (err, clients) => {
+            console.log('CONNECTIONS', mid, clients);
+            socket.broadcast.to(String(mid)).emit('refreshCrowdScreenRequest', clients.length);
+        });
+
+        //socket.broadcast.to(String(mid)).emit('refreshCrowdScreenRequest', data);
+
+
+        // let clients = io.sockets.clients(String(mid)); // all users from room
+        // console.log('CONNECTIONS', mid, clients);
     });
 
     // receive an auth request from the remote que 
@@ -222,7 +421,6 @@ io.on('connection', (socket) => {
         socket.broadcast.to(String(mid)).emit('getCrowdScreenImage', data);
     });
 
-    /*
     socket.on("make", async data => {
         try {
             console.log('calling api make', data);
@@ -237,9 +435,44 @@ io.on('connection', (socket) => {
             //handleError(res, err, 'nope');
         }
     });
-    */
-});
 
+    //
+    // Livestream Socket Stuff
+    //
+    // socket.on("hostCheck", async data => {
+    //     console.log('server received host check');
+    //     socket.broadcast.to(String(mid)).emit('getCrowdScreenImage', data);
+    // });
+
+
+    // // Twilio webhook
+    // app.post('/api/sms/reply', (req, res) => {
+    //     console.log('received an sms at twilio number', req.body.Body, req);
+
+    //     const twiml = new MessagingResponse();
+    //     let key = req.body.Body;
+
+    //     if (crowdScreenKeyMap[key]) {
+
+    //         // send the text to the user to connect
+    //         twiml.message('Click the link to connect. ' + crowdScreenUrl + '/crowdscreen/' + crowdScreenKeyMap[key]);
+
+    //         // send the number to the app
+
+
+    //     } else if (remoteQueKeyMap[key]) {
+    //         twiml.message('Click the link to connect. ' + crowdScreenUrl + '/remote-que/' + remoteQueKeyMap[key]);
+    //     } else if (laserzKeyMap[key]) {
+    //         twiml.message('Click the link to connect. ' + crowdScreenUrl + '/laserz/' + laserzKeyMap[key]);
+    //     } else {
+    //         twiml.message('Connection Error :(');
+    //     }
+
+    //     res.writeHead(200, { 'Content-Type': 'text/xml' });
+    //     res.end(twiml.toString());
+    // });
+
+});
 
 // Generic error handler used by all endpoints.
 function handleError(res, reason, message, code) {
@@ -259,6 +492,120 @@ app.get('/*', function(req,res) {
 app.listen(process.env.PORT || 8080);
 */
 
+// Get the environment
+app.get('/api/env', function (req, res) {
+    res.header('Access-Control-Allow-Origin', '*');
+    res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS');
+    res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization, Content-Length, X-Requested-With');
+
+    const { AUTH0_CLIENT_ID, AUTH0_DOMAIN } = process.env;
+    if (!AUTH0_CLIENT_ID && !AUTH0_DOMAIN) {
+        return res.status(400).json({ message: 'No env set.' });
+    }
+    res.json({ AUTH0_CLIENT_ID, AUTH0_DOMAIN });
+});
+
+// Get the latest version
+app.get('/api/latest', function (req, res) {
+    res.header('Access-Control-Allow-Origin', '*');
+    res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS');
+    res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization, Content-Length, X-Requested-With');
+    //console.log('LATEST', 'DELTA');
+    res.status(200).json({ "version": visualzLatest });
+});
+
+// Get the kill command
+app.get('/api/kill', function (req, res) {
+    res.header('Access-Control-Allow-Origin', '*');
+    res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS');
+    res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization, Content-Length, X-Requested-With');
+    //console.log('LATEST', 'ECHO');
+    res.status(200).json({
+        "kill": kill,
+        "killMsg": killMsg
+    });
+});
+
+// Get the video library
+app.get('/api/videos', function (req, res) {
+    res.header('Access-Control-Allow-Origin', '*');
+    res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS');
+    res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization, Content-Length, X-Requested-With');
+
+    videoLibrary.forEach((artist) => {
+        artist.collections.forEach((collection) => {
+            let path = 'video-library/' + artist.name + '/' + collection.name + '/'
+            listDirectories(path).then((contents) => {
+                console.log('CHUCKY', contents);
+                contents.Contents.shift();
+                collection.videos = contents.Contents;
+            });
+        });
+    });
+
+    setTimeout(() => {
+        res.status(200).json(videoLibrary);
+    }, 2000);
+});
+
+// Get photos from unsplash
+app.get('/api/photos', function (req, res) {
+    res.header('Access-Control-Allow-Origin', '*');
+    res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS');
+    res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization, Content-Length, X-Requested-With');
+
+    console.log('REQ', req.query.tag);
+
+    // PEXELS API
+    pexels.search(req.query.tag, 1, Math.floor(Math.random() * 1000) + 1)
+        .then((results) => {
+            if (results.photos.length == 0) {
+
+                throw 'err';
+                //handleError(res, '', 'nope resultos');
+                //return;
+            }
+            res.write(JSON.stringify(results.photos[0]));
+            res.end();
+        })
+        .catch((error) => {
+            // Something bad happened
+            handleError(res, error, 'nope');
+            console.error(error);
+        });
+
+    // UNSPLASH API
+    // unsplash.photos.getRandomPhoto(String(req.query.tag))
+    //     .then(toJson)
+    //     .then(json => {
+    //         res.write(JSON.stringify(json));
+    //         res.end();
+    //     })
+    //     .catch(err => {
+    //         console.log('err', err);
+    //     });
+
+});
+
+// // Get directories
+// app.get('/api/dirs', function (req, res) {
+//     res.header('Access-Control-Allow-Origin', '*');
+//     res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS');
+//     res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization, Content-Length, X-Requested-With');
+
+//     let dir;
+//     if (req.query.dir) {
+//         dir = req.query.dir;
+//     } else {
+//         dir = 'video-library/'
+//     }
+
+//     listDirectories(dir).then((dirs) => {
+//         res.status(200).json(dirs);
+//     });
+// })
+
+// Sign s3 visualz
 app.get("/api/sign-s3-visualz", async function (req, res) {
     console.log('upload from visualz');
     try {
@@ -270,6 +617,7 @@ app.get("/api/sign-s3-visualz", async function (req, res) {
     }
 });
 
+// Sign s3 muvie
 app.get("/api/sign-s3", async function (req, res) {
     try {
         let sign = await signS3.signS3(req);
@@ -280,6 +628,29 @@ app.get("/api/sign-s3", async function (req, res) {
     }
 });
 
+// Am I host, for livestream
+app.get('/api/livestream/amihost', async (req, res) => {
+    console.log('received a get request to amihost', req.query);
+    try {
+        let uid = req.query.userId;
+        let roomName = req.query.roomName;
+        // if the user is host
+        if (liveStreamRooms[roomName] && liveStreamRooms[roomName].host == uid) {
+            res.write(JSON.stringify({ host: true }));
+        }
+        // if the user is guest
+        else {
+            res.write(JSON.stringify({ host: false, hostPeer: liveStreamRooms[roomName].hostPeer }));
+        }
+        res.end();
+    }
+    catch (err) {
+        handleError(res, err, 'nope')
+    }
+
+});
+
+// Website Entrypoint
 app.get("*", (req, res) => {
     //console.log('ALPHA');
     res.sendFile(__dirname + '/dist/muvie/index.html');	//    res.sendFile(__dirname + '/dist/muvie/index.html');
@@ -326,11 +697,9 @@ app.post("/api/make", async function (req, res) {
     try {
         console.log('calling api make', req.fields);
         let makeVideo = await make.Make(req);
-
         res.header('Access-Control-Allow-Origin', '*');
         res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS');
         res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization, Content-Length, X-Requested-With');
-
         res.write(JSON.stringify(makeVideo));
         res.end();
     } catch (err) {
@@ -346,7 +715,6 @@ app.get("/api/concat", function (req, res) {
             res.header('Access-Control-Allow-Origin', '*');
             res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS');
             res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization, Content-Length, X-Requested-With');
-
             res.status(200).json();
         },
             function (err) {
@@ -358,23 +726,72 @@ app.get("/api/concat", function (req, res) {
     }
 });
 
+app.post("/api/convertToMp4", async function (req, res) {
+    try {
+        console.log('calling api convertToMp4', req.fields);
+        let convertVideo = await convertToMp4.ConvertToMp4(req);
+        res.header('Access-Control-Allow-Origin', '*');
+        res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS');
+        res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization, Content-Length, X-Requested-With');
+        res.write(JSON.stringify(convertVideo));
+        res.end();
+    } catch (err) {
+        handleError(res, err, 'nope');
+    }
+});
+
+app.post("/api/gifToMp4", async function (req, res) {
+    try {
+        console.log('calling api gifToMp4', req.body);
+        let convertGif = await gifToMp4.GifToMp4(req);
+        res.header('Access-Control-Allow-Origin', '*');
+        res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS');
+        res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization, Content-Length, X-Requested-With');
+        res.status(200).json(convertGif);
+    } catch (err) {
+        handleError(res, err, 'nope');
+    }
+});
+
+app.post("/api/extractFrame", async function (req, res) {
+    try {
+        console.log('calling api extractFrame');
+        let getFrame = await extractFrame.ExtractFrame(req);
+        res.header('Access-Control-Allow-Origin', '*');
+        res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS');
+        res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization, Content-Length, X-Requested-With');
+        res.status(200).json(getFrame);
+    } catch (err) {
+        handleError(res, err, 'nope');
+    }
+});
+
 // Twilio webhook
 app.post('/api/sms/reply', (req, res) => {
     console.log('received an sms at twilio number', req.body.Body);
-
     const twiml = new MessagingResponse();
     let key = req.body.Body;
-
+    // Crowdscreen connect
     if (crowdScreenKeyMap[key]) {
+        // send the text to the user to connect
         twiml.message('Click the link to connect. ' + crowdScreenUrl + '/crowdscreen/' + crowdScreenKeyMap[key]);
-    } else if (remoteQueKeyMap[key]) {
+        // send the number to the app
+        //mainSocket.emit('newPhoneNumber', req.body.From);
+        //phoneListHolder[String(crowdScreenKeyMap[key])].push = req.body.From;
+        mainSocket.broadcast.to(String(crowdScreenKeyMap[key])).emit('newPhoneNumber', req.body.From);
+    }
+    // Remote Connect
+    else if (remoteQueKeyMap[key]) {
         twiml.message('Click the link to connect. ' + crowdScreenUrl + '/remote-que/' + remoteQueKeyMap[key]);
-    } else if (laserzKeyMap[key]) {
-        twiml.message('Click the link to connect. ' + crowdScreenUrl + '/laserz/' + laserzKeyMap[key]);
-    } else {
+    }
+    // Laserz
+    // else if (laserzKeyMap[key]) {
+    //     twiml.message('Click the link to connect. ' + crowdScreenUrl + '/laserz/' + laserzKeyMap[key]);
+    // } 
+    // Error
+    else {
         twiml.message('Connection Error :(');
     }
-
     res.writeHead(200, { 'Content-Type': 'text/xml' });
     res.end(twiml.toString());
 });
@@ -505,4 +922,3 @@ app.post("/api/removeSeat", async function (req, res) {
         handleError(res, err, 'nope');
     }
 });
-

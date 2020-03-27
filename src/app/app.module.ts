@@ -8,7 +8,6 @@ import { FormsModule } from '@angular/forms';
 import { AppRoutingModule } from './app-routing.module';
 import { DeviceDetectorModule } from 'ngx-device-detector';
 
-
 import { AppComponent } from './app.component';
 import { UploadComponent } from './upload/upload.component';
 import { TestComponent } from './test/test.component';
@@ -37,6 +36,14 @@ import { RemoteCamComponent } from './remote-cam/remote-cam.component';
 import { RemoteQueComponent } from './remote-que/remote-que.component';
 import { LaserzComponent } from './laserz/laserz.component';
 import { HtwComponent } from './htw/htw.component';
+import { WelcomeComponent } from './welcome/welcome.component';
+import { ProfileComponent } from './profile/profile.component';
+import { Mp4ConverterComponent } from './mp4-converter/mp4-converter.component';
+import { RemoteScreenComponent } from './remote-screen/remote-screen.component';
+import { LiveStreamComponent } from './live-stream/live-stream.component';
+import { StreamStartComponent } from './stream-start/stream-start.component';
+import { GridsterModule } from 'angular-gridster2';
+import { AboutComponent } from './about/about.component';
 
 const config: SocketIoConfig = { url: environment.ioUrl, options: { autoConnect: false } };
 
@@ -63,7 +70,14 @@ const config: SocketIoConfig = { url: environment.ioUrl, options: { autoConnect:
         RemoteCamComponent,
         RemoteQueComponent,
         LaserzComponent,
-        HtwComponent
+        HtwComponent,
+        WelcomeComponent,
+        ProfileComponent,
+        Mp4ConverterComponent,
+        RemoteScreenComponent,
+        LiveStreamComponent,
+        StreamStartComponent,
+        AboutComponent
     ],
     imports: [
         BrowserModule,
@@ -85,6 +99,7 @@ const config: SocketIoConfig = { url: environment.ioUrl, options: { autoConnect:
         MatIconModule,
         MatSlideToggleModule,
         MatTooltipModule,
+        GridsterModule,
         HttpClientModule,
         FontAwesomeModule,
         NgxAudioPlayerModule,

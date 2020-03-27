@@ -1,9 +1,11 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
-//import { UploadComponent } from './upload/upload.component';
-//import { TestComponent } from './test/test.component';
-//import { NewMovieComponent } from './new-movie/new-movie.component';
-//import { FilterComponent } from './filter/filter.component';
+
+// import { UploadComponent } from './upload/upload.component';
+// import { TestComponent } from './test/test.component';
+import { NewMovieComponent } from './new-movie/new-movie.component';
+// import { FilterComponent } from './filter/filter.component';
+
 import { VisualzComponent } from './visualz/visualz.component';
 import { SupportComponent } from './support/support.component';
 import { BuyComponent } from './buy/buy.component';
@@ -20,6 +22,13 @@ import { FanScreenComponent } from './fan-screen/fan-screen.component';
 import { RemoteCamComponent } from './remote-cam/remote-cam.component';
 import { RemoteQueComponent } from './remote-que/remote-que.component';
 import { LaserzComponent } from './laserz/laserz.component';
+import { WelcomeComponent } from './welcome/welcome.component';
+import { ProfileComponent } from './profile/profile.component';
+import { RemoteScreenComponent } from './remote-screen/remote-screen.component';
+import { LiveStreamComponent } from './live-stream/live-stream.component';
+import { StreamStartComponent } from './stream-start/stream-start.component';
+import { AuthGuard } from './auth.guard';
+import { Mp4ConverterComponent } from './mp4-converter/mp4-converter.component';
 
 const routes: Routes = [
     { path: '', component: VisualzComponent },
@@ -38,12 +47,22 @@ const routes: Routes = [
     { path: 'crowdscreen/:mid', component: FanScreenComponent },
     { path: 'remote-cam/:mid', component: RemoteCamComponent },
     { path: 'remote-que/:mid', component: RemoteQueComponent },
-    { path: 'laserz/:mid', component: LaserzComponent }
+    { path: 'laserz/:mid', component: LaserzComponent },
+    { path: 'welcome/:v', component: WelcomeComponent },
+    {
+        path: 'profile',
+        component: ProfileComponent,
+        canActivate: [AuthGuard]
+    },
+    { path: 'mp4-converter', component: Mp4ConverterComponent },
+    { path: 'movie', component: NewMovieComponent },
+    { path: 'remote-screen/:pid/:mid', component: RemoteScreenComponent },
+    { path: 'start', component: StreamStartComponent },
+    { path: 'live/:key', component: LiveStreamComponent }
 
-    //{ path: 'movie', component: NewMovieComponent },
-    //{ path: 'filter', component: FilterComponent },
-    //{ path: 'upload', component: UploadComponent },
-    //{ path: 'test', component: TestComponent }
+    // { path: 'filter', component: FilterComponent },
+    // { path: 'upload', component: UploadComponent },
+    // { path: 'test', component: TestComponent }
 ];
 
 @NgModule({

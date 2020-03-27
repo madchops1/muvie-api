@@ -1,0 +1,29 @@
+<div class="content-wrapper normal mp4">
+    <h1 class="center">Gif to Mp4 Converter</h1>
+    <div class="clearfix"></div>
+
+    <button mat-raised-button (click)="uploadervideo.click()">SELECT GIF FILE</button>
+    <input hidden type="file" #uploadervideo (change)="startUpload($event)" />
+
+    <div class="loading" [hidden]="!uploading">
+        <mat-spinner></mat-spinner>
+    </div>
+
+    <div [hidden]="!file">
+        <img src="{{file}}" style="max-width: 320px;" />
+        <!-- {{file}} -->
+        <br>
+        <button mat-raised-button (click)="convert()">CONVERT</button>
+    </div>
+
+    <div [hidden]="!finalFile">
+        <video width="320" height="240" *ngIf="finalFile" src="{{finalFile}}" controls>
+            Your browser does not support the video tag.
+        </video>
+        <br>
+        <a href="{{finalFile}}" target="_blank">DOWNLOAD</a>
+        <!-- {{finalFile}} -->
+    </div>
+
+    <br><br><br><br><br><br>
+</div>

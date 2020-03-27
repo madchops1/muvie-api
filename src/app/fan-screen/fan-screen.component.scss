@@ -10,6 +10,10 @@
     top: 0px;
     z-index: 0;
     //margin: 5%;
+    transform: rotateY(180deg);
+    -webkit-transform:rotateY(180deg); /* Safari and Chrome */
+    -moz-transform:rotateY(180deg); /* Firefox */
+
 }
 
 canvas {
@@ -17,7 +21,7 @@ canvas {
     top: 0px;
     z-index: 1;
     width: 100vw;
-    height: 100vh;
+    height: calc(100vh + 10px);
 }
 
 .take-pic {
@@ -27,14 +31,34 @@ canvas {
     z-index: 2;
 }
 
+.playing-video {
+    position: absolute; 
+    //top: -77px; 
+    //left: -99px; 
+    top: 0px;
+    left: 0px;
+    z-index: 4;
+
+}
+
 .grant-perms {
     position: fixed;
     bottom: 20px;
     left: calc(50% - 100px);
     width: 200px;
     z-index: 2;
-    background-color: #fff;
-    color: #000;
+    background-color: #ff4081;
+    color: #333;
+}
+
+.start-button {
+    position: fixed;
+    z-index: 5;
+    width: 100vw;
+    height: 100vh;
+    background-color: #ff4081;
+    color: #333;
+    font-size: 40px;
 }
 
 .main-wrapper {
@@ -53,4 +77,3 @@ body, html {
     top: 30vh;
     width: 100%;
 }
-

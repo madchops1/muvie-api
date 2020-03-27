@@ -1,0 +1,318 @@
+<div class="buttons">
+    <!-- <button mat-raised-button ripple color="primary" (click)="drawCanvas()">Refresh</button> -->
+    <button title="Info" matRipple mat-mini-fab (click)="toggleInfo()">
+        <mat-icon aria-label="Info">info</mat-icon>
+    </button>
+    <!-- <button mat-raised-button ripple color="primary" [matMenuTriggerFor]="menu2">
+        Artist: <strong>{{ videoLibrary[currentBrowseArtist].name | titlecase }}</strong>
+    </button>
+
+    <mat-menu #menu2="matMenu">
+        <button mat-menu-item (click)="currentBrowseArtist = i" *ngFor="let artist of videoLibrary; let i = index">
+            {{ artist.name | titlecase }}
+        </button>
+    </mat-menu> -->
+
+</div>
+
+<a class="close-x" (click)="closeAllOverlays()"
+    *ngIf="searchGifs || searchImages || browseVideos || editingModuleSettings">
+    <mat-icon aria-label="close">close</mat-icon>
+</a>
+
+<!-- Set Settings Overlay -->
+<div class="settings-overlay" *ngIf="info || editingSetSettings || editingModuleSettings" (click)="closeAllOverlays()">
+    &nbsp;.
+</div>
+
+<div class="info" *ngIf="info">
+    <h1>About Visualz Live Stream Stage v1.0.0</h1>
+
+    <h2>Hosts:</h2>
+    <ol>
+        <li>You are the host of this stage.</li>
+        <li>Add visual scenes to your backdrop of your stage.</li>
+        <li>The scenes will automatilly change with the audio from your mic/line-in.</li>
+        <li>Share the url address of this page with your viewers.</li>
+    </ol>
+
+    <h2>Guests:</h2>
+    <ol>
+        <li>You are a guest of this stage.</li>
+        <li>Share the url address of this page with your friends.</li>
+        <li>Have fun.</li>
+    </ol>
+
+    <h1>Share URL</h1>
+    <input type="text" value="http://www.visualzStudio.com/live/{{roomName}}" />
+
+    <p>
+        This is in beta. This has only been tested on chrome for the time being. So please be cautious of other
+        browsers.
+        New features, functionality, effects, and bugfixes will be added often!
+    </p>
+
+    <p>
+        By using this page you agree to the terms &amp; conditions and privacy policy of this site.
+    </p>
+
+    <button mat-raised-button ripple color="primary" (click)="toggleInfo()">I Agree, Lets Go</button>
+
+</div>
+
+
+<!-- Module Settings -->
+<div class="settings-dialog" *ngIf="editingModuleSettings">
+
+    <div class="module-settings">
+        <div *ngIf="track.modules[editingModule]">
+            <div class="preferences-title">
+                {{ track.modules[editingModule].name }}
+                <br>
+                Module {{ editingModule | number }}
+                <br>
+                {{ track.modules[editingModule].uuid }}
+            </div>
+            <div *ngFor="let key of objectKeys(track.modules[editingModule].settings)">
+
+                <!-- <div *ngIf="key == 'file'">
+
+                    <div class="filepath" *ngIf="track.modules[currentModule].settings[key] != ''"
+                        title="{{ track.modules[currentModule].settings[key] }}">
+                        File Path: {{track.modules[currentModule].settings[key] | truncate : 20 }}
+                    </div>
+
+                    <img *ngIf="track.modules[currentModule].settings[key] && track.modules[currentModule].name == 'Image'"
+                        src="{{track.modules[currentModule].settings[key]}}" class="setting-image" />
+
+                    <button mat-raised-button (click)="uploadervideo.click()">Browse Files</button>
+
+                    <input type="file" [hidden]="true" #uploadervideo (change)="uploadVideoFile($event, key)" />
+
+                    <button *ngIf="tracks[currentTrack].modules[currentModule].settings[key] !== ''" mat-raised-button
+                        (click)="removeFile($event,key)" class="settings-button">Remove File</button>
+                </div>
+
+                <div *ngIf="key == 'rotation' || key == 'textSize'">
+                    <label *ngIf="key == 'textSize'">Text Size</label>
+                    <label *ngIf="key == 'rotation'">Degrees</label>
+                    <input type="number" [value]="tracks[currentTrack].modules[currentModule].settings[key]"
+                        (change)="changeRotation($event, key)" />
+                </div>
+
+                <div *ngIf="key == 'text'" class="preferences-item">
+                    <label>{{ key | titlecase }}</label>
+                    <input type="text" [value]="tracks[currentTrack].modules[currentModule].settings[key]"
+                        (change)="changeText($event, key)" />
+                </div> -->
+
+                <div class="preferences-item" *ngIf="key == 'searchGifs'">
+                    <button mat-raised-button (click)="toggleSearchGifs()">
+                        Search Gifs
+                    </button>
+                </div>
+
+                <!-- <div class="preferences-item" *ngIf="key == 'searchImages'">
+                    <button mat-raised-button (click)="toggleSearchImages()" *ngIf="key == 'searchImages'">
+                        Search Images
+                    </button>
+                </div>
+
+                <div class="preferences-item" *ngIf="key == 'browseVideos'">
+                    <button mat-raised-button (click)="toggleBrowseVideos()" *ngIf="key == 'browseVideos'">
+                        Browse Video Library
+                    </button>
+                </div> -->
+
+                <!-- <div *ngIf="key == 'number'">
+                    <label>Number</label>
+                    <input type="text" disabled="disabled"
+                        [value]="tracks[currentTrack].modules[currentModule].settings[key]" />
+                </div> -->
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="gif-image-search" (click)="closeAllOverlays($event)" *ngIf="searchGifs || searchImages || browseVideos">
+
+    <div class="search-bar" (click)="$event.stopPropagation()" *ngIf="searchGifs || searchImages">
+        <form>
+            <input type="text" value="search" [(ngModel)]="searchTag" name="searchTag" />
+            <button mat-raised-button ripple class="search" (click)="search()" color="primary">Search</button>
+        </form>
+    </div>
+
+    <div class="browse-bar" *ngIf="browseVideos" (click)="$event.stopPropagation()">
+
+        <div class='top'>
+
+            <div class='feature-video'>
+                <video width="" height="290" class="playing-video" muted loop controls>
+                    <!-- <source src="https://visualz-1.s3.us-east-2.amazonaws.com/" type="video/mp4"> -->
+                </video>
+            </div>
+
+            <div class="author"
+                [ngStyle]="{'background-image': 'url(' + videoLibrary[currentBrowseArtist].imageUrl + ')'}">
+                <div class="detail">
+                    <span class="name">
+                        {{ videoLibrary[currentBrowseArtist].name | titlecase }} |
+                        {{ videoLibrary[currentBrowseArtist].collections.length }} Collection(s) |
+                        {{ countVideos() }} Video(s)
+                    </span>
+                    <a (click)="openUrl(videoLibrary[currentBrowseArtist].link)">
+                        More from {{ videoLibrary[currentBrowseArtist].name | titlecase }}
+                    </a>
+                </div>
+            </div>
+
+            <div class='fda'>
+                <img class='cc' src='../assets/cc.webp' />
+                <div class='cc-description'>
+                    All videos are released by their respective authors under the Creative Commons license and are
+                    available
+                    for both commercial and
+                    non-commercial work in ANY form. All audio rights are retained by
+                    their respective owners.
+                </div>
+
+                <!-- Artist Browse Dropdown-->
+                <button mat-raised-button ripple color="primary" [matMenuTriggerFor]="menu2">
+                    Artist: <strong>{{ videoLibrary[currentBrowseArtist].name | titlecase }}</strong>
+                </button>
+                <mat-menu #menu2="matMenu">
+                    <button mat-menu-item (click)="currentBrowseArtist = i"
+                        *ngFor="let artist of videoLibrary; let i = index">
+                        {{ artist.name | titlecase }}
+                    </button>
+                </mat-menu>
+
+                <!-- Collection Browse Dropdown -->
+                <button mat-raised-button ripple class="" color="primary" [matMenuTriggerFor]="menu3">
+                    Collection:
+                    <strong>{{ videoLibrary[currentBrowseArtist].collections[currentBrowseArtistCollection].name | titlecase }}</strong>
+                </button>
+                <mat-menu #menu3="matMenu">
+                    <button mat-menu-item (click)="currentBrowseArtistCollection = i"
+                        *ngFor="let collection of videoLibrary[currentBrowseArtist].collections; let i = index">
+                        {{ collection.name | titlecase }}
+                    </button>
+                </mat-menu>
+            </div>
+
+            <div class='clearfix'></div>
+
+        </div>
+    </div>
+
+    <!-- Results -->
+    <div class="search-results" (click)="$event.stopPropagation()">
+
+        <!-- Gif Search w/ Giphy -->
+        <div *ngIf="searchGifs">
+            <div *ngFor="let g of gifResults; let i = index" (click)="swapGif(i)" class="result">
+                <img src="{{g.gif}}" />
+            </div>
+        </div>
+
+        <!-- Image Search w/ Unsplash
+        <div *ngIf="searchImages">
+            <div *ngFor="let g of imageResults; let i = index" (click)="swapImage(i)" class="result">
+                <img src="{{g.still}}" />
+                <div class="author">
+                    By <a (click)="openUrl(g.profile)">{{g.username}}</a>
+                    from <a (click)="openUrl(g.html)">Pexels</a>
+                </div>
+            </div>
+        </div>-->
+
+        <!-- Video Library
+        <div *ngIf="browseVideos">
+            <div [hidden]="g.mp4 == ''"
+                *ngFor="let g of videoLibrary[currentBrowseArtist].collections[currentBrowseArtistCollection].videos; let i = index"
+                class="result">
+                <video width="320" height="180" class="playing-video" muted loop controls>
+                    <source src="https://visualz-1.s3.us-east-2.amazonaws.com/{{g.Key}}" type="video/mp4">
+                </video>
+                <div class="author">
+                    <a (click)="swapVideo(i)">Add To Scene</a>
+                </div>
+            </div>
+        </div>-->
+
+    </div>
+
+    <!-- <div class="browse-results" (click)="$event.stopPropagation()">
+
+        <div class="result">
+            
+        </div>
+
+    </div> -->
+
+</div>
+
+<!-- Line in waveform -->
+<div id="waveform" #waveform [hidden]="!host"></div>
+
+<!-- Loading Overlay, overlays preview window only -->
+<!-- <div class="loading-sketch" [hidden]="!sketchLoading"></div> -->
+
+<!-- Three preview area -->
+<div id="renderContainer" class="renderer-container" #rendererContainer [hidden]="hostVideoHidden">
+    <canvas #rendererCanvas id="renderCanvas" crossorigin="anonymous"></canvas>
+</div>
+
+<video class="webcam-video" id="webcamVideo" controls autoplay muted [hidden]="hostVideoHidden"></video>
+<video class="guest-video" id="guestVideo" controls [hidden]="guestVideoHidden"></video>
+
+<!-- Holder for three js, contains video elements for videoTexture, canvas for Text  -->
+<div *ngFor="let module of track.modules; let i = index" [hidden]="currentModule != i || !host" class="raw-video">
+
+    <!-- Video -->
+    <video id="video-{{module.uuid}}" crossOrigin="anonymous"
+        *ngIf="module.name == 'Media' && module.settings.file && module.settings.fileType == 'mp4'" controls autoplay
+        playsinline loop muted>
+        <source src="{{module.settings.file}}" type='video/mp4'>
+    </video>
+
+    <!-- Children (canvas) -->
+    <div id="children-{{module.uuid}}">
+        <canvas id="canvas-{{module.uuid}}"></canvas>
+    </div>
+</div>
+
+<mat-toolbar class="pink" *ngIf="host">
+    <mat-toolbar-row class="main" id="main-toolbar">
+
+        <button title="Add Media" matRipple mat-mini-fab (click)="addModule(0)">
+            <mat-icon aria-label="Add Media">library_add</mat-icon>
+        </button>
+
+    </mat-toolbar-row>
+</mat-toolbar>
+
+<!-- Main/Basic Modules -->
+<div class="mod-wrapper" [hidden]="hostVideoHidden">
+    <div class="modules">
+        <gridster [options]="modOptions">
+            <gridster-item [item]="module" (mousedown)="editModule($event, i)"
+                [ngClass]="{'selected': currentModule == i}"
+                [ngStyle]="{'background-color': module.name == 'Color' ? module.settings.backgroundColor : module.settings.blockColor, 'background-size': 'cover', 'background-position': 'center', 'background-image': 'url('+module.settings.blockImage+''}"
+                *ngFor="let module of track.modules; let i = index">
+                <mat-icon>{{module.icon}}</mat-icon>
+                <div class="button-holder">
+                    <button mat-mini-fab (mousedown)="removeModule($event, i)">
+                        <mat-icon>delete</mat-icon>
+                    </button>
+                    <button mat-mini-fab (mousedown)="toggleModuleSettings($event, i)">
+                        <mat-icon>settings_applications</mat-icon>
+                    </button>
+                    <span *ngIf="true == false">{{i + 1}}</span>
+                </div>
+            </gridster-item>
+        </gridster>
+    </div>
+</div>
