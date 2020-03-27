@@ -1436,7 +1436,7 @@ export class LiveStreamComponent implements OnInit {
                 // send audio to TODO...
                 let cnvs: any = document.getElementById('renderCanvas');
                 this.mediaStream = cnvs.captureStream();
-                console.log(this.mic.mediaStream, this.mic.stream, this.mic.stream.getAudioTracks());
+                console.log(this.mediaStream, this.mic.stream.getAudioTracks());
                 this.mediaStream.addTrack(this.mic.stream.getAudioTracks()[0]);
                 call.answer(this.mediaStream); // answer the call, send the stream...
                 console.log('Answered Call!');
@@ -1452,14 +1452,19 @@ export class LiveStreamComponent implements OnInit {
             this.peer.on('disconnected', () => {
                 this.peer.reconnect();
             });
-            this.peer.on('error', (err) => {
+            this.peer.on('error', (err: String) => {
+                this.peerId = false;
+
                 console.log('PEER ERR', err);
                 if (err.includes('Server has reached its concurrent user limit')) {
-                    this.errorTryAgain();
                     this.errorLimit();
+                    return;
                 }
+
+                if (err.indexOf('Get'))
+
+                    this.errorTryAgain();
                 //alert(err);
-                this.peerId = false;
             });
         });
     }
@@ -1765,12 +1770,14 @@ export class LiveStreamComponent implements OnInit {
         this.__boxSize = this.screenW / 1.5;
         console.log('__boxSize', this.__boxSize);
         this.__texture = new THREE.VideoTexture(this.video);
+        this.__texture = THREE.LinearFilter;
         this.__geometry = new THREE.PlaneBufferGeometry(this.__boxSize, (this.__boxSize * 720 / 1280));
         //geometry.scale(0.5, 0.5, 0.5);
         this.__material = new THREE.MeshBasicMaterial({ map: this.__texture });
         this.__cube = new THREE.Mesh(this.__geometry, this.__material);
         this.scene.add(this.__cube);
         this.__cube.position.z = 100;
+
         //this.__cube.position.y = 50;
     }
 
