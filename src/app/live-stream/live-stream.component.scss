@@ -39,8 +39,17 @@ mat-toolbar {
     position: absolute;
     z-index: 2;
     bottom: 100px;
+    left: 0px;
+    display: inline !important;
 }
 
+.guest-video {
+    width: 100vw;
+    height: 100vh;
+    position: absolute;
+    top: 0px;
+    left: 0px;
+}
 
 
 .renderer-container {

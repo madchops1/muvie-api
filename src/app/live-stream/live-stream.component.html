@@ -225,12 +225,12 @@
 <!-- <div class="loading-sketch" [hidden]="!sketchLoading"></div> -->
 
 <!-- Three preview area -->
-<div id="renderContainer" class="renderer-container" #rendererContainer>
+<div id="renderContainer" class="renderer-container" #rendererContainer [hidden]="hostVideoHidden">
     <canvas #rendererCanvas id="renderCanvas" crossorigin="anonymous"></canvas>
 </div>
 
 <video class="webcam-video" id="webcamVideo" controls autoplay muted [hidden]="hostVideoHidden"></video>
-<video class="guest-video" controls [hidden]="guestVideoHidden"></video>
+<video class="guest-video" id="guestVideo" controls [hidden]="guestVideoHidden"></video>
 
 <!-- Holder for three js, contains video elements for videoTexture, canvas for Text  -->
 <div *ngFor="let module of track.modules; let i = index" [hidden]="currentModule != i || !host" class="raw-video">
@@ -248,7 +248,7 @@
     </div>
 </div>
 
-<mat-toolbar class="pink" [hidden]="!host">
+<mat-toolbar class="pink" *ngIf="host">
     <mat-toolbar-row class="main" id="main-toolbar">
 
         <button title="Add Media" matRipple mat-mini-fab (click)="addModule(0)">

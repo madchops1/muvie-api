@@ -1121,6 +1121,7 @@ export class LiveStreamComponent implements OnInit {
     modGrid: Array<GridsterItem>;
 
     mediaStream: any;
+    hostPeerId: any;
 
     canvas: any;                // Deprecated canvas for the main p5 preview
     canvas2: any;               // canvas for the p5 audio analyzer
@@ -1323,22 +1324,31 @@ export class LiveStreamComponent implements OnInit {
             // Connect to websocket server
             this.socketService.connect(this.roomName, true, this.userId, this.peerId);
 
+            console.log('Who am I?');
+
             // Am I host
             this.amIHost(this.roomName, this.userId).then(() => {
 
                 this.everythingLoaded = true;
 
-                // 
+                // No I am not a host
                 if (!this.host) {
 
-                    // call Host here 
+                    // As a guest call Host here 
+                    console.log('I am a guest.');
                     this.hostVideoHidden = true;
+                    this.guestVideoHidden = false;
+
+                    this.callHostAndStream(this.hostPeerId);
 
                 }
+                // Yes I am the host
                 else {
 
                     // Draw Canvas
-                    this.guestVideoHidden = false;
+                    console.log('I am the host.');
+                    this.hostVideoHidden = false;
+                    this.guestVideoHidden = true;
                     this.drawCanvas();
 
                 }
@@ -1356,16 +1366,17 @@ export class LiveStreamComponent implements OnInit {
     amIHost(roomName, uid): any {
         return new Promise((resolve, reject) => {
 
-            // this.host = true;
+            // this.host = false;
             // resolve();
             // return;
 
-            this.httpClient.get('/api/livestream/amihost?roomName=' + roomName + '&userId=' + uid).subscribe((res) => {
+            this.httpClient.get('/api/livestream/amihost?roomName=' + roomName + '&userId=' + uid).subscribe((res: any) => {
                 console.log('res', res);
                 if (res) {
                     //console.log(res.data.images.original.url);
                     //this.mixpanelService.track('Giphy Api Request');
-                    this.host = true;
+                    this.hostPeerId = res.hostPeer;
+                    this.host = res.host;
                     resolve(res);
                 } else {
                     this.errorTryAgain();
@@ -1382,6 +1393,32 @@ export class LiveStreamComponent implements OnInit {
         alert('There was a problem. Please try again in a moment.');
     }
 
+    callHostAndStream(id) {
+        return new Promise((resolve, reject) => {
+            // Setup and run the video
+            if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
+                var constraints = { video: { width: 1280, height: 720, facingMode: 'user' } };
+                navigator.mediaDevices.getUserMedia(constraints).then((stream) => {
+
+                    let call: any = this.peer.call(id, stream);
+                    console.log('calling peer', id, call, this.peerId);
+                    // apply the stream to the video element used in the texture
+                    //this.video.srcObject = stream;
+                    //this.video.play();
+                    call.on('stream', function (stream2) {
+                        // `stream` is the MediaStream of the remote peer.
+                        // Here you'd add it to an HTML video/canvas element.
+                        let video: any = document.getElementById('guestVideo');
+                        video.srcObject = stream2;
+                    });
+                    resolve();
+                });
+            }
+            //let call: any = this.peer.call(id, this.mediaStream);
+
+        });
+    }
+
     createPeer() {
         //this.peer = null;
         return new Promise((resolve, reject) => {
@@ -1395,7 +1432,10 @@ export class LiveStreamComponent implements OnInit {
                 // send audio to TODO...
                 let cnvs: any = document.getElementById('renderCanvas');
                 this.mediaStream = cnvs.captureStream();
-                call.answer(this.mediaStream); // answer the call
+                console.log(this.mic.mediaStream, this.mic.stream)
+                this.mediaStream.addTrack(this.mic.stream[0]);
+                call.answer(this.mediaStream); // answer the call, send the stream...
+                console.log('Answered Call!');
                 // call.on('stream', function (stream) {
                 //     video = document.getElementById('externalVideo');
                 //     video.srcObject = stream;
@@ -1798,7 +1838,6 @@ export class LiveStreamComponent implements OnInit {
         });
     }
 
-
     addModule(i, keyword = 'visuals', draw = true, fileObject: any = false): any {
         this.sketchLoading = true; // Show loading spinner
         this.clearFlag = true;
@@ -1929,7 +1968,6 @@ export class LiveStreamComponent implements OnInit {
         }
     }
 
-
     onResize(e): any {
         console.log('window resized', e);
         this.sketchLoading = true;
@@ -1986,18 +2024,18 @@ export class LiveStreamComponent implements OnInit {
 
             myCanvas.parent("waveform");
             s.frameRate(this.frameRate); //s.frameRate(this.frameRate); //
-            mic = new p5.AudioIn((err) => { console.log('mic err', err); });
+            this.mic = new p5.AudioIn((err) => { console.log('mic err', err); });
             s.noFill();
             //if (this.previewMode) { return false; }
             this.screenMicLoaded = false;
-            mic.getSources(devices => {
+            this.mic.getSources(devices => {
                 //console.log(devices);
-                mic.setSource(0);
-                mic.start(success => {
+                this.mic.setSource(0);
+                this.mic.start(success => {
                     console.log('Mic Start');
                     //this.analyzer = new p5.FFT(0, 1024);
                     this.analyzer = new p5.FFT(0, 1024);
-                    this.analyzer.setInput(mic);
+                    this.analyzer.setInput(this.mic);
                     this.screenMicLoaded = true;
 
                     //console.log('mic', mic, mic.getLevel());
@@ -2009,10 +2047,10 @@ export class LiveStreamComponent implements OnInit {
                     this.osc = new p5.Oscillator();
 
                     fft = new p5.FFT();
-                    fft.setInput(mic);
+                    fft.setInput(this.mic);
 
                     amplitude = new p5.Amplitude();
-                    amplitude.setInput(mic);
+                    amplitude.setInput(this.mic);
                     amplitude.smooth(0.8);
 
                     //peakDetect = new p5.PeakDetect(this.freq1, this.freq2, this.threshold, this.framesPerPeak);
@@ -2045,13 +2083,11 @@ export class LiveStreamComponent implements OnInit {
                 //}
                 //console.log(s.getAudioContext().state);
 
-                //if (s.getAudioContext().state !== 'running') {
-                //    s.text('click to start audio', s.width / 2, s.height / 2);
-                //    s.getAudioContext().resume();
-                //}
-                //else 
-
-                if (micLoaded) {
+                if (s.getAudioContext().state !== 'running') {
+                    s.text('click to start audio', s.width / 2, s.height / 2);
+                    s.getAudioContext().resume();
+                }
+                else if (micLoaded) {
 
                     //console.log('micLoaded');
 

@@ -634,10 +634,13 @@ app.get('/api/livestream/amihost', async (req, res) => {
     try {
         let uid = req.query.userId;
         let roomName = req.query.roomName;
+        // if the user is host
         if (liveStreamRooms[roomName] && liveStreamRooms[roomName].host == uid) {
             res.write(JSON.stringify({ host: true }));
-        } else {
-            res.write(JSON.stringify({ host: false }));
+        }
+        // if the user is guest
+        else {
+            res.write(JSON.stringify({ host: false, hostPeer: liveStreamRooms[roomName].hostPeer }));
         }
         res.end();
     }
