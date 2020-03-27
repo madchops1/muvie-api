@@ -1,7 +1,7 @@
 <div class="content-wrapper normal djgif">
     <div class="content-inner-wrapper center dark">
 
-        <h1 class="center bigs">Start a Live Stream</h1>
+        <h1 class="center bigs">Start a Quaranstream</h1>
 
         <p>Are you tired of the same ol' boring live stream? This is better. Thanks for using our thing.</p>
         <br>
@@ -10,6 +10,21 @@
             Start
         </a>
 
+
+    </div>
+</div>
+
+<header class="skew big-only">
+    <h2>BROWSE QUARANSTREAMS</h2>
+</header>
+<div class="content-wrapper white feature">
+    <div class="content-inner-wrapper">
+        <!-- <div *ngFor="let key of objectKeys(track.modules[editingModule].settings)"> -->
+
+        <div *ngFor="let room of rooms">
+            <a mat-raised-button class="pink button" routerLink="/live/{{room.name}}">Go To Stream:</a> {{room.name}}
+            <br><br>
+        </div>
 
     </div>
 </div>

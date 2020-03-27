@@ -164,7 +164,7 @@ p {
     padding: 100px 40px 140px;
     overflow-x: hidden;
     //background-color: #fff;
-    min-height: calc(100vh - 320px);
+    min-height: calc(100vh - 160px);
 
     &.small-bottom {
         padding-bottom: 80px;
@@ -356,6 +356,7 @@ footer{
     background-repeat: no-repeat;
     background-size: 4000%;
     background-position: bottom;
+    margin-top: -20px;
 
     //margin-top: -40px;
     
