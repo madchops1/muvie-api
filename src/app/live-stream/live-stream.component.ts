@@ -1486,7 +1486,7 @@ export class LiveStreamComponent implements OnInit {
             this.peer.on('error', (err) => {
                 this.peerId = false;
 
-                console.log('PEER ERR', err);
+                console.log('PEER ERR', typeof err, err);
 
                 // if (err.includes('Server has reached its concurrent user limit')) {
                 //     this.errorLimit();

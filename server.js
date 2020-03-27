@@ -275,6 +275,7 @@ io.on('connection', (socket) => {
 
             // Create the host
             liveStreamRooms[mid].host = userId;
+            liveStreamRooms[mid].name = mid;
             liveStreamRooms[mid].hostPeer = peerId;
 
         }
@@ -628,6 +629,27 @@ app.get("/api/sign-s3", async function (req, res) {
     }
 });
 
+app.get('/api/livestream/getrooms', async (req, res) => {
+    res.header('Access-Control-Allow-Origin', '*');
+    res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS');
+    res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization, Content-Length, X-Requested-With');
+
+    console.log('received a get request to getrooms');
+    try {
+        console.log('liveStreamRooms', liveStreamRooms);
+        let response = [];
+        let keys = Object.keys(liveStreamRooms);
+        keys.forEach(name => {
+            response.push(liveStreamRooms[name]);
+        });
+        res.write(JSON.stringify({ rooms: response }));
+    }
+    catch (err) {
+        handleError(res, err, 'nope');
+    }
+    res.end();
+});
+
 // Am I host, for livestream
 app.get('/api/livestream/amihost', async (req, res) => {
     res.header('Access-Control-Allow-Origin', '*');
@@ -655,7 +677,7 @@ app.get('/api/livestream/amihost', async (req, res) => {
         res.end();
     }
     catch (err) {
-        handleError(res, err, 'nope')
+        handleError(res, err, 'nope');
     }
 
 });
