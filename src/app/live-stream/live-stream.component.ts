@@ -1753,6 +1753,7 @@ export class LiveStreamComponent implements OnInit {
     drawCanvas(): any {
         if (!this.everythingLoaded) { return false; }
         if (this.dontDraw) { this.dontDraw = false; return; }
+        if (!host) { return false; }
         console.log('Draw Canvas');
         this.sketchLoading = true;
 
