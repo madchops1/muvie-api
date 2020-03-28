@@ -14,6 +14,7 @@ export class StreamStartComponent implements OnInit {
     public environment: any = environment;
     code: any = '';
     rooms: any = [];
+    label: any = '';
 
     constructor(private router: Router, private httpClient: HttpClient) {
 
@@ -49,14 +50,16 @@ export class StreamStartComponent implements OnInit {
 
     start() {
         console.log('Start');
-        if (this.code == '') {
-            // gen code
-            this.code = uuid();
-        } else {
-            this.code = this.code.replace(/ /g, '-').toLowerCase();
+        // if (this.code == '') {
+        // gen code
+        if (this.label == "") {
+            return false;
         }
+        this.code = uuid();
+        localStorage.setItem(this.code, this.label);
+        //}
 
-        // go to url   
+        // go to url 
         this.goToUrl();
     }
 
