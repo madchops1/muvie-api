@@ -34,12 +34,13 @@
     <h2>BROWSE QUARANSTREAMS</h2>
 </header>
 <div class="content-wrapper white feature">
-    <div class="content-inner-wrapper">
+    <div class="flex-container">
         <!-- <div *ngFor="let key of objectKeys(track.modules[editingModule].settings)"> -->
 
-        <div *ngFor="let room of rooms" class="rooms-grid">
+        <div routerLink="/live/{{room.name}}" *ngFor="let room of rooms" class="rooms-grid"
+            [hidden]="!room.label || room.label == ''">
             <h3>{{room.label}}</h3>
-            <a mat-raised-button class="pink button" routerLink="/live/{{room.name}}">Watch Stream:</a>
+            <a mat-raised-button class="pink button" routerLink="/live/{{room.name}}">Watch</a>
         </div>
 
     </div>

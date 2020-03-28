@@ -6,19 +6,31 @@ $breakpoint-mobile: 768px;
     background-repeat: no-repeat;
 }
 
+.flex-container {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
 .rooms-grid {
     float: left;
-    margin: 10px;
-    width: 33vw;
-    height: 150px;
-    display: block;
+    margin: 20px;
+    width: 20vw;
+    height: 120px;
     background: #333;
     color: #fff;
+    cursor: pointer;
+
+    &:hover {
+        background: #000;
+        cursor: pointer;
+    }
 
     h3 {
         display: block;
         margin: 20px auto;
         font-size:20px;
+        text-align: center;
         
 
     }
@@ -26,6 +38,7 @@ $breakpoint-mobile: 768px;
     a {
         display: block;
         margin: 0px auto;
+        width: 80px;
     }
 }
 
