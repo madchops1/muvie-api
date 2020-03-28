@@ -1,15 +1,32 @@
 <div class="buttons">
+
     <!-- <button mat-raised-button ripple color="primary" (click)="drawCanvas()">Refresh</button> -->
     <button title="Info" matRipple mat-mini-fab (click)="toggleInfo()">
         <mat-icon aria-label="Info">info</mat-icon>
     </button>
-    <!-- <button mat-raised-button ripple color="primary" [matMenuTriggerFor]="menu2">
-        Artist: <strong>{{ videoLibrary[currentBrowseArtist].name | titlecase }}</strong>
+
+    <div *ngIf="screenMicLoaded">
+        <button mat-raised-button ripple color="primary" [matMenuTriggerFor]="menu2">
+            {{audioSources[currentAudioSource].label}}
+        </button>
+
+        <mat-menu #menu2="matMenu">
+            <button mat-menu-item (click)="changeAudioSource(i)" *ngFor="let source of audioSources; let i = index">
+                {{source.label}}
+            </button>
+        </mat-menu>
+    </div>
+
+    <div class="nums">{{currentGuests}} Watching</div>
+
+    <!-- 
+    <button mat-raised-button ripple color="primary" [matMenuTriggerFor]="menu2">
+        Video Source: ...
     </button>
 
     <mat-menu #menu2="matMenu">
         <button mat-menu-item (click)="currentBrowseArtist = i" *ngFor="let artist of videoLibrary; let i = index">
-            {{ artist.name | titlecase }}
+
         </button>
     </mat-menu> -->
 
