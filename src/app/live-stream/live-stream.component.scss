@@ -169,9 +169,9 @@ mat-button-toggle, gridster-item {
     color: #fff;
     top: calc(50% - 100px);
     left: calc(50% - 100px);
-    display: block;
+    //display: block;
     position: absolute;
-    z-index: 0;
+    z-index: 2;
     font-size:12px;
     text-align: center;
     background-color: rgba(0,0,0,0.5);
