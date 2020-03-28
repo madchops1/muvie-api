@@ -23,6 +23,12 @@
     .nums {
         color: #fff;
         padding: 20px;
+
+        small {
+            margin-left: 30px;
+            color: #aaa;
+            font-size: 12px;
+        }
     }
 }
 
@@ -145,6 +151,33 @@ mat-button-toggle, gridster-item {
     }
 }
 
+.true-bg {
+
+    .loader {
+        background-image: url(../../assets/images/ajax-loader.gif);
+        background-position: center center;
+        background-repeat: no-repeat;
+        width: 60px;
+        height: 60px;
+        border-radius: 30px;
+        display: block;
+        margin: 0px auto;
+    }
+
+    width: 200px;
+    padding: 20px;
+    color: #fff;
+    top: calc(50% - 100px);
+    left: calc(50% - 100px);
+    display: block;
+    position: absolute;
+    z-index: 0;
+    font-size:12px;
+    text-align: center;
+    background-color: rgba(0,0,0,0.5);
+
+}
+
 .button-holder {
     //display: none;
     position: absolute;
@@ -235,7 +268,11 @@ mat-button-toggle, gridster-item {
     border-radius: 4px;
     box-shadow: 0px 2px 4px #111;
     font-family: arial;
-    font-size: 13px;
+    font-size: 13px;    
+
+    a {
+        color: #ff4081
+    }
 
     h1 {
         text-align: center;
@@ -255,7 +292,7 @@ mat-button-toggle, gridster-item {
 
     input {
         padding: 5px;
-        width: 50%;
+        width: 85%;
         margin: 0px auto;
         display: block;
     }
