@@ -17,6 +17,7 @@ const request = require('request');
 const fs = require('fs');
 const AWS = require('aws-sdk');
 const Async = require('async');
+const { PeerServer } = require('peer');
 
 const fetch = require('node-fetch');
 global.fetch = fetch;
@@ -188,6 +189,11 @@ function listDirectories(directory = 'video-library/') {
     });
 }
 
+const peerServer = PeerServer({
+    port: 9000,
+    path: '/peer-server'
+});
+
 const app = express();
 
 // enable ssl redirect
@@ -222,21 +228,33 @@ var server = app.listen(process.env.PORT || 8080, function () {
     console.log("App now running on port", port);
 });
 
+// guest uids are in their local storage
 function newGuest() {
     return {
-        id: ''
+        uid: false,
+        peerId: false
     };
+}
+
+function auth(uid, hostId) {
+    if (uid == hostId) {
+        return true;
+    }
 }
 
 function newLiveStreamRoom() {
     return {
         id: '',
+        started: Date.now(),
+        live: false,
         host: false,
+        hostPeer: false,
         name: '',
         label: '',
         description: '',
         email: '',
-        guests: []
+        guests: [],
+        delete: false
     }
 }
 
@@ -288,11 +306,18 @@ io.on('connection', (socket) => {
         // - this is is the host coming back to the room, or opening a second window.......
         else if (userId == liveStreamRooms[mid].host) {
             //...
+
         }
         // room exists
         // - this is a guest coming to the room 
         else {
-            // ...
+
+            // Add a guest to the room if they don't exist
+            if (liveStreamRooms[mid] && !liveStreamRooms[mid].guests[userId]) {
+                liveStreamRooms[mid].guests[userId] = newGuest();
+                liveStreamRooms[mid].guests[userId].uid = userId;
+                liveStreamRooms[mid].guests[userId].peerId = peerId;
+            }
         }
     }
 
@@ -305,12 +330,12 @@ io.on('connection', (socket) => {
 
     // ping/pong crowd screens, and laserz, every 4 sec to keep them connected
     setInterval(() => {
-        console.log('ping');
+        //console.log('ping');
 
-        console.log('CrowdScreenMap:');
+        //console.log('CrowdScreenMap:');
         for (let key in crowdScreenKeyMap) {
             let roomMid = crowdScreenKeyMap[key];
-            console.log(roomMid);
+            //console.log(roomMid);
             //let clients = //''io.sockets.clients(String(mid)); // all users from room
             //socket.broadcast.to(String(mid)).emit('ping');
             socket.broadcast.to(String(roomMid)).emit('ping');
@@ -318,16 +343,28 @@ io.on('connection', (socket) => {
             //console.log('CONNECTIONS', mid, clients);
         }
 
-        console.log('LiveStreamRooms:');
+        //console.log('LiveStreamRooms:');
         Object.keys(liveStreamRooms).forEach(key => {
             let name = liveStreamRooms[key].name;
-            console.log(name);
+            let started = liveStreamRooms[key].started / 1000;
+            let now = Date.now() / 1000;
+
+            //console.log(name);
             socket.broadcast.to(String(name)).emit('ping');
             //let clients = //''io.sockets.clients(String(mid)); // all users from room
             io.of('/').adapter.clients([String(name)], (err, clients) => {
-                console.log('CONNECTIONS', name, clients);
+                //console.log('CONNECTIONS', name, clients);
                 socket.broadcast.to(String(name)).emit('clientCount', clients.length);
             });
+
+            // 6 hour limit room cleanup
+            if (now - started > 86400) {
+                // Mark for deletion, unecessary
+                liveStreamRooms[key].delete = true;
+
+                // delete
+                delete liveStreamRooms[key];
+            }
         });
 
     }, 4000);
@@ -344,6 +381,11 @@ io.on('connection', (socket) => {
     socket.on("peerId", value => {
         console.log('server received peerId', value);
         socket.broadcast.to(String(value.mid)).emit('peerIdUpdate', value);
+    });
+
+    socket.on("refreshSignal", value => {
+        console.log('server received refreshSignal', value);
+        socket.broadcast.to(String(value)).emit('refreshSignal');
     });
 
     // receive the remote que request from VISUALZ
@@ -671,12 +713,49 @@ app.get('/api/livestream/getrooms', async (req, res) => {
     res.end();
 });
 
+app.get('/api/livestream/room', async (req, res) => {
+    res.header('Access-Control-Allow-Origin', '*');
+    res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS');
+    res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization, Content-Length, X-Requested-With');
+    console.log('received a get request to room', req.query);
+    try {
+        let roomName = req.query.roomName;
+        res.write(JSON.stringify({ data: liveStreamRooms[roomName] }));
+        res.end();
+    }
+    catch (err) {
+        handleError(res, err, 'nope');
+    }
+});
+
+app.get('/api/livestream/toggleLive', async (req, res) => {
+    res.header('Access-Control-Allow-Origin', '*');
+    res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS');
+    res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization, Content-Length, X-Requested-With');
+    console.log('received a get request to togglelive', req.query);
+    try {
+        let uid = req.query.userId;
+        let roomName = req.query.roomName;
+        let live = req.query.live;
+        if (auth(uid, liveStreamRooms[roomName].host)) {
+            console.log('Live streaming', live);
+            liveStreamRooms[roomName].live = live;
+            res.write(JSON.stringify({ live: live }));
+        } else {
+            res.write(JSON.stringify({ msg: 'not the host' }));
+        }
+        res.end();
+    }
+    catch (err) {
+        handleError(res, err, 'nope');
+    }
+});
+
 // Am I host, for livestream
 app.get('/api/livestream/amihost', async (req, res) => {
     res.header('Access-Control-Allow-Origin', '*');
     res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS');
     res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization, Content-Length, X-Requested-With');
-
     console.log('received a get request to amihost', req.query);
     try {
         let uid = req.query.userId;

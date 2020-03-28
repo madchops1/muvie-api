@@ -16,7 +16,7 @@ $breakpoint-mobile: 768px;
     float: left;
     margin: 20px;
     width: 20vw;
-    height: 120px;
+    height: 160px;
     background: #333;
     color: #fff;
     cursor: pointer;
@@ -34,6 +34,8 @@ $breakpoint-mobile: 768px;
         
 
     }
+
+    p { text-align: center; }
 
     a {
         display: block;

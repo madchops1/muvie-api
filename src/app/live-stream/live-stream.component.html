@@ -17,6 +17,7 @@
         </mat-menu>
     </div>
 
+
     <div class="nums">
         {{currentGuests}} Watching
         <strong>{{this.label}}</strong>
@@ -60,6 +61,7 @@
     <ol>
         <li>Add visual scenes to your backdrop of your stage.</li>
         <li>The scenes will automatilly change with the audio from your mic/line-in.</li>
+        <li>Rooms will be automatically removed after 24 hours.</li>
     </ol>
 
     <h2>Watchers:</h2>
@@ -317,6 +319,12 @@
         <button title="Add Media" matRipple mat-mini-fab (click)="addModule(0)">
             <mat-icon aria-label="Add Media">library_add</mat-icon>
         </button>
+
+        <div class="air">
+            <mat-slide-toggle *ngIf="host" class="" (change)="goLive($event)" [checked]="live" [disabled]="false">
+                {{ live == true ? 'On' : 'Off' }} the Air
+            </mat-slide-toggle>
+        </div>
 
     </mat-toolbar-row>
 </mat-toolbar>
