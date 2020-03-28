@@ -233,6 +233,7 @@ function newLiveStreamRoom() {
         id: '',
         host: false,
         name: '',
+        label: '',
         description: '',
         email: '',
         guests: []
@@ -256,6 +257,7 @@ io.on('connection', (socket) => {
     let roomName = socket.handshake.query.roomName;
     let userId = socket.handshake.query.userId;
     let peerId = socket.handshake.query.peerId;
+    let label = socket.handshake.query.label;
 
     if (remoteQueKey) {
         if (!remoteQueKeyMap[remoteQueKey]) {
@@ -277,6 +279,9 @@ io.on('connection', (socket) => {
             liveStreamRooms[mid].host = userId;
             liveStreamRooms[mid].name = mid;
             liveStreamRooms[mid].hostPeer = peerId;
+            if (label != '') {
+                liveStreamRooms[mid].label = label;
+            }
 
         }
         // room exists
@@ -677,18 +682,23 @@ app.get('/api/livestream/amihost', async (req, res) => {
         let uid = req.query.userId;
         let roomName = req.query.roomName;
         let peerId = req.query.peerId;
+        let label = req.query.label;
 
         // if the user is host
         if (liveStreamRooms[roomName] && liveStreamRooms[roomName].host == uid) {
             // update the host peerId
             liveStreamRooms[roomName].hostPeer = peerId;
 
+            if (label != '') {
+                liveStreamRooms[roomName].label = label;
+            }
+
             //
-            res.write(JSON.stringify({ host: true }));
+            res.write(JSON.stringify({ host: true, label: label }));
         }
         // if the user is guest
         else {
-            res.write(JSON.stringify({ host: false, hostPeer: liveStreamRooms[roomName].hostPeer }));
+            res.write(JSON.stringify({ host: false, hostPeer: liveStreamRooms[roomName].hostPeer, label: liveStreamRooms[roomName].label }));
         }
         res.end();
     }

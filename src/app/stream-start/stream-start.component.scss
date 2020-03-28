@@ -6,6 +6,29 @@ $breakpoint-mobile: 768px;
     background-repeat: no-repeat;
 }
 
+.rooms-grid {
+    float: left;
+    margin: 10px;
+    width: 33vw;
+    height: 150px;
+    display: block;
+    background: #333;
+    color: #fff;
+
+    h3 {
+        display: block;
+        margin: 20px auto;
+        font-size:20px;
+        
+
+    }
+
+    a {
+        display: block;
+        margin: 0px auto;
+    }
+}
+
 .bigs {
     font-size: 50px !important;
     margin: 0px;

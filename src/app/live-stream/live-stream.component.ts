@@ -1286,6 +1286,8 @@ export class LiveStreamComponent implements OnInit {
     hostVideoHidden: any = false;
     guestVideoHidden: any = false;
 
+    label: any;
+
     private _clientCount: Subscription;
     private _ping: Subscription;
 
@@ -1326,7 +1328,10 @@ export class LiveStreamComponent implements OnInit {
             localStorage.setItem(this.roomName, this.userId);
         }
 
+        this.label = localStorage.getItem(this.roomName);
+
         console.log('userId', this.userId);
+        console.log('label', this.label);
         this.initModGrid();
 
         // Init Grid
@@ -1343,7 +1348,7 @@ export class LiveStreamComponent implements OnInit {
 
             // Get crowdscreen data from ws
             this._clientCount = this.socketService.clientCount.subscribe(data => {
-                console.log('receiving clientCount', data);
+                //console.log('receiving clientCount', data);
                 this.currentGuests = parseInt(data) - 1;
             });
 
@@ -1353,7 +1358,7 @@ export class LiveStreamComponent implements OnInit {
             console.log('Who am I?');
             setTimeout(() => {
                 // Am I host
-                this.amIHost(this.roomName, this.userId, this.peerId).then(() => {
+                this.amIHost(this.roomName, this.userId, this.peerId, this.label).then(() => {
 
                     this.everythingLoaded = true;
 
@@ -1364,7 +1369,6 @@ export class LiveStreamComponent implements OnInit {
                         console.log('I am a guest.');
                         this.hostVideoHidden = true;
                         this.guestVideoHidden = false;
-
                         this.callHostAndStream(this.hostPeerId);
 
                     }
@@ -1377,9 +1381,7 @@ export class LiveStreamComponent implements OnInit {
                         this.guestVideoHidden = true;
 
                         this.setupVideo();
-
                         this.setupAudio();
-
                         this.drawCanvas();
 
                     }
@@ -1429,20 +1431,21 @@ export class LiveStreamComponent implements OnInit {
         this.setupAudio();
     }
 
-    amIHost(roomName, uid, peerId): any {
+    amIHost(roomName, uid, peerId, label): any {
         return new Promise((resolve, reject) => {
 
             // this.host = false;
             // resolve();
             // return;
 
-            this.httpClient.get(this.environment.ioUrl + '/api/livestream/amihost?roomName=' + roomName + '&userId=' + uid + '&peerId=' + peerId).subscribe((res: any) => {
+            this.httpClient.get(this.environment.ioUrl + '/api/livestream/amihost?roomName=' + roomName + '&userId=' + uid + '&peerId=' + peerId + '&label=' + this.label).subscribe((res: any) => {
                 console.log('res', res);
                 if (res) {
                     //console.log(res.data.images.original.url);
                     //this.mixpanelService.track('Giphy Api Request');
                     this.hostPeerId = res.hostPeer;
                     this.host = res.host;
+                    this.label = res.label
                     resolve(res);
                 } else {
                     this.errorTryAgain();
@@ -1467,7 +1470,7 @@ export class LiveStreamComponent implements OnInit {
         return new Promise((resolve, reject) => {
             // Setup and run the video
             if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
-                var constraints = { video: { width: 1280, height: 720, facingMode: 'user' } };
+                var constraints = { audio: true, video: { width: 1280, height: 720, facingMode: 'user' } };
                 navigator.mediaDevices.getUserMedia(constraints).then((stream) => {
 
                     let call: any = this.peer.call(id, stream);
@@ -1480,11 +1483,17 @@ export class LiveStreamComponent implements OnInit {
                         // Here you'd add it to an HTML video/canvas element.
                         //let stream3: MediaStream;
 
-                        console.log('Remote Stream:', stream2);
-
                         // This is the guest video player that displays the dj
+                        console.log('Remote Stream:', stream2, stream2.getVideoTracks(), stream2.getAudioTracks());
+
                         let video: any = document.getElementById('guestVideo');
                         video.srcObject = stream2;
+                        video.onloadedmetadata = (e) => {
+                            console.log('now playing the video');
+                            video.play();
+                        }
+
+
                     });
                     resolve();
                 });

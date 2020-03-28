@@ -3,12 +3,28 @@
 
         <h1 class="center bigs">Start a Quaranstream</h1>
 
-        <p>Are you tired of the same ol' boring live stream? This is better. Thanks for using our thing.</p>
+        <p>
+            Stay safe &amp; be smart out there. These are troubling times.
+        </p>
+        <p>
+            Use this live stream tool for free to reach your friends, fans, and family with your music.
+        </p>
+        <p>
+            As expected there are audio-reactive visuals you can control on your stream.
+        </p>
         <br>
 
-        <a (click)="start()" mat-raised-button class="pink button bigtext">
-            Start
-        </a>
+        <form class="example-form" name="form1">
+            <mat-form-field class="example-full-width">
+                <mat-label>Set Name</mat-label>
+                <input matInput required class="inputy" placeholder="Ex. Sam's Set" [(ngModel)]="label" name="label"
+                    value="">
+            </mat-form-field>
+            <br><Br>
+            <button (click)="start()" mat-raised-button class="pink button bigtext">
+                Start
+            </button>
+        </form>
 
 
     </div>
@@ -21,9 +37,9 @@
     <div class="content-inner-wrapper">
         <!-- <div *ngFor="let key of objectKeys(track.modules[editingModule].settings)"> -->
 
-        <div *ngFor="let room of rooms">
-            <a mat-raised-button class="pink button" routerLink="/live/{{room.name}}">Go To Stream:</a> {{room.name}}
-            <br><br>
+        <div *ngFor="let room of rooms" class="rooms-grid">
+            <h3>{{room.label}}</h3>
+            <a mat-raised-button class="pink button" routerLink="/live/{{room.name}}">Watch Stream:</a>
         </div>
 
     </div>
