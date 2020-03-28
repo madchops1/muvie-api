@@ -1084,6 +1084,8 @@ export class LiveStreamComponent implements OnInit {
         }
     }
 
+    mainLoading: any = true;
+
     // Environment stuff
     public websiteUrl: any = environment.websiteUrl;
     public environment: any = environment;
@@ -1383,6 +1385,7 @@ export class LiveStreamComponent implements OnInit {
                         this.setupVideo();
                         this.setupAudio();
                         this.drawCanvas();
+                        this.mainLoading = false;
 
                     }
 
@@ -1478,7 +1481,7 @@ export class LiveStreamComponent implements OnInit {
                     // apply the stream to the video element used in the texture
                     //this.video.srcObject = stream;
                     //this.video.play();
-                    call.on('stream', function (stream2) {
+                    call.on('stream', (stream2) => {
                         // `stream` is the MediaStream of the remote peer.
                         // Here you'd add it to an HTML video/canvas element.
                         //let stream3: MediaStream;
@@ -1490,8 +1493,13 @@ export class LiveStreamComponent implements OnInit {
                         video.srcObject = stream2;
                         video.onloadedmetadata = (e) => {
                             console.log('now playing the video');
+                            this.mainLoading = false;
                             video.play();
                         }
+
+                        //setTimeout(() => {
+                        //    this.mainLoading = false;
+                        //}, 1);
 
 
                     });
