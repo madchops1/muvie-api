@@ -1,6 +1,7 @@
 import { Component, OnInit, NgZone, ViewChild, ViewChildren, HostListener, ElementRef } from '@angular/core';
 import Peer from 'peerjs';
 import { HttpClient } from '@angular/common/http';
+import { Observable, Subscription } from 'rxjs';
 
 import { GridsterConfig, GridsterItem, DisplayGrid, GridType, GridsterItemComponentInterface } from 'angular-gridster2';
 import { ActivatedRoute, Router, NavigationEnd } from '@angular/router';
@@ -12,6 +13,7 @@ import 'p5/lib/addons/p5.dom';
 
 import { UtilityService } from '../utility.service';
 import { environment } from 'src/environments/environment';
+import * as Stats from 'stats-js';
 
 export enum KEY_CODE {
     ESC = 27,
@@ -1115,6 +1117,10 @@ export class LiveStreamComponent implements OnInit {
     ];
 
     objectKeys: any = Object.keys;  // used in view for something
+    audioSources: any = [];
+    videoSources: any = [];
+    currentAudioSource: any = 0;
+    currentVideoSource: any;
 
     // Module Grid
     modOptions: GridsterConfig;
@@ -1122,6 +1128,8 @@ export class LiveStreamComponent implements OnInit {
 
     mediaStream: any;
     hostPeerId: any;
+    currentGuests: number = 0;
+    totalGuests: any = 0;
 
     canvas: any;                // Deprecated canvas for the main p5 preview
     canvas2: any;               // canvas for the p5 audio analyzer
@@ -1278,6 +1286,9 @@ export class LiveStreamComponent implements OnInit {
     hostVideoHidden: any = false;
     guestVideoHidden: any = false;
 
+    private _clientCount: Subscription;
+    private _ping: Subscription;
+
     //interacted: any = false;
 
     //
@@ -1324,6 +1335,17 @@ export class LiveStreamComponent implements OnInit {
             // Connect to websocket server
             this.socketService.connect(this.roomName, true, this.userId, this.peerId);
 
+            // ws ping/pong
+            this._ping = this.socketService.ping.subscribe(() => {
+                //console.log('receiving ping, sending pong');
+                this.socketService.pong();
+            });
+
+            // Get crowdscreen data from ws
+            this._clientCount = this.socketService.clientCount.subscribe(data => {
+                console.log('receiving clientCount', data);
+                this.currentGuests = parseInt(data) - 1;
+            });
 
             console.log('connected');
 
@@ -1354,29 +1376,9 @@ export class LiveStreamComponent implements OnInit {
                         this.hostVideoHidden = false;
                         this.guestVideoHidden = true;
 
-                        //
-                        // Setup and run main three.js canvas
-                        //
-                        this.video = document.getElementById('webcamVideo');
-                        // Setup and run the video
-                        if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
-                            var constraints = { video: { width: 1280, height: 720, facingMode: 'user' } };
-                            navigator.mediaDevices.getUserMedia(constraints).then((stream) => {
-                                // apply the stream to the video element used in the texture
-                                this.video.srcObject = stream;
-                                this.video.play();
-                            });
-                        }
+                        this.setupVideo();
 
-                        //
-                        // Setup and run audio analyzer p5 canvas
-                        //
-                        if (this.canvas2) {
-                            this.canvas2.remove();
-                            this.canvas2 = null;
-                            delete this.canvas2;
-                        }
-                        this.canvas2 = new p5(this.sketchInput);
+                        this.setupAudio();
 
                         this.drawCanvas();
 
@@ -1392,6 +1394,39 @@ export class LiveStreamComponent implements OnInit {
             console.log('Alpha err', err);
         });
 
+    }
+
+    setupVideo(): any {
+        //
+        // Setup and run main three.js canvas
+        //
+        this.video = document.getElementById('webcamVideo');
+        // Setup and run the video
+        if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
+            var constraints = { video: { width: 1280, height: 720, facingMode: 'user' } };
+            navigator.mediaDevices.getUserMedia(constraints).then((stream) => {
+                // apply the stream to the video element used in the texture
+                this.video.srcObject = stream;
+                this.video.play();
+            });
+        }
+    }
+
+    setupAudio(): any {
+        //
+        // Setup and run audio analyzer p5 canvas
+        //
+        if (this.canvas2) {
+            this.canvas2.remove();
+            this.canvas2 = null;
+            delete this.canvas2;
+        }
+        this.canvas2 = new p5(this.sketchInput);
+    }
+
+    changeAudioSource(i): any {
+        this.currentAudioSource = i;
+        this.setupAudio();
     }
 
     amIHost(roomName, uid, peerId): any {
@@ -1443,6 +1478,11 @@ export class LiveStreamComponent implements OnInit {
                     call.on('stream', function (stream2) {
                         // `stream` is the MediaStream of the remote peer.
                         // Here you'd add it to an HTML video/canvas element.
+                        //let stream3: MediaStream;
+
+                        console.log('Remote Stream:', stream2);
+
+                        // This is the guest video player that displays the dj
                         let video: any = document.getElementById('guestVideo');
                         video.srcObject = stream2;
                     });
@@ -1465,11 +1505,19 @@ export class LiveStreamComponent implements OnInit {
             });
             this.peer.on('call', (call) => {
                 // send audio to TODO...
+
                 let cnvs: any = document.getElementById('renderCanvas');
                 this.mediaStream = cnvs.captureStream();
-                console.log(this.mediaStream, this.mic.stream.getAudioTracks());
-                this.mediaStream.addTrack(this.mic.stream.getAudioTracks()[0]);
-                call.answer(this.mediaStream); // answer the call, send the stream...
+
+                console.log(this.mediaStream.getVideoTracks(), this.mic.stream.getAudioTracks());
+                //this.mediaStream.addTrack(this.mic.stream.getAudioTracks()[0]);
+                //let tracks:
+                let videoTrack: any = this.mediaStream.getVideoTracks()[0];
+                let audioTrack: any = this.mic.stream.getAudioTracks()[0];
+                let stream3: MediaStream = new MediaStream([videoTrack, audioTrack]);
+
+                //call.answer(this.mediaStream); // answer the call, send the stream...
+                call.answer(stream3); // answer the call, send the stream...
                 console.log('Answered Call!');
                 // call.on('stream', function (stream) {
                 //     video = document.getElementById('externalVideo');
@@ -2054,9 +2102,14 @@ export class LiveStreamComponent implements OnInit {
             s.noFill();
             //if (this.previewMode) { return false; }
             this.screenMicLoaded = false;
+
             this.mic.getSources(devices => {
+                this.audioSources = devices;
+
                 //console.log(devices);
-                this.mic.setSource(0);
+
+                this.mic.setSource(this.currentAudioSource);
+
                 this.mic.start(success => {
                     console.log('Mic Start');
                     //this.analyzer = new p5.FFT(0, 1024);
@@ -2090,7 +2143,7 @@ export class LiveStreamComponent implements OnInit {
                 }, error => {
                     console.log('Mic Err', error);
                     micLoaded = false;
-                    this.screenMicLoaded = true;
+                    //this.screenMicLoaded = true;
                 });
             });
 

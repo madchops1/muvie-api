@@ -300,14 +300,30 @@ io.on('connection', (socket) => {
 
     // ping/pong crowd screens, and laserz, every 4 sec to keep them connected
     setInterval(() => {
+        console.log('ping');
 
+        console.log('CrowdScreenMap:');
         for (let key in crowdScreenKeyMap) {
             let roomMid = crowdScreenKeyMap[key];
-            socket.broadcast.to(String(mid)).emit('ping');
+            console.log(roomMid);
+            //let clients = //''io.sockets.clients(String(mid)); // all users from room
+            //socket.broadcast.to(String(mid)).emit('ping');
+            socket.broadcast.to(String(roomMid)).emit('ping');
             //let clients = io.sockets.clients(String(mid)); // all users from room
             //console.log('CONNECTIONS', mid, clients);
-
         }
+
+        console.log('LiveStreamRooms:');
+        Object.keys(liveStreamRooms).forEach(key => {
+            let name = liveStreamRooms[key].name;
+            console.log(name);
+            socket.broadcast.to(String(name)).emit('ping');
+            //let clients = //''io.sockets.clients(String(mid)); // all users from room
+            io.of('/').adapter.clients([String(name)], (err, clients) => {
+                console.log('CONNECTIONS', name, clients);
+                socket.broadcast.to(String(name)).emit('clientCount', clients.length);
+            });
+        });
 
     }, 4000);
 

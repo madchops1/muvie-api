@@ -19,7 +19,7 @@ export class SocketService {
     getLaserz = this.socket.fromEvent<any>('getLaserz');
     getRemoteQueAuthorizationConfirmation = this.socket.fromEvent<any>('getRemoteQueAuthorizationConfirmation');
     getRemoteQueAuthorizationDenied = this.socket.fromEvent<any>('getRemoteQueAuthorizationDenied');
-
+    clientCount = this.socket.fromEvent<any>('clientCount');
     ping = this.socket.fromEvent<any>('ping');
 
     constructor(private socket: Socket) { }
