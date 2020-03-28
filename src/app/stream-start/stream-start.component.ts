@@ -15,6 +15,8 @@ export class StreamStartComponent implements OnInit {
     code: any = '';
     rooms: any = [];
     label: any = '';
+    objectKeys: any = Object.keys;  // used in view for something
+    userId: any;
 
     constructor(private router: Router, private httpClient: HttpClient) {
 
@@ -25,6 +27,9 @@ export class StreamStartComponent implements OnInit {
         // get rooms
         this.getRooms();
 
+        this.userId = localStorage.getItem('userId');
+        console.log('userId', this.userId);
+
     }
 
 
@@ -33,7 +38,7 @@ export class StreamStartComponent implements OnInit {
             this.httpClient.get(this.environment.ioUrl + '/api/livestream/getrooms').subscribe((res: any) => {
                 console.log('res', res);
                 if (res) {
-                    this.rooms = res.rooms;
+                    this.rooms = res.rooms.reverse();
                     resolve(res);
                 } else {
                     console.log('no response')

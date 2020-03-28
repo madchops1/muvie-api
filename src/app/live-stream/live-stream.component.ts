@@ -1226,6 +1226,8 @@ export class LiveStreamComponent implements OnInit {
     byteFrequencyData: any;
     byteTimeData: any;
 
+    live: any = false;
+
     // ALPHA MODULE - THREE
     mesh = null;
     geometry = null;
@@ -1292,6 +1294,7 @@ export class LiveStreamComponent implements OnInit {
 
     private _clientCount: Subscription;
     private _ping: Subscription;
+    private _refreshSignal: Subscription;
 
     //interacted: any = false;
 
@@ -1324,10 +1327,10 @@ export class LiveStreamComponent implements OnInit {
         //localStorage.setItem('dataSource', this.dataSource.length);
         //and to print, you should use getItem
         //console.log(localStorage.getItem('dataSource'));
-        this.userId = localStorage.getItem(this.roomName);
+        this.userId = localStorage.getItem('userId');
         if (!this.userId) {
             this.userId = uuid();
-            localStorage.setItem(this.roomName, this.userId);
+            localStorage.setItem('userId', this.userId);
         }
 
         this.label = localStorage.getItem(this.roomName);
@@ -1348,10 +1351,15 @@ export class LiveStreamComponent implements OnInit {
                 this.socketService.pong();
             });
 
-            // Get crowdscreen data from ws
+            // Get client count data from ws
             this._clientCount = this.socketService.clientCount.subscribe(data => {
                 //console.log('receiving clientCount', data);
                 this.currentGuests = parseInt(data) - 1;
+            });
+
+            // Get the refreshSignal
+            this._refreshSignal = this.socketService.refreshSignal.subscribe(data => {
+                window.location.reload();
             });
 
             console.log('connected');
@@ -1399,6 +1407,25 @@ export class LiveStreamComponent implements OnInit {
             console.log('Alpha err', err);
         });
 
+    }
+
+    goLive(e): any {
+        return new Promise((resolve, reject) => {
+            console.log('go live', e);
+            this.live = e.checked;
+            this.httpClient.get(this.environment.ioUrl + '/api/livestream/togglelive?roomName=' + this.roomName + '&userId=' + this.userId + '&peerId=' + this.peerId + '&live=' + this.live).subscribe((res: any) => {
+                console.log('res', res);
+                if (res) {
+
+                    this.socketService.sendRefresh(this.roomName);
+                    resolve(res);
+                } else {
+                    reject();
+                }
+            }, (err) => {
+                reject();
+            });
+        });
     }
 
     setupVideo(): any {
@@ -1465,8 +1492,8 @@ export class LiveStreamComponent implements OnInit {
         alert('There was a problem. Please try again in a moment.');
     }
 
-    errorLimit() {
-        alert('Server has reached its user limit. Please try again in a moment.');
+    errorText(text) {
+        alert(text);
     }
 
     callHostAndStream(id) {
@@ -1514,7 +1541,14 @@ export class LiveStreamComponent implements OnInit {
     createPeer() {
         //this.peer = null;
         return new Promise((resolve, reject) => {
+            // this.peer = new Peer({
+            //     host: this.environment.ioUrl,
+            //     port: 9000,
+            //     path: '/peer-server'
+            // });
+
             this.peer = new Peer();
+
             this.peer.on('open', (id) => {
                 console.log('My peer ID is: ' + id);
                 this.peerId = id;
@@ -1534,8 +1568,10 @@ export class LiveStreamComponent implements OnInit {
                 let stream3: MediaStream = new MediaStream([videoTrack, audioTrack]);
 
                 //call.answer(this.mediaStream); // answer the call, send the stream...
-                call.answer(stream3); // answer the call, send the stream...
-                console.log('Answered Call!');
+                if (this.live) {
+                    call.answer(stream3); // answer the call, send the stream...
+                    console.log('Answered Call!');
+                }
                 // call.on('stream', function (stream) {
                 //     video = document.getElementById('externalVideo');
                 //     video.srcObject = stream;
@@ -1553,15 +1589,16 @@ export class LiveStreamComponent implements OnInit {
 
                 console.log('PEER ERR', typeof err, err);
 
-                // if (err.includes('Server has reached its concurrent user limit')) {
-                //     this.errorLimit();
-                //     return;
-                // }
+                if (err.message.includes('Server has reached its concurrent user limit')) {
+                    this.errorText('Max user limit. Try again.');
+                    return;
+                }
 
-                //if (err.indexOf('Get'))
+                if (err.message.includes('Could not connect to peer')) {
+                    this.errorText('Host is not currently streaming. Try back.');
+                    return;
+                }
 
-                //this.errorTryAgain();
-                //alert(err);
             });
         });
     }

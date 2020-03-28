@@ -21,6 +21,7 @@ export class SocketService {
     getRemoteQueAuthorizationDenied = this.socket.fromEvent<any>('getRemoteQueAuthorizationDenied');
     clientCount = this.socket.fromEvent<any>('clientCount');
     ping = this.socket.fromEvent<any>('ping');
+    refreshSignal = this.socket.fromEvent<any>('refreshSignal');
 
     constructor(private socket: Socket) { }
 
@@ -85,5 +86,10 @@ export class SocketService {
     peerId(data): any {
         console.log('send peerId to api socket', data);
         this.socket.emit('peerId', data)
+    }
+
+    sendRefresh(data): any {
+        console.log('send refresh');
+        this.socket.emit('refreshSignal', data);
     }
 }

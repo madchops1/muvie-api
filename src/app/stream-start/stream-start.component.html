@@ -32,6 +32,7 @@
 
 <header class="skew big-only">
     <h2>BROWSE QUARANSTREAMS</h2>
+    <small>*Streams are removed after 24 hours.</small>
 </header>
 <div class="content-wrapper white feature">
     <div class="flex-container">
@@ -40,7 +41,9 @@
         <div routerLink="/live/{{room.name}}" *ngFor="let room of rooms" class="rooms-grid"
             [hidden]="!room.label || room.label == ''">
             <h3>{{room.label}}</h3>
-            <a mat-raised-button class="pink button" routerLink="/live/{{room.name}}">Watch</a>
+            <p>{{objectKeys(room.guests).length}}Total Watchers</p>
+            <a mat-raised-button class="pink button" *ngIf="room.live" routerLink="/live/{{room.name}}">Watch</a>
+            <a mat-raised-button class="pink button" *ngIf="!room.live" disabled>Off Air</a>
         </div>
 
     </div>
