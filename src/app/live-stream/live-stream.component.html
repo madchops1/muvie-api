@@ -17,7 +17,13 @@
         </mat-menu>
     </div>
 
-    <div class="nums">{{currentGuests}} Watching</div>
+    <div class="nums">
+        {{currentGuests}} Watching
+        <strong>{{this.label}}</strong>
+        <small *ngIf="host">Peer ID {{peerId}}</small>
+    </div>
+
+
 
     <!-- 
     <button mat-raised-button ripple color="primary" [matMenuTriggerFor]="menu2">
@@ -32,6 +38,11 @@
 
 </div>
 
+<div class="true-bg">
+    <div class="loader"></div>
+    If loading takes too long try refreshing the page.
+</div>
+
 <a class="close-x" (click)="closeAllOverlays()"
     *ngIf="searchGifs || searchImages || browseVideos || editingModuleSettings">
     <mat-icon aria-label="close">close</mat-icon>
@@ -43,31 +54,33 @@
 </div>
 
 <div class="info" *ngIf="info">
-    <h1>About Visualz Quaranstream</h1>
+    <h1>VISUALZ QURANSTREAM</h1>
 
-    <h2>Hosts:</h2>
+    <h2>Streamers:</h2>
     <ol>
         <li>Add visual scenes to your backdrop of your stage.</li>
         <li>The scenes will automatilly change with the audio from your mic/line-in.</li>
     </ol>
 
-    <h2>Guests:</h2>
+    <h2>Watchers:</h2>
     <ol>
         <li>Click play to start the stream.</li>
         <li>Have fun.</li>
     </ol>
 
-    <h1>Share URL</h1>
+    <h1>Share This URL</h1>
     <input type="text" value="http://www.visualzStudio.com/live/{{roomName}}" />
 
     <p>
-        This is in beta. This has only been tested on chrome for the time being. So please be cautious of other
+        This is a beta. This has only been tested on chrome for the time being. So please be cautious of other
         browsers.
+
         New features, functionality, effects, and bugfixes will be added often!
     </p>
 
     <p>
-        By using this page you agree to the terms &amp; conditions and privacy policy of this site.
+        By using this page you agree to the VISUALZ <a routerLink="/terms-conditions">Terms &amp; Conditions</a> &amp;
+        <a routerLink="/privacy-policy">Privacy Policy</a>.
     </p>
 
     <button mat-raised-button ripple color="primary" (click)="toggleInfo()">I Agree, Lets Go</button>
