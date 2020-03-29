@@ -12,6 +12,73 @@ export class VisualzComponent implements OnInit {
     deviceInfo: any;
     htmlScript: any = '';
 
+    collaborators: any = [
+        {
+            name: 'Desadeca',
+            type: 'DJ',
+            location: 'Chicago',
+            image: '../../assets/images/mckinzy.jpg',
+            link: 'https://www.facebook.com/djdesadeca/'
+        },
+        {
+            name: 'Johnny Nonstop',
+            type: 'DJ',
+            location: 'Chicago',
+            image: 'https://visualz-1.s3.us-east-2.amazonaws.com/default-images/johnnynonstop.jpg',
+            link: 'https://www.facebook.com/johnnynonstop/'
+        },
+        {
+            name: 'Mark Wolff',
+            type: 'DJ',
+            location: 'Chicago',
+            image: 'https://visualz-1.s3.us-east-2.amazonaws.com/default-images/markwolff.jpg',
+            link: 'https://soundcloud.com/markwolffmusic/'
+        },
+        {
+            name: 'Nick Quicktactstic',
+            type: 'DJ',
+            location: 'Chicago',
+            image: 'https://visualz-1.s3.us-east-2.amazonaws.com/default-images/nickmccoord.jpg',
+            link: 'https://www.djquicktastic.com/'
+        },
+        {
+            name: 'Only The Beat',
+            type: 'ORG',
+            location: 'Chicago',
+            image: 'https://visualz-1.s3.us-east-2.amazonaws.com/default-images/otb.jpg',
+            link: 'https://onlythebeat.com/'
+        },
+        {
+            name: 'Sam White',
+            type: 'DJ',
+            location: 'Chicago',
+            image: 'https://visualz-1.s3.us-east-2.amazonaws.com/default-images/samwhite.jpg',
+            link: 'https://samwhitemusic.com/'
+        },
+        {
+            name: 'Slippin Jimmy',
+            type: 'DJ',
+            location: 'Indiana',
+            image: '../../assets/images/evan.jpg',
+            link: 'https://www.facebook.com/SlippinJimmysHouse/'
+        },
+        //,
+        // {
+        //     name: 'Tanza',
+        //     type: 'DJ',
+        //     location: 'Indiana',
+        //     image: 'https://visualz-1.s3.us-east-2.amazonaws.com/default-images/tesh.jpg',
+        //     link: 'https://www.facebook.com/SlippinJimmysHouse/'
+        // },
+        {
+            name: 'Zack Joseph',
+            type: 'DJ',
+            location: 'Chicago',
+            image: 'https://i1.sndcdn.com/avatars-000343177915-enbmz2-t200x200.jpg',
+            link: 'https://www.facebook.com/zj2870'
+        }
+    ];
+
     constructor(private deviceService: DeviceDetectorService, private sanitizer: DomSanitizer) {
 
     }

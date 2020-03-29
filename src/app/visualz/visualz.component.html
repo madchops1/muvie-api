@@ -130,7 +130,7 @@
             <div class="big-only">
                 <p>
                     The CrowdScreen feature is cutting-edge technology for the lighting industry.
-                    Create amazing visual experiences by incorporating hunderends and thousands of devices.
+                    Create amazing visual experiences by incorporating hundreds and thousands of devices.
                 </p>
                 <p>
                     As with the FanCam this is usually complicated and expensive, requiring hardware. Visualz makes it
@@ -257,89 +257,19 @@
 </div>-->
 
 <header class="skew">
-    <h2>Artist Collaborators</h2>
+    <h2>Collaborators</h2>
 </header>
 <div class="content-wrapper dark small-bottom">
     <div class="">
 
-        <mat-card class="example-card">
+        <mat-card class="example-card" *ngFor="let item of collaborators">
             <mat-card-header>
-                <mat-card-title>Sam White</mat-card-title>
-                <mat-card-subtitle>DJ [Chicago]</mat-card-subtitle>
+                <mat-card-title>{{item.name}}</mat-card-title>
+                <mat-card-subtitle>{{item.type}} [{{item.location}}]</mat-card-subtitle>
             </mat-card-header>
-            <img mat-card-image src="https://visualz-1.s3.us-east-2.amazonaws.com/default-images/samwhite.jpg"
-                alt="Sam White">
+            <img mat-card-image src="{{item.image}}" alt="{{item.name}}">
             <mat-card-actions>
-                <a href="https://samwhitemusic.com/" target="_blank" mat-button>More Info</a>
-            </mat-card-actions>
-        </mat-card>
-
-        <mat-card class="example-card">
-            <mat-card-header>
-                <mat-card-title>Desadeca</mat-card-title>
-                <mat-card-subtitle>DJ [Chicago]</mat-card-subtitle>
-            </mat-card-header>
-            <img mat-card-image src="../../assets/images/mckinzy.jpg" alt="Mikinzie Stuart">
-            <mat-card-actions>
-                <a href="https://www.facebook.com/djdesadeca/" target="_blank" mat-button>More Info</a>
-            </mat-card-actions>
-        </mat-card>
-
-        <mat-card class="example-card">
-            <mat-card-header>
-                <mat-card-title>Slippin Jimmy</mat-card-title>
-                <mat-card-subtitle>DJ [Indiana]</mat-card-subtitle>
-            </mat-card-header>
-            <img mat-card-image src="../../assets/images/evan.jpg" alt="Slippin Jimmy">
-            <mat-card-actions>
-                <a href="https://www.facebook.com/SlippinJimmysHouse/" target="_blank" mat-button>More Info</a>
-            </mat-card-actions>
-        </mat-card>
-
-        <mat-card class="example-card">
-            <mat-card-header>
-                <mat-card-title>Mark Wolff</mat-card-title>
-                <mat-card-subtitle>DJ [Chicago]</mat-card-subtitle>
-            </mat-card-header>
-            <img mat-card-image src="https://visualz-1.s3.us-east-2.amazonaws.com/default-images/markwolff.jpg"
-                alt="Mark Wolff">
-            <mat-card-actions>
-                <a href="https://soundcloud.com/markwolffmusic/" target="_blank" mat-button>More Info</a>
-            </mat-card-actions>
-        </mat-card>
-
-        <mat-card class="example-card">
-            <mat-card-header>
-                <mat-card-title>Johnny Nonstop</mat-card-title>
-                <mat-card-subtitle>DJ [Chicago]</mat-card-subtitle>
-            </mat-card-header>
-            <img mat-card-image src="https://visualz-1.s3.us-east-2.amazonaws.com/default-images/johnnynonstop.jpg"
-                alt="Johnny Nonstop">
-            <mat-card-actions>
-                <a href="https://www.facebook.com/johnnynonstop/" target="_blank" mat-button>More Info</a>
-            </mat-card-actions>
-        </mat-card>
-
-        <mat-card class="example-card">
-            <mat-card-header>
-                <mat-card-title>Zack Joseph</mat-card-title>
-                <mat-card-subtitle>DJ [Chicago]</mat-card-subtitle>
-            </mat-card-header>
-            <img mat-card-image src="https://i1.sndcdn.com/avatars-000343177915-enbmz2-t200x200.jpg" alt="Zack Joseph">
-            <mat-card-actions>
-                <a href="https://www.facebook.com/zj2870" target="_blank" mat-button>More Info</a>
-            </mat-card-actions>
-        </mat-card>
-
-        <mat-card class="example-card">
-            <mat-card-header>
-                <mat-card-title>Nick Quicktastic</mat-card-title>
-                <mat-card-subtitle>DJ [Chicago]</mat-card-subtitle>
-            </mat-card-header>
-            <img mat-card-image src="https://visualz-1.s3.us-east-2.amazonaws.com/default-images/nickmccoord.jpg"
-                alt="Nick Quicktastic">
-            <mat-card-actions>
-                <a href="https://www.stylinoutnetwork.com/quicktastic" target="_blank" mat-button>More Info</a>
+                <a href="{{item.link}}" target="_blank" mat-button>More Info</a>
             </mat-card-actions>
         </mat-card>
 
