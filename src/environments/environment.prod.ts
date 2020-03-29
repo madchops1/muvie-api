@@ -5,5 +5,5 @@ export const environment = {
     twilioNumber: '(872) 205-3408',
     bucket: 'visualz-1',
     crowdScreenBucket: 'crowdscreen',
-    peerServerHost: 'www.visualzstudio.com'
+    peerServerHost: ''
 };
