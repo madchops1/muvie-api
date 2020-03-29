@@ -1558,8 +1558,8 @@ export class LiveStreamComponent implements OnInit {
         //this.peer = null;
         return new Promise((resolve, reject) => {
             this.peer = new Peer({
-                host: this.environment.peerServerHost,
-                port: 9000,
+                host: location.hostname,
+                port: (location.protocol === 'https:' ? 443 : 9000),
                 path: '/peer-server'
             });
 
