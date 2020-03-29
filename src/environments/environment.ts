@@ -10,7 +10,8 @@ export const environment = {
     twilioNumber: '(224) 877-7729',
     bucket: 'visualz-1',
     imageResizeEndpoint: 'https://d10x0r1n47colw.cloudfront.net',
-    crowdScreenBucket: 'crowdscreen'
+    crowdScreenBucket: 'crowdscreen',
+    peerServerHost: 'localhost'
 };
 
 /*
