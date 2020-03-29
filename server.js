@@ -190,7 +190,7 @@ function listDirectories(directory = 'video-library/') {
 }
 
 const peerServer = PeerServer({
-    port: 9000,
+    port: (process.env.ENVIRONMENT === 'production' ? 443 : 9000),
     path: '/peer-server'
 });
 
