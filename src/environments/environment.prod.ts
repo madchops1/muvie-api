@@ -4,5 +4,6 @@ export const environment = {
     websiteUrl: 'https://www.visualzstudio.com',
     twilioNumber: '(872) 205-3408',
     bucket: 'visualz-1',
-    crowdScreenBucket: 'crowdscreen'
+    crowdScreenBucket: 'crowdscreen',
+    peerServerHost: 'https://www.visualzstudio.com'
 };
