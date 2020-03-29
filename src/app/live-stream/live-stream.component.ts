@@ -1388,7 +1388,8 @@ export class LiveStreamComponent implements OnInit {
                         this.hostVideoHidden = true;
                         this.guestVideoHidden = false;
                         this.getRoom(this.roomName).then((room) => {
-                            if (room.live) {
+                            console.log('room', room)
+                            if (room.data.live && room.data.live == 'true') {
                                 this.callHostAndStream(this.hostPeerId);
                             } else {
                                 alert('This stream is not live at the moment. Please try back.');
@@ -1427,6 +1428,7 @@ export class LiveStreamComponent implements OnInit {
         return new Promise((resolve, reject) => {
             console.log('go live', e);
             this.live = e.checked;
+            //localStorage.setItem(this.roomName + '_live', this.live)
             this.httpClient.get(this.environment.ioUrl + '/api/livestream/togglelive?roomName=' + this.roomName + '&userId=' + this.userId + '&peerId=' + this.peerId + '&live=' + this.live).subscribe((res: any) => {
                 console.log('res', res);
                 if (res) {

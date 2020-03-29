@@ -326,7 +326,16 @@ io.on('connection', (socket) => {
     socket.join(String(mid));
     console.log('Client connected', mid);
 
-    socket.on('disconnect', () => console.log('Client disconnected'));
+    socket.on('disconnect', () => {
+
+        console.log('Client disconnected', mid);
+        // if there is a room and this is the host then not live
+        if (liveStreamRooms[mid]) {
+            if (userId == liveStreamRooms[mid].host) {
+                liveStreamRooms[mid].live = false;
+            }
+        }
+    });
 
     // ping/pong crowd screens, and laserz, every 4 sec to keep them connected
     setInterval(() => {
