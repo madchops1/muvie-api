@@ -37,13 +37,16 @@
     <div class="flex-container">
         <!-- <div *ngFor="let key of objectKeys(track.modules[editingModule].settings)"> -->
 
-        <div routerLink="/live/{{room.name}}" *ngFor="let room of rooms" class="rooms-grid"
-            [hidden]="!room.label || room.label == ''">
+        <a *ngFor="let room of rooms" class="rooms-grid" [hidden]="!room.label || room.label == ''">
             <h3>{{room.label}}</h3>
-            <p>{{objectKeys(room.guests).length}}Total Watchers</p>
-            <a mat-raised-button class="pink button" *ngIf="room.live" routerLink="/live/{{room.name}}">Watch</a>
-            <a mat-raised-button class="pink button" *ngIf="!room.live" disabled>Off Air</a>
-        </div>
+            <p>{{objectKeys(room.guests).length}} Total Watchers</p>
+            <img src="https://robohash.org/{{room.host}}?set=set5"
+                [ngClass]="{'grayscale': !room.live, 'grayscale': room.live == 'false'}" />
+            <button mat-raised-button class="pink button" *ngIf="room.live && room.live == 'true'"
+                routerLink="/live/{{room.name}}">Watch</button>
+            <button mat-raised-button class="pink button" *ngIf="!room.live || room.live == 'false'" disabled>Off
+                Air</button>
+        </a>
 
     </div>
 </div>
