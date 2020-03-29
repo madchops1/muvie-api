@@ -20,6 +20,7 @@ $breakpoint-mobile: 768px;
     background: #333;
     color: #fff;
     cursor: pointer;
+    position: relative;
 
     &:hover {
         background: #000;
@@ -37,10 +38,21 @@ $breakpoint-mobile: 768px;
 
     p { text-align: center; }
 
-    a {
+    button {
         display: block;
         margin: 0px auto;
         width: 80px;
+    }
+
+    img {
+        position: absolute;
+        width: 100px;
+        bottom: 0px;
+        right: 10px;
+
+        &.grayscale {
+            filter: grayscale(100%);
+        }
     }
 }
 

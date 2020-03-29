@@ -1333,10 +1333,18 @@ export class LiveStreamComponent implements OnInit {
             localStorage.setItem('userId', this.userId);
         }
 
-        this.label = localStorage.getItem(this.roomName);
+        if (!this.isChrome()) {
+            alert('This has not been tested on your browser and may not work. Please use Chrome for the best experience.');
+        }
 
+        this.label = localStorage.getItem(this.roomName);
         console.log('userId', this.userId);
         console.log('label', this.label);
+
+        let tmpTrack: any = localStorage.getItem(this.roomName + '_track');
+        if (tmpTrack && tmpTrack.modules && tmpTrack.modules.length) {
+            this.track = tmpTrack;
+        }
         this.initModGrid();
 
         // Init Grid
@@ -1379,7 +1387,13 @@ export class LiveStreamComponent implements OnInit {
                         console.log('I am a guest.');
                         this.hostVideoHidden = true;
                         this.guestVideoHidden = false;
-                        this.callHostAndStream(this.hostPeerId);
+                        this.getRoom(this.roomName).then((room) => {
+                            if (room.live) {
+                                this.callHostAndStream(this.hostPeerId);
+                            } else {
+                                alert('This stream is not live at the moment. Please try back.');
+                            }
+                        });
 
                     }
                     // Yes I am the host
@@ -1541,13 +1555,13 @@ export class LiveStreamComponent implements OnInit {
     createPeer() {
         //this.peer = null;
         return new Promise((resolve, reject) => {
-            // this.peer = new Peer({
-            //     host: this.environment.ioUrl,
-            //     port: 9000,
-            //     path: '/peer-server'
-            // });
+            this.peer = new Peer({
+                host: 'localhost',
+                port: 9000,
+                path: '/peer-server'
+            });
 
-            this.peer = new Peer();
+            //this.peer = new Peer();
 
             this.peer.on('open', (id) => {
                 console.log('My peer ID is: ' + id);
@@ -1851,6 +1865,11 @@ export class LiveStreamComponent implements OnInit {
         }, t);
     }
 
+    isChrome() {
+        let isChrome = /Chrome/.test(navigator.userAgent) && /Google Inc/.test(navigator.vendor);
+        return isChrome;
+    }
+
     // drawcanas
     drawCanvas(): any {
         if (!this.everythingLoaded) { return false; }
@@ -1859,7 +1878,7 @@ export class LiveStreamComponent implements OnInit {
         console.log('Draw Canvas');
         this.sketchLoading = true;
 
-
+        localStorage.setItem(this.roomName + '_track', this.track);
 
         this.createScene(this.rendererCanvas).then(() => {
             // Only run the animate function one time and one time only
@@ -2495,6 +2514,8 @@ export class LiveStreamComponent implements OnInit {
         }
     }
 
+
+
     apiGetBlockImage(file, i = this.currentModule): any {
         return new Promise((resolve, reject) => {
 
@@ -2628,6 +2649,22 @@ export class LiveStreamComponent implements OnInit {
             };
             xhr.send(file);
         });
+    }
+
+    getRoom(rommName): any {
+        let promise = new Promise((resolve, reject) => {
+            this.httpClient.get(this.environment.ioUrl + '/api/livestream/room?roomName=' + this.roomName).subscribe((res: any) => {
+                console.log('res', res);
+                if (res) {
+                    resolve(res);
+                } else {
+                    reject();
+                }
+            }, (err) => {
+                reject();
+            });
+        });
+        return promise;
     }
 
     getGif(tag): any {
