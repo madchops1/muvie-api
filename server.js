@@ -17,7 +17,7 @@ const request = require('request');
 const fs = require('fs');
 const AWS = require('aws-sdk');
 const Async = require('async');
-const { PeerServer } = require('peer');
+const { ExpressPeerServer } = require('peer');
 
 const fetch = require('node-fetch');
 global.fetch = fetch;
@@ -189,11 +189,6 @@ function listDirectories(directory = 'video-library/') {
     });
 }
 
-const peerServer = PeerServer({
-    port: 9000,
-    path: '/peer-server'
-});
-
 const app = express();
 
 // enable ssl redirect
@@ -227,6 +222,13 @@ var server = app.listen(process.env.PORT || 8080, function () {
     var port = server.address().port;
     console.log("App now running on port", port);
 });
+
+const peerServer = ExpressPeerServer(server, {
+    debug: true,
+    path: '/peer-server'
+});
+
+app.use('/peerjs', peerServer);
 
 // guest uids are in their local storage
 function newGuest() {
@@ -801,6 +803,14 @@ app.get("*", (req, res) => {
     //console.log('ALPHA');
     res.sendFile(__dirname + '/dist/muvie/index.html');	//    res.sendFile(__dirname + '/dist/muvie/index.html');
 });
+
+// const server
+
+// const peerServer = ExpressPeerServer({
+//     port: 9000,
+//     path: '/peer-server'
+// });
+
 
 /*
 app.all('*', function (req, res, next) {
