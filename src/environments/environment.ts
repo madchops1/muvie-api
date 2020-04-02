@@ -11,7 +11,7 @@ export const environment = {
     bucket: 'visualz-1',
     imageResizeEndpoint: 'https://d10x0r1n47colw.cloudfront.net',
     crowdScreenBucket: 'crowdscreen',
-    peerServerHost: 'localhost'
+    peerServerHost: 'visualz.ngrok.io'
 };
 
 /*
