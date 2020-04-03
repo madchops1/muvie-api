@@ -1,5 +1,10 @@
 .download {
     position: relative;
     z-index: 2;
+
+    &:hover {
+        background: #fff;
+        color: #333;
+    }
 }
 
