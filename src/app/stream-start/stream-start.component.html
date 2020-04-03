@@ -41,7 +41,7 @@
             <h3>{{room.label}}</h3>
             <p>{{objectKeys(room.guests).length}} Total Watchers</p>
             <img src="https://robohash.org/{{room.host}}?set=set5"
-                [ngClass]="{'grayscale': !room.live, 'grayscale': room.live == 'false'}" />
+                [ngClass]="{'grayscale': (!room.live || room.live == 'false')}" />
             <button mat-raised-button class="pink button" *ngIf="room.live && room.live == 'true'"
                 routerLink="/live/{{room.name}}">Watch</button>
             <button mat-raised-button class="pink button" *ngIf="!room.live || room.live == 'false'" disabled>Off

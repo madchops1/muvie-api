@@ -27,12 +27,11 @@
         </mat-menu>
     </div>
 
-    <!-- Watching count -->
+    <!-- peer
     <div class="nums">
         <small *ngIf="host">Peer ID {{peerId}}</small>
     </div>
-
-
+    -->
 
     <!-- 
     <button mat-raised-button ripple color="primary" [matMenuTriggerFor]="menu2">
@@ -43,13 +42,17 @@
         <button mat-menu-item (click)="currentBrowseArtist = i" *ngFor="let artist of videoLibrary; let i = index">
 
         </button>
-    </mat-menu> -->
+    </mat-menu> 
+    -->
 
 </div>
 
+<div class="not-live" *ngIf="notLive">
+    This stream is not currently live.
+</div>
+
 <div class="true-bg" [hidden]="!mainLoading">
-    <div class="loader"></div>
-    If loading takes too long try refreshing the page.
+    <div class="loader"></div> If loading takes too long try refreshing the page.
 </div>
 
 <a class="close-x" (click)="closeAllOverlays()"
@@ -63,22 +66,20 @@
 </div>
 
 <div class="info" *ngIf="info">
-    <h1>VISUALZ QURANSTREAM</h1>
+    <h1>VISUALZ Live Stream</h1>
 
-    <h2>Streamers:</h2>
     <ol>
-        <li>Add visual scenes to your backdrop of your stage.</li>
-        <li>The scenes will automatilly change with the audio from your mic/line-in.</li>
+        <li>
+            Allow microphone and camera access to connect.
+        </li>
+        <li>
+            You can see and hear the stream host, but the host can't see or
+            hear you.
+        </li>
         <li>Rooms will be automatically removed after 24 hours.</li>
     </ol>
 
-    <h2>Watchers:</h2>
-    <ol>
-        <li>Click play to start the stream.</li>
-        <li>Have fun.</li>
-    </ol>
-
-    <h1>Share This URL</h1>
+    <h1>Share This Streaming URL</h1>
     <input type="text" value="http://www.visualzStudio.com/live/{{roomName}}" />
 
     <p>
