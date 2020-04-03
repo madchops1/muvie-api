@@ -1122,7 +1122,7 @@ export class LiveStreamComponent implements OnInit {
     audioSources: any = [];
     videoSources: any = [];
     currentAudioSource: any = 0;
-    currentVideoSource: any;
+    currentVideoSource: any = 0;
 
     // Module Grid
     modOptions: GridsterConfig;
@@ -1319,7 +1319,6 @@ export class LiveStreamComponent implements OnInit {
                 //console.log('remotePeerId', this.remotePeerId);
             }
         });
-
     }
 
     ngOnInit() {
@@ -1405,6 +1404,7 @@ export class LiveStreamComponent implements OnInit {
                         this.hostVideoHidden = false;
                         this.guestVideoHidden = true;
 
+                        this.getSources();
                         this.setupVideo();
                         this.setupAudio();
                         this.drawCanvas();
@@ -1444,6 +1444,24 @@ export class LiveStreamComponent implements OnInit {
         });
     }
 
+    getSources(): any {
+        return new Promise((resolve, reject) => {
+            if (navigator.mediaDevices && navigator.mediaDevices.enumerateDevices) {
+                navigator.mediaDevices.enumerateDevices().then((devices) => {
+                    console.log('DEVICES', devices);
+                    devices.forEach(device => {
+                        console.log('device', device);
+                        if (device.kind == 'videoinput') {
+                            this.videoSources.push(device);
+                        }
+                    });
+                });
+            } else {
+                reject();
+            }
+        });
+    }
+
     setupVideo(): any {
         //
         // Setup and run main three.js canvas
@@ -1452,11 +1470,15 @@ export class LiveStreamComponent implements OnInit {
         // Setup and run the video
         if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
             var constraints = { video: { width: 1280, height: 720, facingMode: 'user' } };
+
             navigator.mediaDevices.getUserMedia(constraints).then((stream) => {
                 // apply the stream to the video element used in the texture
                 this.video.srcObject = stream;
                 this.video.play();
             });
+
+
+
         }
     }
 
@@ -1474,7 +1496,40 @@ export class LiveStreamComponent implements OnInit {
 
     changeAudioSource(i): any {
         this.currentAudioSource = i;
+        //this.currentAudioDeviceId = deviceId;
         this.setupAudio();
+    }
+
+    changeVideoSource(i): any {
+        this.currentVideoSource = i;
+
+        //this.currentVideoDeviceId = deviceId;
+
+        // if (window.stream) {
+        //     window.stream.getTracks().forEach(track => {
+        //         track.stop();
+        //     });
+        // }
+        const audioSource = this.audioSources[this.currentAudioSource].id; //audioInputSelect.value;
+        const videoSource = this.videoSources[i].deviceId; //videoSelect.value;
+        console.log('changing to video src:', this.videoSources[i], videoSource);
+        const constraints = {
+            //audio: { deviceId: audioSource ? { exact: audioSource } : undefined },
+            video: { deviceId: videoSource ? { exact: videoSource } : undefined }
+        };
+        navigator.mediaDevices.getUserMedia(constraints)
+            .then((stream) => {
+                //console.log('gotStream', gotStream);
+                this.video.srcObject = stream;
+                this.video.play();
+            });
+        // .then((gotDevices) => {
+        //     console.log('gotDevices', gotDevices);
+        // })
+        // .catch((err) => {
+        //     console.log('err', err);
+        // });
+
     }
 
     amIHost(roomName, uid, peerId, label): any {
@@ -2518,8 +2573,6 @@ export class LiveStreamComponent implements OnInit {
             });
         }
     }
-
-
 
     apiGetBlockImage(file, i = this.currentModule): any {
         return new Promise((resolve, reject) => {

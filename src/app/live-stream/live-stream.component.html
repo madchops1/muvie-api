@@ -1,10 +1,6 @@
 <div class="buttons">
 
-    <!-- <button mat-raised-button ripple color="primary" (click)="drawCanvas()">Refresh</button> -->
-    <button title="Info" matRipple mat-mini-fab (click)="toggleInfo()">
-        <mat-icon aria-label="Info">info</mat-icon>
-    </button>
-
+    <!-- Audio Sources -->
     <div *ngIf="screenMicLoaded">
         <button mat-raised-button ripple color="primary" [matMenuTriggerFor]="menu2">
             {{audioSources[currentAudioSource].label}}
@@ -17,10 +13,22 @@
         </mat-menu>
     </div>
 
+    <!-- Video Sources -->
+    <div *ngIf="videoSources.length">
+        <button mat-raised-button ripple color="primary" [matMenuTriggerFor]="menu2">
+            {{videoSources[currentVideoSource].label}}
 
+        </button>
+
+        <mat-menu #menu2="matMenu">
+            <button mat-menu-item (click)="changeVideoSource(i)" *ngFor="let source of videoSources; let i = index">
+                {{source.label}}
+            </button>
+        </mat-menu>
+    </div>
+
+    <!-- Watching count -->
     <div class="nums">
-        {{currentGuests}} Watching
-        <strong>{{this.label}}</strong>
         <small *ngIf="host">Peer ID {{peerId}}</small>
     </div>
 
@@ -316,8 +324,21 @@
 <mat-toolbar class="pink" *ngIf="host">
     <mat-toolbar-row class="main" id="main-toolbar">
 
-        <button title="Add Media" matRipple mat-mini-fab (click)="addModule(0)">
-            <mat-icon aria-label="Add Media">library_add</mat-icon>
+        <!-- ADD -->
+        <button title="Add Visuals" matTooltip="Add Media/Gif" matRipple mat-mini-fab (click)="addModule(0)">
+            <mat-icon aria-label="Add Visuals">add</mat-icon>
+        </button>
+
+        <!-- EDIT -->
+        <button *ngIf="track.modules.length > 0" title="Edit Media/Gif" matTooltip="Edit Media/Gif" matRipple
+            mat-mini-fab (click)="addModule(0)">
+            <mat-icon aria-label="Edit Visuals">edit</mat-icon>
+        </button>
+
+        <!-- INFO -->
+        <!-- <button mat-raised-button ripple color="primary" (click)="drawCanvas()">Refresh</button> -->
+        <button title="Info" matRipple mat-mini-fab (click)="toggleInfo()">
+            <mat-icon aria-label="Info">info</mat-icon>
         </button>
 
         <div class="air">
@@ -326,12 +347,22 @@
             </mat-slide-toggle>
         </div>
 
+        <!-- Watching count -->
+        <div class="counts">
+            {{currentGuests}} Watching
+            <strong>{{this.label}}</strong>
+        </div>
+
     </mat-toolbar-row>
 </mat-toolbar>
 
 <!-- Main/Basic Modules -->
 <div class="mod-wrapper" [hidden]="hostVideoHidden">
     <div class="modules">
+        <div *ngIf="track.modules.length == 0" class="click-here" (click)="addModule(0)">
+            Click Here To Add Visuals
+            <small>Visual scenes will change with the music automatically.</small>
+        </div>
         <gridster [options]="modOptions">
             <gridster-item [item]="module" (mousedown)="editModule($event, i)"
                 [ngClass]="{'selected': currentModule == i}"
@@ -339,11 +370,11 @@
                 *ngFor="let module of track.modules; let i = index">
                 <mat-icon>{{module.icon}}</mat-icon>
                 <div class="button-holder">
-                    <button mat-mini-fab (mousedown)="removeModule($event, i)">
+                    <button mat-mini-fab matTooltip="Delete" (mousedown)="removeModule($event, i)">
                         <mat-icon>delete</mat-icon>
                     </button>
-                    <button mat-mini-fab (mousedown)="toggleModuleSettings($event, i)">
-                        <mat-icon>settings_applications</mat-icon>
+                    <button mat-mini-fab matTooltip="Edit Media/Gif" (mousedown)="toggleModuleSettings($event, i)">
+                        <mat-icon>edit</mat-icon>
                     </button>
                     <span *ngIf="true == false">{{i + 1}}</span>
                 </div>

@@ -266,8 +266,6 @@ let laserzKeyMap = {};
 let phoneListHolder = [];
 let liveStreamRooms = [];
 
-//const io = socketIO(server);
-
 var io = require('socket.io')(server);
 let mainSocket = false;
 io.on('connection', (socket) => {
@@ -803,14 +801,6 @@ app.get("*", (req, res) => {
     //console.log('ALPHA');
     res.sendFile(__dirname + '/dist/muvie/index.html');	//    res.sendFile(__dirname + '/dist/muvie/index.html');
 });
-
-// const server
-
-// const peerServer = ExpressPeerServer({
-//     port: 9000,
-//     path: '/peer-server'
-// });
-
 
 /*
 app.all('*', function (req, res, next) {

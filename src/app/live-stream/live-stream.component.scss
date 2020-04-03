@@ -22,14 +22,20 @@
 
     .nums {
         color: #fff;
-        padding: 20px;
+        padding: 20px 0;
 
         small {
-            margin-left: 30px;
+            //margin-left: 30px;
             color: #aaa;
             font-size: 12px;
         }
     }
+}
+
+.counts {
+    right: 20px;
+    position: absolute;
+
 }
 
 .raw-video {
@@ -141,8 +147,6 @@ gridster {
     }
 }
 
-
-
 mat-button-toggle, gridster-item {
     &:hover {
         .button-holder {
@@ -153,6 +157,38 @@ mat-button-toggle, gridster-item {
 
 .air {
     margin-left: 20px;
+}
+
+mat-toolbar-row {
+    button {
+        margin-right: 10px;
+    }
+}
+
+.mat-fab.mat-accent, .mat-flat-button.mat-accent, .mat-mini-fab.mat-accent, .mat-raised-button.mat-accent {
+    background-color: #fff;
+
+}
+
+.click-here {
+    position: absolute;
+    color: #000;
+    text-align: center;
+    bottom: 0px;
+    z-index: 4;
+    background: #fff;
+    width: 100vw;
+    height: 70px;
+    padding-top: 30px;
+    font-size: 20px;
+    //sline-height: 100px;
+    cursor: pointer;
+    opacity: 0.5;
+
+    small {
+        clear: both;
+        display: block;
+    }
 }
 
 .true-bg {
