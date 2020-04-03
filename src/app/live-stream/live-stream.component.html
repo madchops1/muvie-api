@@ -348,6 +348,12 @@
             </mat-slide-toggle>
         </div>
 
+        <div class="bump">
+            <mat-slide-toggle *ngIf="host" class="" (change)="toggleBump($event)" [checked]="bump" [disabled]="false">
+                Bump Video Effect {{ bump == true ? 'On' : 'Off' }}
+            </mat-slide-toggle>
+        </div>
+
         <!-- Watching count -->
         <div class="counts">
             {{currentGuests}} Watching
