@@ -1132,6 +1132,7 @@ export class LiveStreamComponent implements OnInit {
     hostPeerId: any;
     currentGuests: number = 0;
     totalGuests: any = 0;
+    notLive: any = false;
 
     canvas: any;                // Deprecated canvas for the main p5 preview
     canvas2: any;               // canvas for the p5 audio analyzer
@@ -1149,6 +1150,7 @@ export class LiveStreamComponent implements OnInit {
     animating = false;
     playing: any = true;
     pause: any = false;
+    bump: any = true;
 
     // For three js
     renderer = new THREE.WebGLRenderer();
@@ -1391,7 +1393,8 @@ export class LiveStreamComponent implements OnInit {
                             if (room.data.live && room.data.live == 'true') {
                                 this.callHostAndStream(this.hostPeerId);
                             } else {
-                                alert('This stream is not live at the moment. Please try back.');
+                                this.notLive = true;
+                                //alert('This stream is not live at the moment. Please try back.');
                             }
                         });
 
@@ -1567,13 +1570,19 @@ export class LiveStreamComponent implements OnInit {
         alert(text);
     }
 
+    addCamera() {
+
+    }
+
     callHostAndStream(id) {
         return new Promise((resolve, reject) => {
             // Setup and run the video
             if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
                 var constraints = { audio: true, video: { width: 1280, height: 720, facingMode: 'user' } };
+                //var constraints = { audio: true, video: false };
                 navigator.mediaDevices.getUserMedia(constraints).then((stream) => {
 
+                    //let stream1 = new MediaStream;
                     let call: any = this.peer.call(id, stream);
                     console.log('calling peer', id, call, this.peerId);
                     // apply the stream to the video element used in the texture

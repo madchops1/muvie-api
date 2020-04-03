@@ -32,6 +32,20 @@
     }
 }
 
+.not-live {
+    position: absolute;
+    z-index: 6;
+    background: #333;
+    opacity: 0.95;
+    line-height: 100vh;
+    color: #fff;
+    text-align: center;
+    font-size: 40px;
+    width: 100vw;
+    height: 100vh;
+
+}
+
 .counts {
     right: 20px;
     position: absolute;
