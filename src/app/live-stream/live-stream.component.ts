@@ -1622,7 +1622,9 @@ export class LiveStreamComponent implements OnInit {
         //this.peer = null;
         return new Promise((resolve, reject) => {
             this.peer = new Peer({
-                host: location.hostname//,
+                //host: location.hostname,
+                //host: 'visualz.ngrok.com',
+                //path: '/peer-server'
                 //port: 9000//,
                 //secure: false,
                 //path: '/peer-server'
@@ -2859,6 +2861,7 @@ export class LiveStreamComponent implements OnInit {
     toggleSearchGifs() {
         if (this.searchTag == 'pattern') { this.searchTag = 'visuals' };
         this.searchGifs = !this.searchGifs;
+        this.playing = !this.searchGifs();
         if (this.searchGifs && !this.gifResults.length) {
             this.search();
         }
