@@ -2862,6 +2862,7 @@ export class LiveStreamComponent implements OnInit {
     toggleSearchGifs() {
         if (this.searchTag == 'pattern') { this.searchTag = 'visuals' };
         this.searchGifs = !this.searchGifs;
+        this.playing = !this.searchGifs();
         if (this.searchGifs && !this.gifResults.length) {
             this.search();
         }
