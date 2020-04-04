@@ -332,7 +332,7 @@
 
         <!-- EDIT -->
         <button *ngIf="track.modules.length > 0" title="Edit Media/Gif" matTooltip="Edit Media/Gif" matRipple
-            mat-mini-fab (click)="addModule(0)">
+            mat-mini-fab (click)="toggleSearchGifs()">
             <mat-icon aria-label="Edit Visuals">edit</mat-icon>
         </button>
 
@@ -380,7 +380,7 @@
                     <button mat-mini-fab matTooltip="Delete" (mousedown)="removeModule($event, i)">
                         <mat-icon>delete</mat-icon>
                     </button>
-                    <button mat-mini-fab matTooltip="Edit Media/Gif" (mousedown)="toggleModuleSettings($event, i)">
+                    <button mat-mini-fab matTooltip="Edit Media/Gif" (mousedown)="toggleSearchGifs()">
                         <mat-icon>edit</mat-icon>
                     </button>
                     <span *ngIf="true == false">{{i + 1}}</span>

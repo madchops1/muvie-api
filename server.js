@@ -223,12 +223,12 @@ var server = app.listen(process.env.PORT || 8080, function () {
     console.log("App now running on port", port);
 });
 
-const peerServer = ExpressPeerServer(server, {
-    debug: true,
-    path: '/peer-server'
-});
+// const peerServer = ExpressPeerServer(server, {
+//     debug: true,
+//     path: '/peer-server'
+// });
 
-app.use('/peerjs', peerServer);
+// app.use('/peerjs', peerServer);
 
 // guest uids are in their local storage
 function newGuest() {
