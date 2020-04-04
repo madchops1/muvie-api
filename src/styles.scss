@@ -450,6 +450,13 @@ header {
     h2 {
         color: #333;
     }
+
+    h3 {
+        font-size: 15px;
+        margin-top: -30px;
+        margin-bottom: 20px;
+        text-align: center;
+    }
 }
 
 
@@ -685,6 +692,8 @@ img {
     height: 80px;
     display: block;
     margin: 25px auto;
+
+    filter: grayscale(100%);
 
     @media (max-width: $breakpoint-mobile) {
         height: calc(60px);
