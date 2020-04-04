@@ -283,7 +283,9 @@ io.on('connection', (socket) => {
         }
     }
 
-    if (roomName) {
+    console.log('roomName', roomName);
+
+    if (roomName && roomName != 'false') {
 
         // new room
         // - set the host
@@ -340,6 +342,8 @@ io.on('connection', (socket) => {
     // ping/pong crowd screens, and laserz, every 4 sec to keep them connected
     setInterval(() => {
         //console.log('ping');
+        console.log('crowdScreenKeyMap', Object.keys(crowdScreenKeyMap).length);
+        console.log('liveStreamRooms', Object.keys(liveStreamRooms).length);
 
         //console.log('CrowdScreenMap:');
         for (let key in crowdScreenKeyMap) {
@@ -354,6 +358,9 @@ io.on('connection', (socket) => {
 
         //console.log('LiveStreamRooms:');
         Object.keys(liveStreamRooms).forEach(key => {
+
+            //console.log('', key, liveStreamRooms[key]);
+
             let name = liveStreamRooms[key].name;
             let started = liveStreamRooms[key].started / 1000;
             let now = Date.now() / 1000;
