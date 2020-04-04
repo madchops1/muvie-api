@@ -297,7 +297,7 @@
 	   We recommend moving this block and the preceding CSS link to the HEAD of your HTML file. */
         </style>
         <div id="mc_embed_signup">
-            <form
+            <form #form
                 action="https://dutchess.us7.list-manage.com/subscribe/post?u=81486f81685beb71289ee6fe1&amp;id=ea72b92f29"
                 method="post" id="mc-embedded-subscribe-form" name="mc-embedded-subscribe-form" class="validate"
                 target="_blank" novalidate>
@@ -311,11 +311,12 @@
                     </div>
                     <div class="clear">
                         <input type="submit" value="SUBSCRIBE" name="subscribe" id="mc-embedded-subscribe"
-                            class="button mat-button"
+                            class="button mat-button" (click)="form.submit()"
                             style="clear: both; color:#333; height: 70px; font-size: 20px; margin-top: 20px; padding:20px;">
                     </div>
                 </div>
             </form>
+
         </div>
 
         <div class="clearfix"></div>
