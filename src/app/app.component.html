@@ -33,18 +33,22 @@
         <a routerLink="/support">SUPPORT</a>
         <a routerLink="/how-it-works">HOW IT WORKS</a>
         -->
+        <button mat-button [matMenuTriggerFor]="menuT">TOOLS</button>
+        <mat-menu #menuT="matMenu">
+            <button mat-menu-item routerLink="/start">LIVE STREAM</button>
+            <button mat-menu-item routerLink="/mp4-converter">GIF TO MP4 CONVERTER</button>
+            <!-- <button mat-menu-item routerLink="/movie">MUSIC VIDEO CREATOR</button> -->
+        </mat-menu>
 
         <button mat-button [matMenuTriggerFor]="menu">HELP</button>
         <mat-menu #menu="matMenu">
             <button mat-menu-item routerLink="/how-it-works">START HERE</button>
             <button mat-menu-item routerLink="/resources">RESOURCES</button>
             <button mat-menu-item routerLink="/support">COMMUNITY</button>
-            <button mat-menu-item [matMenuTriggerFor]="menuT">TOOLS</button>
-            <mat-menu #menuT="matMenu">
-                <button mat-menu-item routerLink="/mp4-converter">GIF TO MP4 CONVERTER</button>
-                <!-- <button mat-menu-item routerLink="/movie">MUSIC VIDEO CREATOR</button> -->
-            </mat-menu>
+            <button mat-menu-item>visualzapp.contact@gmail.com</button>
         </mat-menu>
+
+        <!-- <button href="mailto:visualzapp.contact@gmail.com" mat-button>CONTACT</button> -->
 
         <!-- 
         <button mat-raised-button class="btn btn-primary btn-margin" *ngIf="!auth.loggedIn" (click)="auth.login()">
@@ -74,7 +78,8 @@
     <a routerLink="/support">Community</a> &nbsp;&nbsp;|&nbsp;&nbsp;
     <a href="https://www.instagram.com/visualzapp/" target="_blank">Instagram</a> &nbsp;&nbsp;|&nbsp;&nbsp;
     <a routerLink="/terms-conditions">Terms &amp; Conditions</a> &nbsp;&nbsp;|&nbsp;&nbsp;
-    <a routerLink="/privacy-policy">Privacy Policy</a>
+    <a routerLink="/privacy-policy">Privacy Policy</a> &nbsp;&nbsp;|&nbsp;&nbsp;
+    <a href="mailto:visualzapp.contact@gmail.com">visualzapp.contact@gmail.com</a>
     <!--
     <a routerLink="/artist-partners">Artist Partnership</a> |
     <a routerLink="/venue-partners">Venue Partnership</a> |
