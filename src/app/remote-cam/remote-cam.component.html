@@ -1,3 +1,31 @@
 <div class="main-wrapper">
+    <button class="start-button" *ngIf="!started" (click)="start()">
+        START
+    </button>
+    <!-- Video For Camera Stream -->
+    <video class="cam" #videoElement autoplay muted playsinline></video>
+    <div class="message">
+        Mobile: {{this.mobile}}
+        <br>
+        {{msg}}
+    </div>
+
+    <button mat-mini-fab class="live-steam-status" [ngStyle]="{'green': liveStreamStatus}">
+        <mat-icon>videocam</mat-icon>
+    </button>
+
+    <button mat-mini-fab class="on-the-air-status" [ngStyle]="{'red': onTheAir}">
+        <mat-icon>airplay</mat-icon>
+    </button>
+
+    <button mat-mini-fab color="primary" class="flip-cam" (click)="flipCam($event)">
+        <mat-icon>flip_camera_ios</mat-icon>
+    </button>
+
+    <button mat-mini-fab color="primary" class="flash" (click)="toggleFlash($event)">
+        <mat-icon *ngIf="torch">flash_off</mat-icon>
+        <mat-icon *ngIf="!torch">flash_on</mat-icon>
+    </button>
+
 
 </div>

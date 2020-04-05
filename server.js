@@ -262,6 +262,7 @@ function newLiveStreamRoom() {
 
 let crowdScreenKeyMap = {};
 let remoteQueKeyMap = {};
+let mobileVideoKeyMap = {};
 let laserzKeyMap = {};
 let phoneListHolder = [];
 let liveStreamRooms = [];
@@ -459,6 +460,21 @@ io.on('connection', (socket) => {
         });
 
     });
+
+    // Connect the movile video keymap for twilio
+    socket.on("connectMobileVideo", async data => {
+        console.log('server received connectMobileVideo', mobileVideoKeyMap, data);
+        let mobileVideoKey = data.key;
+        if (mobileVideoKey) {
+            if (!mobileVideoKeyMap[mobileVideoKey]) {
+                mobileVideoKeyMap[mobileVideoKey] = {
+                    mid: data.mid,
+                    pid: data.pid,
+                    sid: data.sid
+                }
+            }
+        }
+    })
 
     // receive a refresh crowd screen request from the web server
     // and pass it on to the VISUALZ APP
@@ -936,6 +952,10 @@ app.post('/api/sms/reply', (req, res) => {
     // Remote Connect
     else if (remoteQueKeyMap[key]) {
         twiml.message('Click the link to connect. ' + crowdScreenUrl + '/remote-que/' + remoteQueKeyMap[key]);
+    }
+    // Mobile Video connect
+    else if (mobileVideoKeyMap[key]) {
+        twiml.message('Click the link to connect. ' + crowdScreenUrl + '/mobile-video/' + mobileVideoKeyMap[key].mid + '/' + mobileVideoKeyMap[key].pid + '/' + mobileVideoKeyMap[key].sid);
     }
     // Laserz
     // else if (laserzKeyMap[key]) {

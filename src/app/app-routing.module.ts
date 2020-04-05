@@ -45,7 +45,7 @@ const routes: Routes = [
     { path: 'resources', component: ResourcesComponent },
     { path: 'crowdcam/:mid', component: FanCamComponent },
     { path: 'crowdscreen/:mid', component: FanScreenComponent },
-    { path: 'remote-cam/:mid/:pid/:sid', component: RemoteCamComponent },
+    { path: 'mobile-video/:mid/:pid/:sid', component: RemoteCamComponent },
     { path: 'remote-que/:mid', component: RemoteQueComponent },
     { path: 'laserz/:mid', component: LaserzComponent },
     { path: 'welcome/:v', component: WelcomeComponent },
