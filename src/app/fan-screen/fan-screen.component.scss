@@ -5,29 +5,52 @@
 }
 
 .cam {
-    width: 100%;
+    width: 50vw;
     position: absolute;
     top: 0px;
+    right: 0px;
     z-index: 0;
     //margin: 5%;
     transform: rotateY(180deg);
     -webkit-transform:rotateY(180deg); /* Safari and Chrome */
     -moz-transform:rotateY(180deg); /* Firefox */
+    //border: 1px solid #fff;
+    background: #333;
 
+}
+
+.overlay {
+    position: fixed;
+    width: 100vw;
+    height: 100vh;
+    background: #333;
+    z-index: 4;
+    color: #fff;
+    font-size: 40px;
+    padding-top: 100px;
+    text-align: center;
 }
 
 canvas {
     position: absolute;
     top: 0px;
+    left: 0px;
     z-index: 1;
-    width: 100vw;
-    height: calc(100vh + 10px);
+    width: 25vw;
+    //height: calc(100vh + 0px);
 }
 
 .take-pic {
     position: fixed;
     bottom: 20px;
     left: calc(50% - 20px);
+    z-index: 2;
+}
+
+.flip-cam {
+    position: fixed;
+    bottom: 20px;
+    left: 20px;
     z-index: 2;
 }
 

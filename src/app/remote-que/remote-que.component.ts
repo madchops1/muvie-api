@@ -43,6 +43,7 @@ export class RemoteQueComponent implements OnInit {
         this._getRemoteQueAuthorizationConfirmation = this.socketService.getRemoteQueAuthorizationConfirmation.subscribe(data => {
             console.log('Authorization', data);
             this.auth = true;
+            //localStorage.setItem('auth-' + this.mid, 'true');
         });
 
         this._getRemoteQueAuthorizationDenied = this.socketService.getRemoteQueAuthorizationDenied.subscribe(data => {
