@@ -9,22 +9,23 @@
     <video class="cam" [ngClass]="{'user': facingMode == user }" #videoElement autoplay muted playsinline></video>
 
     <div class="message">
-        <br><br><br>
-        Mobile: {{mobile}}<br>
+        <!-- Mobile: {{mobile}}<br>
         Status: {{liveStreamStatus}}<br>
-        OnTheAir: {{onTheAir}}<br>
-        {{msg}}
+        OnTheAir: {{onTheAir}}<br> -->
+        Id: {{peerId}}
+        <!-- <br>
+        {{msg}} -->
     </div>
 
-    <!-- Live Stream Status -->
+    <!-- Live Stream Status
     <button mat-mini-fab class="live-stream-status" [ngClass]="{'green': liveStreamStatus}">
         <mat-icon>videocam</mat-icon>
-    </button>
+    </button>-->
 
-    <!-- On-The-Air Status -->
+    <!-- On-The-Air Status
     <button mat-mini-fab class="on-the-air-status" [ngClass]="{'red': onTheAir}">
         <mat-icon>airplay</mat-icon>
-    </button>
+    </button>-->
 
     <!-- Flip Camera -->
     <button mat-mini-fab color="primary" class="flip-cam" (click)="flipCam($event)" *ngIf="mobile">

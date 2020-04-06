@@ -343,8 +343,12 @@ io.on('connection', (socket) => {
     // ping/pong crowd screens, and laserz, every 4 sec to keep them connected
     setInterval(() => {
         //console.log('ping');
+        //console.log('')
         console.log('crowdScreenKeyMap', Object.keys(crowdScreenKeyMap).length);
         console.log('liveStreamRooms', Object.keys(liveStreamRooms).length);
+        console.log('remoteQueKeyMap', Object.keys(remoteQueKeyMap).length);
+        console.log('mobileVideoKeyMap', Object.keys(mobileVideoKeyMap).length);
+        console.log('--------------------------');
 
         //console.log('CrowdScreenMap:');
         for (let key in crowdScreenKeyMap) {
@@ -475,6 +479,7 @@ io.on('connection', (socket) => {
                 mobileVideoKeyMap[mobileVideoKey] = {
                     mid: data.mid,
                     pid: data.pid,
+                    opid: data.opid,
                     sid: data.sid
                 }
             }
