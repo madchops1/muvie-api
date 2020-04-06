@@ -6,12 +6,25 @@
     right: 0px;
     z-index: 0;
     
-    // transform: rotateY(180deg);
-    // -webkit-transform:rotateY(180deg); /* Safari and Chrome */
-    // -moz-transform:rotateY(180deg); /* Firefox */
+    
     
     background: #333;
 
+
+    &.user {
+        transform: rotateY(180deg);
+        -webkit-transform:rotateY(180deg); /* Safari and Chrome */
+        -moz-transform:rotateY(180deg); /* Firefox */
+    }
+}
+
+.facing-torch {
+    background: #fff;
+    opacity: 0.9;
+    height: 100vh;
+    width: 100vw;
+    position: static;
+    z-index: 2;
 }
 
 .main-wrapper {
@@ -32,27 +45,30 @@
 .message {
     position: absolute;
     z-index: 10;
+    left: 70px; 
+    top:30px;
+    color: #ff4081;
 }
 
 .live-stream-status {
-    background: #333;
+    background: #ccc;
     position: fixed;
     transform: scale(0.8);
     top: 20px; 
     right: 60px;
-
+    z-index: 3;
     &.red {
         background: rgb(190, 61, 61);
     }
 }
 
-.on-the-air {
-    background: #333;
+.on-the-air-status {
+    background: #ccc;
     position: fixed;
     transform: scale(0.8);
     top: 20px; 
     right: 20px;
-
+    z-index: 3;
     &.green {
         background: rgb(67, 165, 67);
     }
@@ -63,7 +79,7 @@
     position: fixed;
     top: 20px;
     left: 20px;
-    z-index: 2;
+    z-index: 3;
 }
 
 

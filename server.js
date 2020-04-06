@@ -439,6 +439,11 @@ io.on('connection', (socket) => {
         socket.broadcast.to(String(mid)).emit('changeTrackRequest', data);
     });
 
+    socket.on("sendOnTheAir", async data => {
+        console.log('server received sendOnTheAir');
+        socket.broadcast.to(String(mid)).emit('getOnTheAir', data);
+    });
+
     // Get the crowd screen from VISUALZ 
     // Maps the key to the room mid
     // and send it the website

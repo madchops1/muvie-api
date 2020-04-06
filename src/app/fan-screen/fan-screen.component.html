@@ -4,7 +4,8 @@
         <canvas id="canvas"></canvas>
 
         <!-- Video For Camera Stream -->
-        <video class="cam" #videoElement autoplay muted playsinline [hidden]="!camera"></video>
+        <video class="cam" [ngClass]="{'user': facingMode == user }" #videoElement autoplay muted playsinline
+            [hidden]="!camera"></video>
 
         <div *ngIf="takingPic" class="timer">{{timer}}</div>
 

@@ -2,9 +2,8 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { Observable, Subscription } from 'rxjs';
 import { SocketService } from '../socket.service';
 import { ActivatedRoute, Router, NavigationEnd } from '@angular/router';
-//import "p5/lib/addons/p5.sound";
-//import "p5/lib/addons/p5.dom";
-//import { promise } from 'protractor';
+import Peer from 'peerjs';
+
 const SUPPORTS_MEDIA_DEVICES = 'mediaDevices' in navigator;
 
 @Component({
@@ -12,10 +11,11 @@ const SUPPORTS_MEDIA_DEVICES = 'mediaDevices' in navigator;
     templateUrl: './remote-cam.component.html',
     styleUrls: ['./remote-cam.component.scss']
 })
+
 export class RemoteCamComponent implements OnInit {
 
     userAgent: any = false;
-    mobile: any = true; // start true
+    mobile: any = true; // start true on purpose
     currentRoute: any = '';
     mid: any = '';
     pid: any = '';
@@ -27,12 +27,17 @@ export class RemoteCamComponent implements OnInit {
     liveStreamStatus: any = false;
     onTheAir: any = false;
     torch: any = false;
+    facingTorch: any = false;
+    peer: any = false;
+    peerId: any = false;
 
     facingMode: any = 'environment';
 
     @ViewChild('videoElement') videoElement: any;
     video: any;
 
+    private _getOnTheAir: Subscription;
+    private _ping: Subscription;
 
     constructor(private route: ActivatedRoute, private router: Router, private socketService: SocketService) {
 
@@ -62,7 +67,68 @@ export class RemoteCamComponent implements OnInit {
         // Video element and canvas element for photo taking and preview
         this.video = this.videoElement.nativeElement;
 
+        // Connect to ws
+        this.socketService.connect(this.mid);
+
+        // ws ping/pong
+        this._ping = this.socketService.ping.subscribe(() => {
+            this.socketService.pong();
+        });
+
+        this._getOnTheAir = this.socketService.getOnTheAir.subscribe((data) => {
+            console.log('getOnTheAirData', data);
+            if (data.peerId == this.peerId) {
+                this.onTheAir = true;
+            } else {
+                this.onTheAir = false;
+            }
+        });
+
         this.setCamera(this.facingMode);
+    }
+
+    callPeer(id) {
+        return new Promise((resolve, reject) => {
+            let call = this.peer.call(id, this.stream);
+
+            call.on('stream', function (stream) {
+                this.liveStreamStatus = true;
+                console.log('this is the remote windows stream', stream);
+                // `stream` is the MediaStream of the remote peer.
+                // Here you'd add it to an HTML video/canvas element.
+            });
+            resolve();
+        });
+    }
+
+    createPeer() {
+        //this.peer = null;
+        return new Promise((resolve, reject) => {
+
+            if (this.peerId) { resolve(this.peerId); return; }
+
+            this.peer = new Peer({});
+
+            this.peer.on('open', (id) => {
+                console.log('My peer ID is: ' + id);
+                this.peerId = id;
+                resolve(id);
+            });
+
+            this.peer.on('close', () => {
+                //this.peer = null;
+                this.peerId = false;
+            });
+
+            this.peer.on('disconnected', () => {
+                this.peer.reconnect();
+            });
+
+            this.peer.on('error', (err) => {
+                console.log('PEER ERR', err);
+                this.peerId = false;
+            });
+        });
     }
 
     setCamera(facingMode): any {
@@ -110,7 +176,23 @@ export class RemoteCamComponent implements OnInit {
 
                         //this.gotCapabilities = true;
                         this.stream = stream;
-                        this.video.srcObject = this.stream;// = window.URL.createObjectURL(stream);
+                        this.video.srcObject = this.stream; // = window.URL.createObjectURL(stream);
+
+                        //
+                        if (!this.liveStreamStatus) {
+                            this.createPeer().then(() => {
+
+                                this.callPeer(this.pid);
+
+                            }, (err) => {
+                                console.log('err', err);
+                            });
+                        }
+
+
+
+
+
                         //this.video.context
                         this.video.onloadeddata = () => {
                             //console.log('Video data loaded');
@@ -123,6 +205,7 @@ export class RemoteCamComponent implements OnInit {
                             // this.context = this.canvas.getContext('2d');
                             //canvasContext = canvas.getContext('2d');
                             this.video.play();
+
                             //this.applyConstraints();
 
                             //this.context.translate(this.video.videoWidth, 0);
@@ -130,11 +213,12 @@ export class RemoteCamComponent implements OnInit {
                         };
 
                         //this.videoContext =
-
-
                         //this.video.srcObject = stream;// = window.URL.createObjectURL(stream);
                         this.video.play();
                         this.applyConstraints();
+                    }, (err) => {
+                        console.log('err', err);
+                        alert('Could not start the camera.');
                     });
                 }
             });
@@ -145,8 +229,9 @@ export class RemoteCamComponent implements OnInit {
         this.started = true;
     }
 
-
     flipCam(e): any {
+        this.torch = false;
+        this.applyConstraints();
         if (this.facingMode == 'environment') {
             this.setCamera('user');
         } else {
@@ -154,31 +239,43 @@ export class RemoteCamComponent implements OnInit {
         }
     }
 
+    toggleFlash(e): any {
+        this.torch = !this.torch;
+        this.applyConstraints();
+    }
 
     applyConstraints(): any {
         return new Promise((resolve, reject) => {
-            if (!this.mobile || this.facingMode != 'environment') {
+
+            if (!this.mobile) {
                 resolve();
                 return;
             }
-            //if (this.gotCapabilities) {
+
+            let realTorch = this.torch;
+            if (this.facingMode == 'user') {
+                if (this.torch) {
+                    this.facingTorch = true;
+                } else {
+                    this.facingTorch = false;
+                }
+                realTorch = false;
+            }
+
             try {
                 this.track.applyConstraints({
-                    advanced: [<any>{ torch: this.torch, intensity: 1 }]
+                    advanced: [<any>{ torch: realTorch, intensity: 1 }]
                 }).then(() => {
                     console.log('constraints applied');
                     resolve();
                 }, (err) => {
-                    //alert('BETA' + err);
                     console.log('could not apply constraints beta', err);
                     reject();
                 });
             } catch (err) {
-                //alert('ALPHA' + err);
                 console.log('could not apply constraints alpha', err);
                 reject();
             }
-            //}
         });
     }
 

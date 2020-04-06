@@ -22,6 +22,7 @@ export class SocketService {
     clientCount = this.socket.fromEvent<any>('clientCount');
     ping = this.socket.fromEvent<any>('ping');
     refreshSignal = this.socket.fromEvent<any>('refreshSignal');
+    getOnTheAir = this.socket.fromEvent<any>('getOnTheAir');
 
     constructor(private socket: Socket) { }
 
@@ -33,8 +34,6 @@ export class SocketService {
         //        resolve();
         //    });
         //});
-
-
     }
 
     pong(): any {
