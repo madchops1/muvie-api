@@ -146,6 +146,13 @@ p {
                 font-size: 14px;
             }
         }
+
+        a {
+
+            display: inline-block;
+            float: none;
+
+        }
     }
 
     button {
@@ -248,6 +255,7 @@ p {
     .main {
         width: 300px;
         margin: 0px auto;
+        
     }
 
     ul.big {

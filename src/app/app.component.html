@@ -1,5 +1,5 @@
 <div *ngIf="!interactive" class="msg">
-    VISUALZ 2.0.1 is here! <a routerLink="/download">Download Now</a>
+    VISUALZ 2.0.1 is here! <a routerLink="/download">Get It Now</a>
 </div>
 <header *ngIf="!interactive">
     <a routerLink="/" class="logo">VISUALZ</a>
@@ -12,7 +12,7 @@
         <button mat-button routerLink="/">HOME</button>
         <button mat-button routerLink="/about">ABOUT</button>
         <button mat-button routerLink="/start">STREAM</button>
-        <button mat-button routerLink="/download">DOWNLOAD FREE</button>
+        <button mat-button routerLink="/download">GET IT NOW</button>
 
         <!-- <button mat-button routerLink="/prices">PRICES</button> -->
 
@@ -43,7 +43,7 @@
             <!-- <button mat-menu-item routerLink="/movie">MUSIC VIDEO CREATOR</button> -->
         </mat-menu>
 
-        <button mat-button [matMenuTriggerFor]="menu">HELP</button>
+        <button mat-button [matMenuTriggerFor]="menu">LEARN</button>
         <mat-menu #menu="matMenu">
             <button mat-menu-item routerLink="/how-it-works">START HERE</button>
             <button mat-menu-item routerLink="/resources">RESOURCES</button>
