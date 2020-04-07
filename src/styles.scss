@@ -29,6 +29,11 @@ gridster {
     color: #e91e63;
     padding: 10px;
     letter-spacing: 2px;
+
+    a {
+        color: #fff;
+        text-decoration: underline;
+    }
 }
 
 h1 {
@@ -574,7 +579,7 @@ img {
     .ico {
         width: 140px;
         overflow: hidden;
-        border-radius: 10px;
+        //border-radius: 10px;
         margin: 20px 0px 25px;
         float: right;
     }

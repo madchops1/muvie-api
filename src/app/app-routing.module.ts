@@ -8,6 +8,7 @@ import { NewMovieComponent } from './new-movie/new-movie.component';
 
 import { VisualzComponent } from './visualz/visualz.component';
 import { SupportComponent } from './support/support.component';
+import { AboutComponent } from './about/about.component';
 import { BuyComponent } from './buy/buy.component';
 import { SuccessComponent } from './success/success.component';
 import { CanceledComponent } from './canceled/canceled.component';
@@ -33,6 +34,7 @@ import { Mp4ConverterComponent } from './mp4-converter/mp4-converter.component';
 const routes: Routes = [
     { path: '', component: VisualzComponent },
     { path: 'support', component: SupportComponent },
+    { path: 'about', component: AboutComponent },
     { path: 'prices', component: BuyComponent },
     { path: 'success', component: SuccessComponent },
     { path: 'canceled', component: CanceledComponent },
