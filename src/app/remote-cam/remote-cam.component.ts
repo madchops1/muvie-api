@@ -38,6 +38,7 @@ export class RemoteCamComponent implements OnInit {
 
     private _getOnTheAir: Subscription;
     private _ping: Subscription;
+    private _getMobileVideoData: Subscription;
 
     constructor(private route: ActivatedRoute, private router: Router, private socketService: SocketService) {
 
@@ -84,7 +85,18 @@ export class RemoteCamComponent implements OnInit {
             }
         });
 
-        this.setCamera(this.facingMode);
+        this._getMobileVideoData = this.socketService.getMobileVideoData.subscribe((data) => {
+            console.log('getMobileVideoData', data);
+            if (data) {
+                this.pid = data;
+            }
+        });
+
+        this.socketService.requestMobileVideoData({ opid: this.pid });
+
+        setTimeout(() => {
+            this.setCamera(this.facingMode);
+        }, 2000);
     }
 
     callPeer(id) {
@@ -112,6 +124,7 @@ export class RemoteCamComponent implements OnInit {
             this.peer.on('open', (id) => {
                 console.log('My peer ID is: ' + id);
                 this.peerId = id;
+                this.socketService.mapModulePeer({ pid: this.peerId, sid: this.sid });
                 resolve(id);
             });
 
@@ -179,15 +192,15 @@ export class RemoteCamComponent implements OnInit {
                         this.video.srcObject = this.stream; // = window.URL.createObjectURL(stream);
 
                         //
-                        if (!this.liveStreamStatus) {
-                            this.createPeer().then(() => {
+                        //if (!this.liveStreamStatus) {
+                        this.createPeer().then(() => {
 
-                                this.callPeer(this.pid);
+                            this.callPeer(this.pid);
 
-                            }, (err) => {
-                                console.log('err', err);
-                            });
-                        }
+                        }, (err) => {
+                            console.log('err', err);
+                        });
+                        //}
 
 
 
