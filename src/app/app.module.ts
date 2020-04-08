@@ -44,6 +44,7 @@ import { LiveStreamComponent } from './live-stream/live-stream.component';
 import { StreamStartComponent } from './stream-start/stream-start.component';
 import { GridsterModule } from 'angular-gridster2';
 import { AboutComponent } from './about/about.component';
+import { VideoLibraryComponent } from './video-library/video-library.component';
 
 const config: SocketIoConfig = { url: environment.ioUrl, options: { autoConnect: false } };
 
@@ -77,7 +78,8 @@ const config: SocketIoConfig = { url: environment.ioUrl, options: { autoConnect:
         RemoteScreenComponent,
         LiveStreamComponent,
         StreamStartComponent,
-        AboutComponent
+        AboutComponent,
+        VideoLibraryComponent
     ],
     imports: [
         BrowserModule,
