@@ -59,6 +59,7 @@ export class RemoteScreenComponent implements OnInit {
             call.on('stream', function (stream2) {
                 this.video = document.getElementById('externalVideo');
                 this.video.srcObject = stream2;
+                this.video.play();
             });
             //});
             //}

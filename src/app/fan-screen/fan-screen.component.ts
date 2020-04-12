@@ -103,8 +103,10 @@ export class FanScreenComponent implements OnInit {
                     this.crowdScreenFunction = data.function;
                     this.crowdScreenIntensity = data.intensity;
                     this.torch = data.torch;
-                    this.camera = data.camera;
+                    //this.camera = data.camera;
                 }
+
+                this.camera = data.camera;
 
                 this.applyConstraints();
 
