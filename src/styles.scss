@@ -665,6 +665,7 @@ img {
         text-align: right;
         clear: both;
         margin-bottom: 30px;
+        line-height: 45px;
         @media (max-width: $breakpoint-mobile) {
             text-align: center;
         }

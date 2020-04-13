@@ -164,7 +164,7 @@ twilioClient.messages
 */
 
 // Stripe
-const stripe = require('stripe')(process.env.STRIPE_KEY);
+const stripe = require('stripe')(process.env.STRIPE_TEST_KEY);
 
 const s3 = new AWS.S3({
     accessKeyId: process.env.AWS_ACCESS_KEY,
@@ -346,12 +346,14 @@ io.on('connection', (socket) => {
     setInterval(() => {
         //console.log('ping');
         //console.log('')
-        console.log('crowdScreenKeyMap', Object.keys(crowdScreenKeyMap).length);
-        console.log('liveStreamRooms', Object.keys(liveStreamRooms).length);
-        console.log('remoteQueKeyMap', Object.keys(remoteQueKeyMap).length);
-        console.log('mobileVideoKeyMap', Object.keys(mobileVideoKeyMap).length);
-        console.log('modulePeerMap', Object.keys(modulePeerMap).length);
-        console.log('--------------------------');
+
+
+        // console.log('crowdScreenKeyMap', Object.keys(crowdScreenKeyMap).length);
+        // console.log('liveStreamRooms', Object.keys(liveStreamRooms).length);
+        // console.log('remoteQueKeyMap', Object.keys(remoteQueKeyMap).length);
+        // console.log('mobileVideoKeyMap', Object.keys(mobileVideoKeyMap).length);
+        // console.log('modulePeerMap', Object.keys(modulePeerMap).length);
+        // console.log('--------------------------');
 
         //console.log('CrowdScreenMap:');
         for (let key in crowdScreenKeyMap) {
@@ -1015,8 +1017,12 @@ app.post("/api/createSeat", async function (req, res) {
     let key = req.body.mid; //'27540e6c-3929-4733-bc0b-314f657dec0b';
     let email = req.body.email;
     let plan = 0;
+
+    console.log('key');
+
     if (!key) {
-        handleError(res, err, 'no key');
+        alert('No machine id. Please restart the app and try again');
+        handleError(res, 'err', 'no key');
     }
     try {
         //console.log('request', req);
@@ -1025,6 +1031,7 @@ app.post("/api/createSeat", async function (req, res) {
         stripe.customers.list({ limit: 1, email: email },
             function (err, customers) {
                 if (err) {
+                    alert('Issue verifying purchase with stripe.')
                     handleError(res, err, 'nope');
                 }
 
@@ -1032,21 +1039,30 @@ app.post("/api/createSeat", async function (req, res) {
                 //    throw err;
                 //}
 
+                console.log('CUSTOMERS', customers.data[0]);
+
                 if (customers.data.length && customers.data[0].subscriptions.data.length) {
                     for (i = 0; i < customers.data[0].subscriptions.data.length; i++) {
+
+                        //plan
                         console.log(customers.data[0].subscriptions.data[i]);
                         if (customers.data[0].subscriptions.data[i].status == 'active') {
+
                             let nickName = customers.data[0].subscriptions.data[i].plan.nickname;
-                            if (nickName.indexOf('Visualz') !== -1 && nickName.indexOf('Popular') !== -1) {
-                                plan = 1;
+                            console.log('plan', nickName);
+
+                            if (nickName.indexOf('Visualz') !== -1 && nickName.indexOf('Educational') !== -1) {
+                                if (plan <= 1) {
+                                    plan = 1;
+                                }
                             }
 
-                            if (nickName.indexOf('Visualz') !== -1 && nickName.indexOf('Pro') !== -1) {
+                            if (nickName.indexOf('Visualz') !== -1 && nickName.indexOf('Commercial') !== -1) {
                                 plan = 2;
                             }
                         }
-                    }
 
+                    }
 
                     // create the key
                     const params = {

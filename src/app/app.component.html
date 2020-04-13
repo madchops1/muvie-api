@@ -4,17 +4,11 @@
 <header *ngIf="!interactive">
     <a routerLink="/" class="logo">VISUALZ</a>
     <div class="nav">
-        <!--<div>
-            VISUALZ is coming soon. Email karl.steltenpohl [at] gmail.com for information or early access.
-        </div>-->
-        <!--<a routerLink="/filter">Filter</a>-->
 
         <button mat-button routerLink="/">HOME</button>
         <button mat-button routerLink="/about">ABOUT</button>
         <button mat-button routerLink="/start">STREAM</button>
         <button mat-button routerLink="/download">GET IT NOW</button>
-
-        <!-- <button mat-button routerLink="/prices">PRICES</button> -->
 
         <!-- <button mat-button [matMenuTriggerFor]="menu2">MARKET</button>
         <mat-menu #menu2="matMenu">
@@ -22,23 +16,11 @@
             <button mat-menu-item routerLink="/create">CREATE &amp; PUBLISH</button>
         </mat-menu> -->
 
-        <!-- 
-        <button mat-button [matMenuTriggerFor]="menu1">ABOUT</button>
-        <mat-menu #menu1="matMenu">
-            <button mat-menu-item routerLink="/about">ABOUT</button>
-            <button mat-menu-item routerLink="/events">EVENTS</button>
-            <button mat-menu-item routerLink="/investors">INVESTORS</button>
-        </mat-menu> -->
-
-        <!--
-        <a routerLink="/support">SUPPORT</a>
-        <a routerLink="/how-it-works">HOW IT WORKS</a>
-        -->
         <button mat-button [matMenuTriggerFor]="menuT">TOOLS</button>
         <mat-menu #menuT="matMenu">
-            <button mat-menu-item routerLink="/download">VISUALZ FOR LAPTOP</button>
+            <button mat-menu-item routerLink="/download">VISUALZ v2.0.1</button>
             <button mat-menu-item routerLink="/start">LIVE STREAM</button>
-            <button mat-menu-item routerLink="/cc-video-library">CC VIDEO LIBRARY</button>
+            <!-- <button mat-menu-item routerLink="/cc-video-library">CC VIDEO LIBRARY</button> -->
             <button mat-menu-item routerLink="/mp4-converter">GIF TO MP4 CONVERTER</button>
             <!-- <button mat-menu-item routerLink="/movie">MUSIC VIDEO CREATOR</button> -->
         </mat-menu>
@@ -48,11 +30,10 @@
             <button mat-menu-item routerLink="/how-it-works">START HERE</button>
             <button mat-menu-item routerLink="/resources">RESOURCES</button>
             <button mat-menu-item routerLink="/support">COMMUNITY</button>
-            <button mat-menu-item>visualzapp.contact@gmail.com</button>
+            <!-- <button mat-menu-item>visualzapp.contact@gmail.com</button> -->
         </mat-menu>
 
         <!-- <button href="mailto:visualzapp.contact@gmail.com" mat-button>CONTACT</button> -->
-
         <!-- 
         <button mat-raised-button class="btn btn-primary btn-margin" *ngIf="!auth.loggedIn" (click)="auth.login()">
             LOG IN

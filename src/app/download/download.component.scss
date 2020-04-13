@@ -10,6 +10,12 @@ $breakpoint-mobile: 768px;
     }
 }
 
+button.pink {
+    width: calc(100% - 40px);
+    margin: 20px 20px;
+    
+}
+
 a.button {
     color: #ffffff !important;
     margin: 0px auto;
@@ -17,9 +23,9 @@ a.button {
 }
 
 .border {
-    background: #ccc;
+    background: #3c3c3c;
     width: 1px;
-    height: 400px;
+    height: 600px;
     float: left;
 
     @media (max-width: $breakpoint-mobile) {
@@ -77,9 +83,8 @@ mat-grid-tile {
     }
 }
 
-
 .price_card {
-	width: calc(24%);
+	width: calc(31%);
 	background: rgb(255, 255, 255);
     float: left;
 
@@ -87,7 +92,7 @@ mat-grid-tile {
 }
 
 .price_card:not(:last-child) {
-	margin: 0px 1px;
+	margin: 0px 1%;
 }
 
 .header {

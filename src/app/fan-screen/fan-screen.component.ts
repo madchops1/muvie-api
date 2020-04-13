@@ -19,7 +19,7 @@ export class FanScreenComponent implements OnInit {
 
     mid: any = '';
     userAgent: any = '';
-    canTakeImage: any = true;
+    canTakeImage: any = true; // start ture
 
     torch: any = false;
     intensity: any = 1;
@@ -298,9 +298,7 @@ export class FanScreenComponent implements OnInit {
 
     takePic(e): any {
 
-        console.log('takePic');
-        this.takingPic = true;
-        this.torch = false;
+
         if (this.canTakeImage == false) {
             alert('Please wait a bit to take another photo.');
             return;
@@ -310,6 +308,10 @@ export class FanScreenComponent implements OnInit {
         setTimeout(() => {
             this.canTakeImage = true;
         }, 10000);
+
+        console.log('takePic');
+        this.takingPic = true;
+        this.torch = false;
         //this.setCamera('user');
 
         //setTimeout(() => {
