@@ -8,7 +8,7 @@
 
     <div class="bordered">
         <img class="mac" src="../../assets/images/macos.png" />
-        <a href="https://visualz-1.s3.us-east-2.amazonaws.com/Visualz-1.2.2.dmg" target="_blank" mat-raised-button
+        <a href="https://visualz-1.s3.us-east-2.amazonaws.com/Visualz-2.0.1.dmg" target="_blank" mat-raised-button
             (click)="downloadMac()" class="pink button">
             Download For Mac
         </a>
@@ -32,6 +32,9 @@
             </p>
             <p>
                 MacBook Pro (Retina) late-2012 or newer
+            </p>
+            <p>
+                Internet Connection
             </p>
         </div>
     </div>
@@ -68,6 +71,9 @@
             <p>
                 SSD drive recommended for movie playback
             </p>
+            <p>
+                Internet Connection
+            </p>
         </div>
     </div>
 
@@ -92,7 +98,7 @@
                 <li>3d audio reactive visualizations.</li>
                 <li>Multiple screens.</li>
                 <li>OBS integration for Stream RTSP video to web.</li>
-                <li>Future v2.* Updates</li>
+                <li>Future Updates</li>
 
                 <li>Max output resolution 1280x1280.</li>
 
@@ -145,7 +151,8 @@
 
             <!-- PROD COMMERCIAL LICENSE -->
             <div [hidden]="testMode === true">
-                <button class="red" id="" role="link" mat-raised-button>
+                <button color="primary" class="pink" id="checkout-button-plan_H5V8KwiRi8BxEK" role="link"
+                    mat-raised-button>
                     Buy Commercial License
                 </button>
             </div>
