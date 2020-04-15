@@ -3,27 +3,42 @@
 
         <canvas id="canvas"></canvas>
 
-        <video class="cam" #videoElement></video>
+        <!-- Video For Camera Stream -->
+        <video class="cam" [ngClass]="{'user': facingMode == user }" #videoElement autoplay muted playsinline
+            [hidden]="!camera"></video>
 
         <div *ngIf="takingPic" class="timer">{{timer}}</div>
+
+        <!-- <div class="overlay" *ngIf="!this.mobile">
+            MOBILE ONLY
+        </div> -->
 
         <button class="start-button" *ngIf="!started" (click)="start()">
             START
         </button>
 
-        <button mat-button color="primary" class="grant-perms" *ngIf="!cameraPerm" (click)="setCamera('environment')">
-            Use Camera
-        </button>
-
-        <button mat-mini-fab color="primary" class="take-pic" *ngIf="!takingPic && cameraPerm"
+        <button mat-mini-fab color="primary" class="take-pic" *ngIf="!takingPic && cameraPerm && camera"
             (click)="takePic($event)">
             <mat-icon>camera</mat-icon>
         </button>
 
-        <video width="100" height="100" class="playing-video" loop autoplay muted playsinline>
+        <button mat-mini-fab color="primary" class="flip-cam" *ngIf="!takingPic && cameraPerm && camera"
+            (click)="flipCam($event)">
+            <mat-icon>flip_camera_ios</mat-icon>
+        </button>
+
+        <video width="1" height="1" class="playing-video" id="heartbeat" loop autoplay muted playsinline>
             <source src="https://muvievideos.s3.us-east-2.amazonaws.com/SampleVideo_1280x720_2mb.mp4_1.mp4"
                 type="video/mp4">
         </video>
+        <!-- 
+        <div style='margin:20px;'>
+            Mobile: {{mobile}}
+        </div>
+
+        <div style='margin:20px;'>
+            User-Agent: {{userAgent}}
+        </div> -->
 
         <script>
             setInterval(() => {

@@ -1,3 +1,44 @@
 <div class="main-wrapper">
 
+    <!-- Start Button -->
+    <button class="start-button" *ngIf="!started" (click)="start()">
+        START
+    </button>
+
+    <!-- Video For Camera Stream -->
+    <video class="cam" [ngClass]="{'user': facingMode == user }" #videoElement autoplay muted playsinline></video>
+
+    <div class="message">
+        <!-- Mobile: {{mobile}}<br>
+        Status: {{liveStreamStatus}}<br>
+        OnTheAir: {{onTheAir}}<br> -->
+        Id: {{peerId}}
+        <!-- <br>
+        {{msg}} -->
+    </div>
+
+    <!-- Live Stream Status
+    <button mat-mini-fab class="live-stream-status" [ngClass]="{'green': liveStreamStatus}">
+        <mat-icon>videocam</mat-icon>
+    </button>-->
+
+    <!-- On-The-Air Status
+    <button mat-mini-fab class="on-the-air-status" [ngClass]="{'red': onTheAir}">
+        <mat-icon>airplay</mat-icon>
+    </button>-->
+
+    <!-- Flip Camera -->
+    <button mat-mini-fab color="primary" class="flip-cam" (click)="flipCam($event)" *ngIf="mobile">
+        <mat-icon>flip_camera_ios</mat-icon>
+    </button>
+
+    <!-- Flash -->
+    <button mat-mini-fab color="primary" class="flash" (click)="toggleFlash($event)" *ngIf="mobile">
+        <mat-icon *ngIf="torch">flash_off</mat-icon>
+        <mat-icon *ngIf="!torch">flash_on</mat-icon>
+    </button>
+
+    <!-- Face Flash -->
+    <div class="facing-torch" *ngIf="facingTorch && facingMode == 'user'"></div>
+
 </div>

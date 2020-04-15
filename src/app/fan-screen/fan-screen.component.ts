@@ -18,11 +18,15 @@ const SUPPORTS_MEDIA_DEVICES = 'mediaDevices' in navigator;
 export class FanScreenComponent implements OnInit {
 
     mid: any = '';
+    userAgent: any = '';
+    canTakeImage: any = true; // start ture
+
     torch: any = false;
     intensity: any = 1;
     crowdScreenBackgroundColor: any = 'transparent';
     crowdScreenFunction: any = '';
     crowdScreenIntensity: any = 1;
+
     interval: any = false;
     currentRoute: any = '';
     camera: any = false;
@@ -31,12 +35,16 @@ export class FanScreenComponent implements OnInit {
     timeArray: any = [200, 300, 400, 500, 600, 700, 800, 900, 1000, 1100, 1200, 1300, 1400, 1500, 1600, 1700, 1800, 1900, 2000];
     gotCapabilities: any = false;
     stream: any = false;
+
     takingPic: any = false;
-    timer: any = 'Get Ready';
+    timer: any = '';
     canvas: any;
     context: any;
     cameraPerm: any = false;
     started = false;
+    mobile = true;
+
+    facingMode: any = 'environment';
 
     @ViewChild('videoElement') videoElement: any;
     video: any;
@@ -59,9 +67,22 @@ export class FanScreenComponent implements OnInit {
 
     ngOnInit() {
 
+        console.log('userAgent', navigator.userAgent);
+        this.userAgent = navigator.userAgent;
+        if (!navigator.userAgent.toLocaleLowerCase().includes('android') && !navigator.userAgent.toLowerCase().includes('iphone')) {
+            this.mobile = false;
+        }
+
+        console.log('IS MOBILE:', this.mobile);
+
         // Video element and canvas element for photo taking and preview
         this.video = this.videoElement.nativeElement;
         this.canvas = document.getElementById('canvas');
+
+        //let heartbeat: any = document.getElementById('heartbeat');
+        //heartbeat.onloadeddata = () => {
+        //    heartbeat.play();
+        //};
 
         // Connect to ws
         this.socketService.connect(this.mid);
@@ -82,7 +103,10 @@ export class FanScreenComponent implements OnInit {
                     this.crowdScreenFunction = data.function;
                     this.crowdScreenIntensity = data.intensity;
                     this.torch = data.torch;
+                    //this.camera = data.camera;
                 }
+
+                this.camera = data.camera;
 
                 this.applyConstraints();
 
@@ -112,7 +136,8 @@ export class FanScreenComponent implements OnInit {
                         this.applyConstraints();
                     }, intervalTime);
                 }
-                //this.setCamera('environment');
+                this.setCamera('environment');
+                this.applyConstraints();
             }
         });
         this.refreshCrowdScreen();
@@ -125,11 +150,40 @@ export class FanScreenComponent implements OnInit {
         //vid = document.getElementById('vid');
         //vid.play();
         this.started = true;
+        let heartbeat: any = document.getElementById('heartbeat');
+        heartbeat.onloadeddata = () => {
+            heartbeat.play();
+        };
+        heartbeat.play();
+    }
+
+    flipCam(e): any {
+        if (this.facingMode == 'environment') {
+            this.setCamera('user');
+        } else {
+            this.setCamera('environment');
+        }
+    }
+
+    unsetCamera(): any {
+        this.setCamera('environment');
+    }
+
+    playVideo(): any {
+
+        console.log(this.video, this.video.paused);
+        //if (this.video.paused) {
+        this.video.play();
+        //}
     }
 
     setCamera(facingMode): any {
 
+        this.facingMode = facingMode;
+
         //return new promise();
+        console.log('support', SUPPORTS_MEDIA_DEVICES);
+
         if (SUPPORTS_MEDIA_DEVICES) {
             //Get the environment camera (usually the second one)
             navigator.mediaDevices.enumerateDevices().then(devices => {
@@ -142,31 +196,61 @@ export class FanScreenComponent implements OnInit {
                 } else {
                     const camera = cameras[cameras.length - 1];
                     this.cameraPerm = true;
+                    let obj;
 
                     // Create stream and get video track
-                    navigator.mediaDevices.getUserMedia({
-                        video: {
-                            //deviceId: camera.deviceId,
-                            //facingMode: ['user', 'environment'],
-                            facingMode: { exact: facingMode },
+                    if (this.mobile) {
+                        obj = {
+                            facingMode: { ideal: this.facingMode },
                             height: { ideal: 1080 },
                             width: { ideal: 1920 }
-                        },
+                        };
+                    } else {
+                        obj = {
+                            height: { ideal: 1080 },
+                            width: { ideal: 1920 }
+                        };
+                    }
+
+                    navigator.mediaDevices.getUserMedia({
+                        video: obj,
                         audio: false
                     }).then(stream => {
                         this.track = stream.getVideoTracks()[0];
 
                         //Create image capture object and get camera capabilities
-                        const imageCapture = new ImageCapture(this.track);
-                        const photoCapabilities = imageCapture.getPhotoCapabilities().then(() => {
+                        //const imageCapture = new ImageCapture(this.track);
+                        //const photoCapabilities = imageCapture.getPhotoCapabilities().then(() => {
 
-                            this.gotCapabilities = true;
-                            this.stream = stream;
-                            //this.video.srcObject = stream;// = window.URL.createObjectURL(stream);
-                            //this.video.play();
+                        this.gotCapabilities = true;
+                        this.stream = stream;
+                        this.video.srcObject = this.stream;// = window.URL.createObjectURL(stream);
+                        //this.video.context
+                        this.video.onloadeddata = () => {
+                            //console.log('Video data loaded');
+                            //console.log(this.video.videoWidth, this.video.videoHeight);
+                            //console.log(this.video.width, this.video.height);   
+
+                            // set the canvas up when the video is working
+                            this.canvas.width = this.video.videoWidth;
+                            this.canvas.height = this.video.videoHeight;
+                            this.context = this.canvas.getContext('2d');
+                            //canvasContext = canvas.getContext('2d');
+                            this.playVideo();
                             this.applyConstraints();
 
-                        });
+                            //this.context.translate(this.video.videoWidth, 0);
+                            //this.context.scale(-1, 1);
+                        };
+
+                        //this.videoContext =
+
+
+                        //this.video.srcObject = stream;// = window.URL.createObjectURL(stream);
+                        this.playVideo();
+                        this.applyConstraints();
+
+                        //});
                     });
                 }
             });
@@ -186,87 +270,91 @@ export class FanScreenComponent implements OnInit {
     }
 
     applyConstraints(): any {
-        if (this.gotCapabilities) {
-            try {
-                this.track.applyConstraints({
-                    advanced: [<any>{ torch: this.torch, intensity: this.intensity }]
-                }).then(() => {
-                    console.log('constraints applied')
-                }, (err) => {
-                    console.log('could not apply constraints beta')
-                });
-            } catch {
-                console.log('could not apply constraints alpha');
+        return new Promise((resolve, reject) => {
+            if (!this.mobile || this.facingMode != 'environment') {
+                resolve();
+                return;
             }
-        }
+            if (this.gotCapabilities) {
+                try {
+                    this.track.applyConstraints({
+                        advanced: [<any>{ torch: this.torch, intensity: this.intensity }]
+                    }).then(() => {
+                        console.log('constraints applied');
+                        resolve();
+                    }, (err) => {
+                        //alert('BETA' + err);
+                        console.log('could not apply constraints beta', err);
+                        reject();
+                    });
+                } catch (err) {
+                    //alert('ALPHA' + err);
+                    console.log('could not apply constraints alpha', err);
+                    reject();
+                }
+            }
+        });
     }
 
     takePic(e): any {
 
+
+        if (this.canTakeImage == false) {
+            alert('Please wait a bit to take another photo.');
+            return;
+        }
+
+        this.canTakeImage = false;
+        setTimeout(() => {
+            this.canTakeImage = true;
+        }, 10000);
+
         console.log('takePic');
         this.takingPic = true;
         this.torch = false;
-        this.setCamera('user');
+        //this.setCamera('user');
 
+        //setTimeout(() => {
+
+        //this.canvas.width = this.video.width();
+        //this.canvas.height = this.video.height();
+        //console.log(this.video.videoWidth, this.video.videoHeight);
+        //this.context = this.canvas.getContext('2d');
+
+        //this.timer = '3';
+        //setTimeout(() => {
+        //this.timer = '2';
+        //setTimeout(() => {
+        //this.timer = '1';
+        //setTimeout(() => {
+
+        //this.timer = '';
+
+        this.context.translate(this.canvas.width, 0);
+        this.context.scale(-1, 1);
+
+        //this.context.drawImage(image, 0, 0);
+
+        this.context.drawImage(this.video, 0, 0, this.video.videoWidth, this.video.videoHeight);
+        let dataUri = this.canvas.toDataURL('image/jpeg'); // can also use 'image/png'
+        this.socketService.sendCrowdScreenImage(dataUri);
+        this.timer = 'Sending Photo To Screen';
         setTimeout(() => {
-            this.video.srcObject = this.stream;// = window.URL.createObjectURL(stream);
-            //this.video.context
-            this.video.onloadeddata = () => {
-                //console.log('Video data loaded');
-                //console.log(this.video.videoWidth, this.video.videoHeight);
-                //console.log(this.video.width, this.video.height);    
-                this.canvas.width = this.video.videoWidth;
-                this.canvas.height = this.video.videoHeight;
-                this.context = this.canvas.getContext('2d');
-                //canvasContext = canvas.getContext('2d');
 
+            this.takingPic = false;
+            //this.context.clearRect(0,0,this.canvas.width, this.canvas.height);
+            //this.getSignedRequest(dataURI, 'image');
+            this.context.fillRect(0, 0, this.canvas.width, this.canvas.height);
+            this.video.src = '';
+            this.timer = '';
+            //this.timer = 'Get Ready';
+            //this.setCamera('environment');
 
-
-                //this.context.translate(this.video.videoWidth, 0);
-                //this.context.scale(-1, 1);
-            };
-
-            //this.videoContext =
-            this.video.play();
-
-            //this.canvas.width = this.video.width();
-            //this.canvas.height = this.video.height();
-            //console.log(this.video.videoWidth, this.video.videoHeight);
-            //this.context = this.canvas.getContext('2d');
-
-            this.timer = '3';
-            setTimeout(() => {
-                this.timer = '2';
-                setTimeout(() => {
-                    this.timer = '1';
-                    setTimeout(() => {
-
-                        this.timer = '';
-
-                        this.context.translate(this.canvas.width, 0);
-                        this.context.scale(-1, 1);
-
-                        //this.context.drawImage(image, 0, 0);
-
-                        this.context.drawImage(this.video, 0, 0, this.video.videoWidth, this.video.videoHeight);
-                        let dataUri = this.canvas.toDataURL('image/jpeg'); // can also use 'image/png'
-                        this.socketService.sendCrowdScreenImage(dataUri);
-
-                        setTimeout(() => {
-
-                            this.takingPic = false;
-                            //this.context.clearRect(0,0,this.canvas.width, this.canvas.height);
-                            //this.getSignedRequest(dataURI, 'image');
-                            this.context.fillRect(0, 0, this.canvas.width, this.canvas.height);
-                            this.video.src = '';
-                            this.timer = 'Get Ready';
-                            this.setCamera('environment');
-
-                        }, 3000);
-                    }, 1000);
-                }, 1000);
-            }, 1000);
-        }, 2000);
+        }, 3000);
+        //}, 1000);
+        //}, 1000);
+        //}, 1000);
+        //}, 2000);
     }
 
     getSignedRequest(file, type): any {

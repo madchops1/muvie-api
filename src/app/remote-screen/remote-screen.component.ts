@@ -33,14 +33,8 @@ export class RemoteScreenComponent implements OnInit {
     }
 
     ngOnInit() {
-
-        // connect to the api server socket
-        this.socketService.connect(this.mid);
-
-        // create the peer and wait for a call
-        this.connectPeer();
-
-
+        this.socketService.connect(this.mid);   // connect to the api server socket
+        this.connectPeer();                     // create the peer and wait for a call
     }
 
     connectPeer() {
@@ -56,11 +50,19 @@ export class RemoteScreenComponent implements OnInit {
 
         // Then await for a call
         this.peer.on('call', (call) => {
+            //console.log('receiving call');
+            //if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
+            //    var constraints = { audio: true, video: false };
+            //    navigator.mediaDevices.getUserMedia(constraints).then((stream1) => {
+            console.log('got userMedia, answering call');
             call.answer(); // answer the call, send the microphone audio
-            call.on('stream', function (stream) {
+            call.on('stream', function (stream2) {
                 this.video = document.getElementById('externalVideo');
-                this.video.srcObject = stream;
+                this.video.srcObject = stream2;
+                this.video.play();
             });
+            //});
+            //}
         });
 
         this.peer.on('close', () => {
@@ -81,35 +83,4 @@ export class RemoteScreenComponent implements OnInit {
             this.connectPeer();
         });
     }
-
-    // createPeer() {
-
-    //     return new Promise((resolve, reject) => {
-
-    //         this.peer = new Peer();
-
-    //         this.peer.on('open', (id) => {
-    //             console.log('My peer ID is: ' + id);
-    //             this.peerId = id;
-    //             resolve(id);
-    //         });
-
-    //         this.peer.on('close', () => {
-    //             this.peerId = false;
-    //         });
-
-    //         this.peer.on('disconnected', () => {
-    //             this.peer.reconnect();
-    //         });
-
-    //         this.peer.on('error', (err) => {
-    //             console.log('PEER ERR', err);
-    //             alert(err);
-    //             this.peerId = false;
-
-    //         });
-
-    //     });
-    // }
-
 }

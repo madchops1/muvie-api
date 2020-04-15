@@ -8,6 +8,7 @@ import { NewMovieComponent } from './new-movie/new-movie.component';
 
 import { VisualzComponent } from './visualz/visualz.component';
 import { SupportComponent } from './support/support.component';
+import { AboutComponent } from './about/about.component';
 import { BuyComponent } from './buy/buy.component';
 import { SuccessComponent } from './success/success.component';
 import { CanceledComponent } from './canceled/canceled.component';
@@ -27,12 +28,14 @@ import { ProfileComponent } from './profile/profile.component';
 import { RemoteScreenComponent } from './remote-screen/remote-screen.component';
 import { LiveStreamComponent } from './live-stream/live-stream.component';
 import { StreamStartComponent } from './stream-start/stream-start.component';
+import { VideoLibraryComponent } from './video-library/video-library.component';
 import { AuthGuard } from './auth.guard';
 import { Mp4ConverterComponent } from './mp4-converter/mp4-converter.component';
 
 const routes: Routes = [
     { path: '', component: VisualzComponent },
     { path: 'support', component: SupportComponent },
+    { path: 'about', component: AboutComponent },
     { path: 'prices', component: BuyComponent },
     { path: 'success', component: SuccessComponent },
     { path: 'canceled', component: CanceledComponent },
@@ -45,7 +48,7 @@ const routes: Routes = [
     { path: 'resources', component: ResourcesComponent },
     { path: 'crowdcam/:mid', component: FanCamComponent },
     { path: 'crowdscreen/:mid', component: FanScreenComponent },
-    { path: 'remote-cam/:mid', component: RemoteCamComponent },
+    { path: 'mobile-video/:mid/:pid/:sid', component: RemoteCamComponent },
     { path: 'remote-que/:mid', component: RemoteQueComponent },
     { path: 'laserz/:mid', component: LaserzComponent },
     { path: 'welcome/:v', component: WelcomeComponent },
@@ -58,7 +61,8 @@ const routes: Routes = [
     { path: 'movie', component: NewMovieComponent },
     { path: 'remote-screen/:pid/:mid', component: RemoteScreenComponent },
     { path: 'start', component: StreamStartComponent },
-    { path: 'live/:key', component: LiveStreamComponent }
+    { path: 'live/:key', component: LiveStreamComponent },
+    { path: 'video-library', component: VideoLibraryComponent }
 
     // { path: 'filter', component: FilterComponent },
     // { path: 'upload', component: UploadComponent },

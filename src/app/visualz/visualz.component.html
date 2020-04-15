@@ -1,11 +1,15 @@
 <div class="wrapper pink">
     <div class="main">
-        <h1>Realtime Audio Reactive Graphics</h1>
+        <h1>Realtime Audio Reactive Experiences</h1>
         <h2>
-            Free visual composition tools for live events &amp; streams. Hey DJs, VJs, Artists, and Venues.
+
+            Create realtime audio reactive
+            graphical visualizations and experiences quickly and easily.
+            Intended for Vjs, Djs, Artists, and Venues.
+            <!-- Free visual composition tools for live events &amp; streams. Hey DJs, VJs, Artists, and Venues. -->
         </h2>
-        <a routerLink="/start" class="download">STREAM IN BROWSER</a>
-        <a routerLink="/download" class="download">DOWNLOAD v1.2.2</a>
+        <a routerLink="/download" class="download">NEW v2.0.1 GET IT NOW</a><Br>
+        <a routerLink="/start" class="download">NEW LIVE STREAM TOOL</a><br>
     </div>
     <div class='macwrap'>
         <img src='../../assets/images/macbook.png' class='macbook' />
@@ -28,7 +32,7 @@
             <img src="../../assets/images/icon.ico" class="ico" />
 
             <div *ngIf="deviceInfo.os == 'Mac'" class="clearfix">
-                <a href="https://visualz-1.s3.us-east-2.amazonaws.com/Visualz-1.2.2.dmg" target="_blank"
+                <a href="https://visualz-1.s3.us-east-2.amazonaws.com/Visualz-2.0.1.dmg" target="_blank"
                     mat-raised-button (click)="downloadMac()" class="pink button">
                     Download Free
                 </a>
@@ -44,28 +48,33 @@
 
         </div>
         <div class="release-notes">
-            <h1>VISUALZ</h1>
-            <p>
-                Visualz brings real-time audio responsiveness and video composition into one place to create great
-                visuals that go to your music's beat. Whether
-                you are a dj newb or a pro create visuals easily.
-            </p>
+            <h1>VISUALZ v2.0.1</h1>
 
             <div class="big-only">
-                <h2>What's New in Version 1.2.2</h2>
-                <ul>
-                    <li>Released 9/27/2019 version 1.2.2 is the first time Visualz has been available for Mac OSx. Yay!
-                    </li>
-                    <li>Crowdscreen fan cam selfie feature is live.</li>
-                    <li>Crowdscreen Link changed to just Crowdscreen.</li>
+                <h2>What's New in Version 2.0.1</h2>
+                <ul class='new'>
+                    <li>Released April 2020.</li>
+                    <li>Added visual effects.</li>
+                    <li>Updated camera feature. Now with streaming mobile video support.</li>
+                    <li>With permission the audience can send selfies to the composition.</li>
                     <li>Updates to remote control.</li>
-                    <li>Gif optimizations.</li>
-                    <li>Beat detection threshold changes.</li>
-                </ul>
-
-                <h2>Bug Fixes</h2>
-                <ul>
-                    <li>SMS number correction.</li>
+                    <li>Gif &amp; image search.</li>
+                    <li>CC video library.</li>
+                    <li>3d audio reactive visualizations.</li>
+                    <li>Optimized beat detection.</li>
+                    <li>Multiple screens.</li>
+                    <li>Stream to browser.</li>
+                    <li>Hotkeys.</li>
+                    <li>Mobile device controller.</li>
+                    <li>With permission control your audiences phone screen and flashlight.</li>
+                    <li>Updated smartphone remote control.</li>
+                    <li>Improved UI/UX.</li>
+                    <li>Add music to tracks.</li>
+                    <li>Optionally store media in the cloud.</li>
+                    <li>Output resolution specification.</li>
+                    <li>With permission collect connected audience mobile phone numbers.</li>
+                    <li>Undo.</li>
+                    <li>Much, much, more.</li>
                 </ul>
             </div>
         </div>
@@ -81,7 +90,7 @@
         <img src="../../assets/images/projection.jpg" />
         <div class="feature-text">
             <mat-icon aria-hidden="false" aria-label="FanCam" class="ico wide">cast_connected</mat-icon>
-            <h1>Graphics</h1>
+            <h1>Audio Graphical</h1>
             <h2>Visualizations to the beat of your music</h2>
             <div class="big-only">
                 <p>
@@ -112,7 +121,7 @@
                     The image is then sent directly to the projection or wall.
                 </p>
                 <p>
-                    Until now this has been complicated and very expensive. Visualz makes it turn-key for free ;)
+                    Normally a complicated and expensive process is as easy as clicking a button.
                 </p>
             </div>
         </div>
@@ -126,16 +135,15 @@
         <img src="../../assets/images/crowdscreen.jpg" />
         <div class="feature-text">
             <mat-icon aria-hidden="false" aria-label="CrowdScreen" class="ico">mobile_screen_share</mat-icon>
-            <h1>CrowdScreen</h1>
+            <h1>Mobile Controller</h1>
             <h2>Mobile device flashlight and screen control</h2>
             <div class="big-only">
                 <p>
-                    The CrowdScreen feature is cutting-edge technology for the lighting industry.
-                    Create amazing visual experiences by incorporating hundreds and thousands of devices.
+                    The mobile controller is cutting-edge event creating tech.
+                    Create amazing visual experiences by incorporating audience devices.
                 </p>
                 <p>
-                    As with the FanCam this is usually complicated and expensive, requiring hardware. Visualz makes it
-                    as easy as clicking a button. Still free.
+                    Again a complicated and expensive process is as easy as clicking a button.
                 </p>
             </div>
         </div>
@@ -162,30 +170,41 @@
                 images, effects and more.
             </li>
             <li>
-                <mat-icon aria-hidden="false" aria-label="Gif Heaven">gif</mat-icon>
-                <h1>Gif Heaven</h1>
-                <strong>Giphy</strong> integration lets you have access to millions of Gifs for your set right now.
+                <mat-icon aria-hidden="false" aria-label="Gif/Image Search">image_search</mat-icon>
+                <h1>Gif/Image Search</h1>
+                <strong>Gif</strong> &amp; image search lets you have access to millions of visuals for your set right
+                now.
+            </li>
+            <li>
+                <mat-icon aria-hidden="false" aria-label="Gif Heaven">video_library</mat-icon>
+                <h1>CC Video Library</h1>
+                A built in <strong>Creative Commons Video library</strong> gives you access to an evergrowing collection
+                of great visuals.
             </li>
             <li>
                 <mat-icon aria-hidden="false" aria-label="Mic">mic</mat-icon>
                 <h1>Easy Input</h1>
-                Use your built-in microphone or mic input.
+                Use your computer's built-in microphone, external microphone, or line-in.
             </li>
             <li>
-                <mat-icon aria-hidden="false" aria-label="Output">all_out</mat-icon>
+                <mat-icon aria-hidden="false" aria-label="Output">settings_input_hdmi</mat-icon>
                 <h1>Easy Output</h1>
                 Output to projector, tvs, LED screens, lighting hardware, mobile devices, and more.
             </li>
-            <!-- 
             <li>
-                <mat-icon aria-hidden="false" aria-label="RemoteCam">linked_camera</mat-icon>
-                <h1>RemoteCam</h1>
+                <mat-icon aria-hidden="false" aria-label="Mobile Video">important_devices</mat-icon>
+                <h1>Mobile Video</h1>
                 Use mobile devices as remote cameras to achieve multiple video streams and angles.
-            </li> -->
+            </li>
             <li>
-                <mat-icon aria-hidden="false" aria-label="FanCam">settings_remote</mat-icon>
+                <mat-icon aria-hidden="false" aria-label="Remote Control">settings_remote</mat-icon>
                 <h1>Remote Control</h1>
                 Que tracks from your mobile device with the remote control. Its super jiffy.
+            </li>
+            <li>
+                <mat-icon aria-hidden="false" aria-label="Remote Screen">open_in_browser</mat-icon>
+                <h1>Remote Screen</h1>
+                Stream to the browser and display on remote screens.
             </li>
             <!--
             <li>
@@ -219,7 +238,12 @@
 </header>
 <div class="content-wrapper white">
     <div class="content-inner-wrapper big-only">
-        <app-htw style="margin:120px auto; display: block; box-shadow:0px 10px 60px 0px #aaa;"></app-htw>
+        <app-htw
+            style="margin:120px auto; background: #333; border-radius: 5px; display: block; box-shadow:0px 10px 60px 0px #aaa;">
+        </app-htw>
+        <!-- <p class="center">
+            If you're ready to learn more checkout the <a routerLink="/user-guide">User Guide</a>.
+        </p> -->
     </div>
 </div>
 

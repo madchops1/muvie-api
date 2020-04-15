@@ -22,6 +22,8 @@ export class SocketService {
     clientCount = this.socket.fromEvent<any>('clientCount');
     ping = this.socket.fromEvent<any>('ping');
     refreshSignal = this.socket.fromEvent<any>('refreshSignal');
+    getOnTheAir = this.socket.fromEvent<any>('getOnTheAir');
+    getMobileVideoData = this.socket.fromEvent<any>('getMobileVideoData');
 
     constructor(private socket: Socket) { }
 
@@ -33,8 +35,6 @@ export class SocketService {
         //        resolve();
         //    });
         //});
-
-
     }
 
     pong(): any {
@@ -91,5 +91,15 @@ export class SocketService {
     sendRefresh(data): any {
         console.log('send refresh');
         this.socket.emit('refreshSignal', data);
+    }
+
+    requestMobileVideoData(data): any {
+        console.log('request mobile video data', data);
+        this.socket.emit('requestMobileVideoData', data);
+    }
+
+    mapModulePeer(data): any {
+        console.log('map module peer', data);
+        this.socket.emit('mapModulePeer', data);
     }
 }

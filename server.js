@@ -164,7 +164,7 @@ twilioClient.messages
 */
 
 // Stripe
-const stripe = require('stripe')(process.env.STRIPE_KEY);
+const stripe = require('stripe')(process.env.STRIPE_TEST_KEY);
 
 const s3 = new AWS.S3({
     accessKeyId: process.env.AWS_ACCESS_KEY,
@@ -262,9 +262,12 @@ function newLiveStreamRoom() {
 
 let crowdScreenKeyMap = {};
 let remoteQueKeyMap = {};
+let mobileVideoKeyMap = {};
+let modulePeerMap = {};
 let laserzKeyMap = {};
 let phoneListHolder = [];
 let liveStreamRooms = [];
+
 
 var io = require('socket.io')(server);
 let mainSocket = false;
@@ -283,7 +286,9 @@ io.on('connection', (socket) => {
         }
     }
 
-    if (roomName) {
+    console.log('roomName', roomName);
+
+    if (roomName && roomName != 'false') {
 
         // new room
         // - set the host
@@ -340,6 +345,15 @@ io.on('connection', (socket) => {
     // ping/pong crowd screens, and laserz, every 4 sec to keep them connected
     setInterval(() => {
         //console.log('ping');
+        //console.log('')
+
+
+        // console.log('crowdScreenKeyMap', Object.keys(crowdScreenKeyMap).length);
+        // console.log('liveStreamRooms', Object.keys(liveStreamRooms).length);
+        // console.log('remoteQueKeyMap', Object.keys(remoteQueKeyMap).length);
+        // console.log('mobileVideoKeyMap', Object.keys(mobileVideoKeyMap).length);
+        // console.log('modulePeerMap', Object.keys(modulePeerMap).length);
+        // console.log('--------------------------');
 
         //console.log('CrowdScreenMap:');
         for (let key in crowdScreenKeyMap) {
@@ -354,6 +368,9 @@ io.on('connection', (socket) => {
 
         //console.log('LiveStreamRooms:');
         Object.keys(liveStreamRooms).forEach(key => {
+
+            //console.log('', key, liveStreamRooms[key]);
+
             let name = liveStreamRooms[key].name;
             let started = liveStreamRooms[key].started / 1000;
             let now = Date.now() / 1000;
@@ -431,6 +448,11 @@ io.on('connection', (socket) => {
         socket.broadcast.to(String(mid)).emit('changeTrackRequest', data);
     });
 
+    socket.on("sendOnTheAir", async data => {
+        console.log('server received sendOnTheAir');
+        socket.broadcast.to(String(mid)).emit('getOnTheAir', data);
+    });
+
     // Get the crowd screen from VISUALZ 
     // Maps the key to the room mid
     // and send it the website
@@ -451,6 +473,38 @@ io.on('connection', (socket) => {
             socket.broadcast.to(String(mid)).emit('clientCount', clients.length);
         });
 
+    });
+
+    socket.on("mapModulePeer", async data => {
+        console.log('server received map module peer', data);
+        modulePeerMap[data.sid] = data.pid;
+    });
+
+    // Connect the movile video keymap for twilio
+    socket.on("connectMobileVideo", async data => {
+        console.log('server received connectMobileVideo', data);
+        let mobileVideoKey = data.key;
+        if (mobileVideoKey) {
+            mobileVideoKeyMap[mobileVideoKey] = {
+                mid: data.mid,
+                pid: data.pid,
+                opid: data.opid,
+                sid: data.sid
+            }
+        }
+    });
+
+    // Get the mobile video from the mobile remote camera
+    // theis gets and matches the proper peerid...
+    socket.on("requestMobileVideoData", async data => {
+        console.log('server received get MobileVideo', data);
+        let match = false;
+        Object.keys(mobileVideoKeyMap).forEach(key => {
+            if (mobileVideoKeyMap[key].opid == data.opid) {
+                match = mobileVideoKeyMap[key].pid;
+            }
+        });
+        socket.broadcast.to(String(mid)).emit('getMobileVideoData', match);
     });
 
     // receive a refresh crowd screen request from the web server
@@ -596,6 +650,17 @@ app.get('/api/kill', function (req, res) {
     res.status(200).json({
         "kill": kill,
         "killMsg": killMsg
+    });
+});
+
+
+// Get the modulepeermap command
+app.get('/api/modulepeermap', function (req, res) {
+    res.header('Access-Control-Allow-Origin', '*');
+    res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS');
+    res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization, Content-Length, X-Requested-With');
+    res.status(200).json({
+        "map": modulePeerMap
     });
 });
 
@@ -930,6 +995,10 @@ app.post('/api/sms/reply', (req, res) => {
     else if (remoteQueKeyMap[key]) {
         twiml.message('Click the link to connect. ' + crowdScreenUrl + '/remote-que/' + remoteQueKeyMap[key]);
     }
+    // Mobile Video connect
+    else if (mobileVideoKeyMap[key]) {
+        twiml.message('Click the link to connect. ' + crowdScreenUrl + '/mobile-video/' + mobileVideoKeyMap[key].mid + '/' + mobileVideoKeyMap[key].pid + '/' + mobileVideoKeyMap[key].sid);
+    }
     // Laserz
     // else if (laserzKeyMap[key]) {
     //     twiml.message('Click the link to connect. ' + crowdScreenUrl + '/laserz/' + laserzKeyMap[key]);
@@ -948,8 +1017,12 @@ app.post("/api/createSeat", async function (req, res) {
     let key = req.body.mid; //'27540e6c-3929-4733-bc0b-314f657dec0b';
     let email = req.body.email;
     let plan = 0;
+
+    console.log('key');
+
     if (!key) {
-        handleError(res, err, 'no key');
+        alert('No machine id. Please restart the app and try again');
+        handleError(res, 'err', 'no key');
     }
     try {
         //console.log('request', req);
@@ -958,6 +1031,7 @@ app.post("/api/createSeat", async function (req, res) {
         stripe.customers.list({ limit: 1, email: email },
             function (err, customers) {
                 if (err) {
+                    alert('Issue verifying purchase with stripe.')
                     handleError(res, err, 'nope');
                 }
 
@@ -965,21 +1039,30 @@ app.post("/api/createSeat", async function (req, res) {
                 //    throw err;
                 //}
 
+                console.log('CUSTOMERS', customers.data[0]);
+
                 if (customers.data.length && customers.data[0].subscriptions.data.length) {
                     for (i = 0; i < customers.data[0].subscriptions.data.length; i++) {
+
+                        //plan
                         console.log(customers.data[0].subscriptions.data[i]);
                         if (customers.data[0].subscriptions.data[i].status == 'active') {
+
                             let nickName = customers.data[0].subscriptions.data[i].plan.nickname;
-                            if (nickName.indexOf('Visualz') !== -1 && nickName.indexOf('Popular') !== -1) {
-                                plan = 1;
+                            console.log('plan', nickName);
+
+                            if (nickName.indexOf('Visualz') !== -1 && nickName.indexOf('Educational') !== -1) {
+                                if (plan <= 1) {
+                                    plan = 1;
+                                }
                             }
 
-                            if (nickName.indexOf('Visualz') !== -1 && nickName.indexOf('Pro') !== -1) {
+                            if (nickName.indexOf('Visualz') !== -1 && nickName.indexOf('Commercial') !== -1) {
                                 plan = 2;
                             }
                         }
-                    }
 
+                    }
 
                     // create the key
                     const params = {

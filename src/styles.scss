@@ -29,6 +29,11 @@ gridster {
     color: #e91e63;
     padding: 10px;
     letter-spacing: 2px;
+
+    a {
+        color: #fff;
+        text-decoration: underline;
+    }
 }
 
 h1 {
@@ -141,6 +146,13 @@ p {
                 font-size: 14px;
             }
         }
+
+        a {
+
+            display: inline-block;
+            float: none;
+
+        }
     }
 
     button {
@@ -243,6 +255,7 @@ p {
     .main {
         width: 300px;
         margin: 0px auto;
+        
     }
 
     ul.big {
@@ -574,7 +587,7 @@ img {
     .ico {
         width: 140px;
         overflow: hidden;
-        border-radius: 10px;
+        //border-radius: 10px;
         margin: 20px 0px 25px;
         float: right;
     }
@@ -652,6 +665,7 @@ img {
         text-align: right;
         clear: both;
         margin-bottom: 30px;
+        line-height: 45px;
         @media (max-width: $breakpoint-mobile) {
             text-align: center;
         }

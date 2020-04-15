@@ -1,3 +1,11 @@
+
+    ::ng-deep .mat-tooltip, .mat-tooltip {
+        //color: yellow !important;
+        font-size: 14px !important;
+        line-height: 19px !important;
+        //padding: 20px;
+    }
+
 .how-to-app {
     position: relative;
 
@@ -6,52 +14,162 @@
 
     }
 
+    // .mat-button-wrapper {
+    //     content: "";
+    // }
+
     button {
         position: absolute;
         opacity: 0.8;
+        transform: scale(0.6);
+        background: #d1f349;
+        //color: #d1f349;
+        color: #000;
+        //font-size: 0px;
+        //content: "";
 
         &.one {
             top: 30px;
-            left: 10px;
+            left: -10px;
         }
 
         &.two {
-            top: 80px;
-            left: 30px;
+            top: 30px;
+            left: 40px;
         }
 
         &.three {
-            top: 300px;
-            left: 120px;
+            top: 30px;
+            left: 80px;
         }
 
         &.four {
-            top: 200px;
-            left: 680px;
+            top: 60px;
+            left: 100px;
         }
 
         &.five {
-            top: 100px;
-            left: 740px;
+            top: 95px;
+            left: 100px;
         }
 
         &.six {
-            top: 5px;
-            left: 150px;
+            top: 125px;
+            left: 100px;
         }
 
         &.seven {
-            top: 5px;
-            left: 200px;
+            top: 160px;
+            left: 100px;
         }
 
         &.eight {
-            top: 150px;
-            left: 400px;
+            top: 190px;
+            left: 100px;
+        }
+
+        &.nine {
+            top: 35px;
+            left: 125px;
+        }
+
+        &.ten {
+            top: 35px;
+            left: 160px;
+        }
+
+        &.eleven {
+            top: 35px;
+            left: 195px;
+        }
+
+        &.twelve {
+            top: 35px;
+            left: 225px;
+        }
+
+        &.thirteen {
+            top: 35px;
+            left: 265px;
+        }
+
+        &.fourteen {
+            top: 25px;
+            left: 620px;
+        }
+
+        &.fifteen {
+            top: 25px;
+            left: 700px;
+        }
+    
+        &.sixteen {
+            top: 180px;
+            left: 380px;
+        }
+
+        &.seventeen {
+            top: 80px;
+            left: 740px;
+        }
+
+        &.eighteen {
+            top: 300px;
+            left: 160px;
+        }
+
+        &.nineteen {
+            top: 300px;
+            left: 220px;
+        }
+
+        &.twenty {
+            top: 325px;
+            left: 610px;
+        }
+
+        &.twentyone {
+            top: 325px;
+            left: 640px;
+        }
+
+        &.twentytwo {
+            top: 325px;
+            left: 670px;
+        }
+
+        &.twentythree {
+            top: 325px;
+            left: 700px;
+        }
+
+        &.twentyfour {
+            top: 325px;
+            left: 730px;
+        }
+
+        &.twentyfive {
+            top: 325px;
+            left: 760px;
+        }
+
+        &.twentysix {
+            top: 370px;
+            left: 360px;
+        }
+
+        &.twentyseven {
+            top: 350px;
+            left: 425px;
+        }
+
+        &.twentyeight {
+            top: 425px;
+            left: 660px;
         }
 
         &:hover {
-            opacity: 1;
+            opacity: 0.9;
         }
     }
 }

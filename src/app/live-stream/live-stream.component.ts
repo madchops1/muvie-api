@@ -2811,13 +2811,12 @@ export class LiveStreamComponent implements OnInit {
     imageEffectsThree(): any {
         //if (audioReactive) {
         // Shape Volume Scale
-        if (this.bump) {
-            let gotoScale = (this.volume * 1.2 + .1) * 2;
-            this.scl += (gotoScale - this.scl) / 3;
-            //console.log(this.scl);
-            if (this.scl <= 1.0) { this.scl = 1.0; }
-            this.__cube.scale.x = this.__cube.scale.y = this.__cube.scale.z = this.scl;
-        }
+        let gotoScale = (this.volume * 1.2 + .1) * 2;
+        this.scl += (gotoScale - this.scl) / 3;
+        //console.log(this.scl);
+        if (this.scl <= 1.0) { this.scl = 1.0; }
+        this.__cube.scale.x = this.__cube.scale.y = this.__cube.scale.z = this.scl;
+
         // let gotoScale = (this.volume * 1.2 + .1) * 2;
         // this.scl += (gotoScale - this.scl) / 3;
         // this.videoSize = this.screenH / 2 * this.scl;
@@ -2866,10 +2865,6 @@ export class LiveStreamComponent implements OnInit {
         if (this.searchGifs && !this.gifResults.length) {
             this.search();
         }
-    }
-
-    toggleBump() {
-        this.bump = !this.bump;
     }
 
     // Close all the overlays
