@@ -89,6 +89,13 @@ mat-grid-tile {
     float: left;
 
     color: #000;
+
+
+    @media (max-width: $breakpoint-mobile) {
+        width: 100%;
+        float: none;
+        margin-bottom: 20px !important;
+    }
 }
 
 .price_card:not(:last-child) {
