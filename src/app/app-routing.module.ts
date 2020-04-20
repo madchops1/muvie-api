@@ -59,7 +59,7 @@ const routes: Routes = [
     },
     { path: 'mp4-converter', component: Mp4ConverterComponent },
     { path: 'movie', component: NewMovieComponent },
-    { path: 'remote-screen/:pid/:mid', component: RemoteScreenComponent },
+    { path: 'remote-screen/:pid/:mid/:plan', component: RemoteScreenComponent },
     { path: 'start', component: StreamStartComponent },
     { path: 'live/:key', component: LiveStreamComponent },
     { path: 'video-library', component: VideoLibraryComponent }

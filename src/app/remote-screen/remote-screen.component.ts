@@ -18,14 +18,16 @@ export class RemoteScreenComponent implements OnInit {
     mid: any;
     remotePeerId: any;
     peerId: any = false;
+    plan: any = 0;
 
     constructor(private route: ActivatedRoute, private router: Router, private socketService: SocketService) {
         router.events.subscribe((val) => {
             if (val instanceof NavigationEnd) {
                 this.currentRoute = val.url;
                 let routeArray = this.currentRoute.split("/");
-                this.mid = routeArray[routeArray.length - 1];
-                this.remotePeerId = routeArray[routeArray.length - 2];
+                this.mid = routeArray[routeArray.length - 2];
+                this.remotePeerId = routeArray[routeArray.length - 3];
+                this.plan = routeArray[routeArray.length - 1];
                 console.log('mid', this.mid);
                 console.log('remotePeerId', this.remotePeerId);
             }
