@@ -40,7 +40,8 @@
             </div>
 
             <div *ngIf="deviceInfo.os != 'Mac'" class="clearfix">
-                <a disabled="disabled" mat-raised-button class="pink button">
+                <a href="https://visualz-1.s3.us-east-2.amazonaws.com/Visualz-Setup-2.0.5w.rar" target="_blank"
+                    mat-raised-button (click)="downloadWindows()" class="pink button">
                     Currently Unavailable
                 </a>
                 <img class="windows" src="../../assets/images/windows.png" />
@@ -82,6 +83,7 @@
                     <h2>Changes 2.0.5</h2>
                     <ul class='new'>
                         <li>Performace Improvement.</li>
+                        <li>Windows Version Released</li>
                     </ul>
 
                     <!-- 4/20/20 -->
