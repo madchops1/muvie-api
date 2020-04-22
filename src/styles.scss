@@ -707,7 +707,7 @@ img {
     display: block;
     margin: 25px auto;
 
-    filter: grayscale(100%);
+    //filter: grayscale(100%);
 
     @media (max-width: $breakpoint-mobile) {
         height: calc(60px);
