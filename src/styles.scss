@@ -194,6 +194,14 @@ p {
     text-align: center;
 }
 
+.collab {
+    line-height: 30px;
+
+    @media (max-width: $breakpoint-mobile) {
+        font-size: 15px;
+    }
+}
+
 .content-inner-wrapper {
     max-width: 800px;
     margin: 0px auto;
@@ -626,6 +634,31 @@ img {
         float: right;
         clear: both;
     }
+
+    @media (max-width: $breakpoint-mobile) {
+        float: none;
+        width: 100%;
+        padding: 0px;
+
+        a {
+            font-size: 12px;
+            clear: both;
+            float: none;
+            display: block;
+            margin: 40px auto;
+        }
+
+        .ico {
+            float: none;
+            margin: 0px auto;
+            display: block;
+        }
+
+        img {
+            float: none;
+            margin: 0px auto;
+        }
+    }
 }
 
 .release-notes {
@@ -646,6 +679,11 @@ img {
 
     ul {
         margin: 20px 0 20px -25px;
+    }
+
+    @media (max-width: $breakpoint-mobile) {
+        float: none;
+        width: 100%;
     }
 }
 
@@ -688,6 +726,7 @@ img {
         padding-right: 0px;
         margin-top: 40px;
         text-align: center;
+
     }
 
     h1 {
@@ -725,7 +764,7 @@ img {
         }
 
         @media (max-width: $breakpoint-mobile) {
-            margin: 0px auto;
+            margin: 0px auto -50px auto;
             float:none;
         }
     }
