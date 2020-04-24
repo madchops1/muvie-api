@@ -14,6 +14,13 @@ export class VisualzComponent implements OnInit {
 
     collaborators: any = [
         {
+            name: 'Beat Lab',
+            type: 'HOUSE + TECHNO DJs',
+            location: 'Live Stream',
+            image: '../../assets/images/beatlab1.png',
+            link: 'https://m.twitch.tv/beatlabchicago'
+        },
+        {
             name: 'Desadeca',
             type: 'DJ',
             location: 'Chicago',
@@ -26,6 +33,20 @@ export class VisualzComponent implements OnInit {
             location: 'Chicago',
             image: 'https://visualz-1.s3.us-east-2.amazonaws.com/default-images/johnnynonstop.jpg',
             link: 'https://www.facebook.com/johnnynonstop/'
+        },
+        {
+            name: 'The Kaizen Club',
+            type: 'PRODUCERS',
+            location: 'Live Stream',
+            image: '../../assets/images/kaizen.jpg',
+            link: 'https://www.youtube.com/channel/UCk7yZcoQFKGUWnyvF219LLw/featured'
+        },
+        {
+            name: 'Mike Larry Draw',
+            type: 'ARTIST',
+            location: 'NYC',
+            image: '../../assets/images/mikelarry.jpg',
+            link: 'https://www.mikelarrydraw.me/work'
         },
         {
             name: 'Mark Wolff',
@@ -43,7 +64,7 @@ export class VisualzComponent implements OnInit {
         },
         {
             name: 'Only The Beat',
-            type: 'ORG',
+            type: 'EVENTS',
             location: 'Chicago',
             image: 'https://visualz-1.s3.us-east-2.amazonaws.com/default-images/otb.jpg',
             link: 'https://onlythebeat.com/'
