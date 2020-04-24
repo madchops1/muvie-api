@@ -32,7 +32,7 @@
             <img src="../../assets/images/icon.ico" class="ico" />
 
             <div *ngIf="deviceInfo.os == 'Mac'" class="clearfix">
-                <a href="https://visualz-1.s3.us-east-2.amazonaws.com/Visualz-2.0.5.dmg" target="_blank"
+                <a href="https://visualz-1.s3.us-east-2.amazonaws.com/Visualz-2.0.6.dmg" target="_blank"
                     mat-raised-button (click)="downloadMac()" class="pink button">
                     Download Mac
                 </a>
@@ -40,7 +40,7 @@
             </div>
 
             <div *ngIf="deviceInfo.os != 'Mac'" class="clearfix">
-                <a href="https://visualz-1.s3.us-east-2.amazonaws.com/Visualz-Setup-2.0.5w.rar" target="_blank"
+                <a href="https://visualz-1.s3.us-east-2.amazonaws.com/Visualz-Setup-2.0.6w.rar" target="_blank"
                     mat-raised-button (click)="downloadWindows()" class="pink button">
                     Download Windows
                 </a>
@@ -49,7 +49,7 @@
 
         </div>
         <div class="release-notes">
-            <h1>VISUALZ v2.0.5</h1>
+            <h1>VISUALZ v2.0.6</h1>
 
             <div class="">
                 <h2>What's New in Version 2</h2>
@@ -80,33 +80,44 @@
                 <div class="smaller">
 
                     <!-- 4/21/20 -->
-                    <h2>Changes 2.0.5</h2>
+                    <h2>Update 2.0.6</h2>
+                    <ul class='new'>
+                        <li>Added Glitch Effect.</li>
+                        <li>Added Replicate scene feature.</li>
+                        <li>Added additional scene change triggers:</li>
+                        <li>Beatx16, Beatx32, Beatx64</li>
+                        <li>Bugfix to playback stopping when moving scenes sometimes.</li>
+                        <li>Bugfix to media file open issue.</li>
+                        <li>Bugfix to fx issue after moving scene to another track.</li>
+                    </ul>
+
+                    <h2>Update 2.0.5</h2>
                     <ul class='new'>
                         <li>Performace Improvement.</li>
                         <li>Windows Version Available.</li>
                     </ul>
 
                     <!-- 4/20/20 -->
-                    <h2>Changes 2.0.4</h2>
+                    <h2>Update 2.0.4</h2>
                     <ul class='new'>
                         <li>Stream to browser enabled for free use. Allows for remote OBS integration.</li>
                     </ul>
 
                     <!-- 4/15/20 -->
-                    <h2>Bugfixes 2.0.3</h2>
+                    <h2>Update 2.0.3</h2>
                     <ul class='new'>
                         <li>Issue on computers with high resolutions.</li>
                         <li>Audio source selection bug</li>
                     </ul>
 
                     <!-- 4/14/20 -->
-                    <h2>Bugfixes 2.0.2</h2>
+                    <h2>Update 2.0.2</h2>
                     <ul class='new'>
                         <li>Video library loading issue.</li>
                     </ul>
 
                     <!-- 4/13/20 -->
-                    <h2>Bugfixes 2.0.1</h2>
+                    <h2>Update 2.0.1</h2>
                     <ul class='new'>
                         <li>Mac Version Available.</li>
                     </ul>
@@ -124,7 +135,7 @@
     <div class="content-inner-wrapper main-feature">
         <img src="../../assets/images/projection.jpg" />
         <div class="feature-text">
-            <mat-icon aria-hidden="false" aria-label="FanCam" class="ico wide">cast_connected</mat-icon>
+            <mat-icon aria-hidden="false" aria-label="FanCam" class="ico">cast_connected</mat-icon>
             <h1>Audio Graphical</h1>
             <h2>Visualizations to the beat of your music</h2>
             <div class="big-only">
@@ -376,7 +387,6 @@
 </header>
 <div class="content-wrapper dark small-bottom">
     <div class="">
-
         <mat-card class="example-card" *ngFor="let item of collaborators">
             <mat-card-header>
                 <mat-card-title>{{item.name}}</mat-card-title>
@@ -394,7 +404,7 @@
 
         <div class="clearfix"></div>
 
-        <h2 style="line-height: 30px;">
+        <h2 class="collab">
             Interested in collaborating?
             <br>visualzapp.contact@gmail.com
         </h2>
