@@ -1,0 +1,101 @@
+
+
+h2.left {
+    text-align: left !important;
+    display: block;
+    clear: both;
+    width: 100%;
+}
+
+.how-to-d {
+
+    position: relative;
+    margin-top: 10px;
+    height: 700px;
+
+    img {
+        margin-right: 40px;
+        margin-bottom: 40px;
+        display: block;
+        float: left;
+        clear: both;
+        max-width: 300px;
+
+        &.border {
+            border: 1px solid #4a4a4a;
+        }
+
+    }
+
+    div {
+        border-left: 1px dashed rgb(196, 196, 196);
+        color: #fff;
+        height: 100px;
+        position: absolute;
+        z-index: 1;
+
+        &.one { 
+            height: 50px; top: 135px; left: 260px; 
+        }
+
+        &.two { 
+            height: 289px; top: 125px; left: 100px; 
+        }
+
+        &.three { 
+            height: 200px; top: 149px; left: 135px; 
+        }
+
+        &.four { 
+            height: 118px; top: 141px; left: 195px; 
+        }
+
+        &.five { 
+            height: 395px; top: 140px; left: 25px; 
+        }
+
+        &.six { 
+            width: 250px; 
+            top: 95px; 
+            left: 210px; 
+            border-left: 0px !important;
+            border-top: 1px dashed rgb(196, 196, 196);
+
+            span {
+                top: -10px !important;
+                right: -245px !important;
+            }
+
+            p {
+                right: -210px;
+                top: -10px;
+            }
+        }
+
+        span {
+            color: #fff;
+            position: absolute;
+            right: -222px;
+            display: block;
+            width: 235px;
+            font-size: 14px;
+            bottom: -20px;
+
+        }
+
+        p {
+            color: #969696;
+            position: absolute;
+            right: -187px;
+            display: block;
+            width: 200px;
+            height: 130px;
+            font-size: 10px;
+            line-height: 14px;
+            bottom: -170px;
+
+        }
+    }
+
+
+}
