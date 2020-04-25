@@ -1,25 +1,57 @@
 <div class="content-wrapper normal">
     <div class="content-inner-wrapper">
-        <h1 class="center">Start Here</h1>
+
+        <h1 class="center">User Guide</h1>
+
+        <app-how-a></app-how-a>
+        <div class="clearfix"></div>
+
         <p>
-            Welcome to Visulz. When you open the app click new set. A new track with some content will be created for
-            you automatically. You can
-            toggle between the Track List and Content in the left sidebar.
+            The rest of the user guide is in progress.
+            Check back and stay tuned for more updates to the app!
         </p>
 
         <p>
-            The audio analyzer is one of the main components to Visualz. Using volume amplitude and peak detection
-            Visualz
-            detects timing to trigger the transition of scenes, and activate fx in your tracks.
+            New features, fx, and user requests are being added regularly.
+            We're also working on user tutorials and more instructional material.
+            Get notified about new releases and other updates.
         </p>
 
-        <p>
-            If you're ready to learn more checkout the <a routerLink="/user-guide">User Guide</a>.
-        </p>
+        <!-- Begin Mailchimp Signup Form -->
+        <link href="//cdn-images.mailchimp.com/embedcode/horizontal-slim-10_7.css" rel="stylesheet" type="text/css">
+        <style type="text/css">
+            #mc_embed_signup {
+                clear: left;
+                width: 100%;
+            }
 
-        <app-htw></app-htw>
+            /* Add your own Mailchimp form style overrides in your site stylesheet or in this style block.
+        	   We recommend moving this block and the preceding CSS link to the HEAD of your HTML file. */
+        </style>
 
-        <br><br><br>
+
+        <div id="mc_embed_signup">
+            <form #form
+                action="https://dutchess.us7.list-manage.com/subscribe/post?u=81486f81685beb71289ee6fe1&amp;id=ea72b92f29"
+                method="post" id="mc-embedded-subscribe-form" name="mc-embedded-subscribe-form" class="validate"
+                target="_blank" novalidate>
+                <div id="mc_embed_signup_scroll">
+                    <input style="width:50vw; height:80px; display:block; margin: 0px auto; font-size:35px;"
+                        type="email" value="" name="EMAIL" class="email" id="mce-EMAIL" placeholder="Email address"
+                        required>
+                    <!-- real people should not fill this in and expect good things - do not remove this or risk form bot signups-->
+                    <div style="position: absolute; left: -5000px;" aria-hidden="true">
+                        <input type="text" name="b_81486f81685beb71289ee6fe1_ea72b92f29" tabindex="-1" value="">
+                    </div>
+                    <div class="clear">
+                        <input type="submit" value="SUBSCRIBE" name="subscribe" id="mc-embedded-subscribe"
+                            class="button mat-button" (click)="form.submit()"
+                            style="clear: both; color:#333; height: 70px; font-size: 20px; margin-top: 20px; padding:20px;">
+                    </div>
+                </div>
+            </form>
+
+        </div>
 
         <!--         
         <p>

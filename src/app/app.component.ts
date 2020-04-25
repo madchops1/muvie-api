@@ -27,6 +27,8 @@ export class AppComponent {
             if (val instanceof NavigationEnd) {
                 this.currentRoute = val.url;
                 console.log('route', this.currentRoute);
+                window.scrollTo(0, 0);
+
                 if (
                     this.currentRoute.includes('welcome') ||
                     this.currentRoute.includes('crowdscreen') ||
