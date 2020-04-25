@@ -12,6 +12,9 @@ export class AppComponent {
     currentRoute = '';
     interactive: any = false;
     userProfile: any;
+    menu: any = false;
+
+
     // detect the route
     constructor(private route: ActivatedRoute, private router: Router, private auth: AuthService) {
 
@@ -28,6 +31,7 @@ export class AppComponent {
                 this.currentRoute = val.url;
                 console.log('route', this.currentRoute);
                 window.scrollTo(0, 0);
+                this.menu = false;
 
                 if (
                     this.currentRoute.includes('welcome') ||
@@ -45,6 +49,10 @@ export class AppComponent {
                 }
             }
         });
+    }
+
+    toggleMenu(): any {
+        this.menu = !this.menu;
     }
 
 }
