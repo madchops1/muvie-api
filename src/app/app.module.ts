@@ -46,6 +46,7 @@ import { GridsterModule } from 'angular-gridster2';
 import { AboutComponent } from './about/about.component';
 import { VideoLibraryComponent } from './video-library/video-library.component';
 import { UserGuideComponent } from './user-guide/user-guide.component';
+import { HowAComponent } from './how-a/how-a.component';
 
 const config: SocketIoConfig = { url: environment.ioUrl, options: { autoConnect: false } };
 
@@ -81,7 +82,8 @@ const config: SocketIoConfig = { url: environment.ioUrl, options: { autoConnect:
         StreamStartComponent,
         AboutComponent,
         VideoLibraryComponent,
-        UserGuideComponent
+        UserGuideComponent,
+        HowAComponent
     ],
     imports: [
         BrowserModule,
