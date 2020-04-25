@@ -1,0 +1,22 @@
+$breakpoint-mobile: 768px;
+
+iframe {
+    width: 800px;
+    height: 600px;
+
+
+    @media (max-width: $breakpoint-mobile) {
+        width: 300px;
+        height: 300px;
+        margin: 0px auto;
+        display: block;
+    }
+}
+
+.collab {
+    line-height: 30px;
+
+    @media (max-width: $breakpoint-mobile) {
+        font-size: 15px;
+    }
+}

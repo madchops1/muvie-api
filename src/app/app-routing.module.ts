@@ -32,6 +32,7 @@ import { VideoLibraryComponent } from './video-library/video-library.component';
 import { AuthGuard } from './auth.guard';
 import { Mp4ConverterComponent } from './mp4-converter/mp4-converter.component';
 import { UserGuideComponent } from './user-guide/user-guide.component';
+import { CalendarComponent } from './calendar/calendar.component';
 
 const routes: Routes = [
     { path: '', component: VisualzComponent },
@@ -64,7 +65,8 @@ const routes: Routes = [
     { path: 'start', component: StreamStartComponent },
     { path: 'live/:key', component: LiveStreamComponent },
     { path: 'video-library', component: VideoLibraryComponent },
-    { path: 'user-guide', component: UserGuideComponent }
+    { path: 'user-guide', component: UserGuideComponent },
+    { path: 'calendar', component: CalendarComponent }
     // { path: 'filter', component: FilterComponent },
     // { path: 'upload', component: UploadComponent },
     // { path: 'test', component: TestComponent }

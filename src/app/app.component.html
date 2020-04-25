@@ -1,3 +1,27 @@
+<button *ngIf="!interactive" class="menu" mat-button (click)="toggleMenu()">
+    <mat-icon aria-label="Menu">menu</mat-icon>
+</button>
+
+<div *ngIf="menu && !interactive" class="mobile-menu">
+    <button mat-button routerLink="/">HOME</button>
+    <button mat-button routerLink="/about">ABOUT</button>
+    <button mat-button routerLink="/download">GET IT NOW</button>
+    <button mat-button [matMenuTriggerFor]="menuT1">TOOLS</button>
+    <mat-menu #menuT1="matMenu">
+        <button mat-menu-item routerLink="/download">VISUALZ v2</button>
+        <button mat-menu-item routerLink="/start">LIVE STREAM IN BROWSER</button>
+        <button mat-menu-item routerLink="/mp4-converter">GIF TO MP4 CONVERTER</button>
+    </mat-menu>
+    <button mat-button routerLink="/calendar">CALENDAR</button>
+    <button mat-button [matMenuTriggerFor]="menu1">LEARN</button>
+    <mat-menu #menu1="matMenu">
+        <button mat-menu-item routerLink="/how-it-works">START HERE</button>
+        <button mat-menu-item routerLink="/user-guide">USER GUIDE</button>
+        <button mat-menu-item routerLink="/resources">RESOURCES</button>
+        <button mat-menu-item routerLink="/support">COMMUNITY</button>
+    </mat-menu>
+</div>
+
 <div *ngIf="!interactive" class="msg">
     VISUALZ v2 is here! <a routerLink="/download">Get It Now</a>
 </div>
@@ -24,6 +48,8 @@
             <!-- <button mat-menu-item routerLink="/movie">MUSIC VIDEO CREATOR</button> -->
         </mat-menu>
 
+        <button mat-button routerLink="/calendar">CALENDAR</button>
+
         <button mat-button [matMenuTriggerFor]="menu">LEARN</button>
         <mat-menu #menu="matMenu">
             <button mat-menu-item routerLink="/how-it-works">START HERE</button>
@@ -48,6 +74,7 @@
         </mat-menu> -->
 
     </div>
+
     <div class="clearfix"></div>
 </header>
 
@@ -59,8 +86,8 @@
     <a routerLink="/">Home</a> &nbsp;&nbsp;|&nbsp;&nbsp;
     <a routerLink="/about">About</a> &nbsp;&nbsp;|&nbsp;&nbsp;
     <a routerLink="/download">Get It Now</a> &nbsp;&nbsp;|&nbsp;&nbsp;
-    <a routerLink="/how-it-works">Help</a> &nbsp;&nbsp;|&nbsp;&nbsp;
-    <a routerLink="/support">Community</a> &nbsp;&nbsp;|&nbsp;&nbsp;
+    <a routerLink="/calendar">Calendar</a> &nbsp;&nbsp;|&nbsp;&nbsp;
+    <a routerLink="/how-it-works">Learn</a> &nbsp;&nbsp;|&nbsp;&nbsp;
     <a href="https://www.instagram.com/visualzapp/" target="_blank">Instagram</a>
 
     <br>

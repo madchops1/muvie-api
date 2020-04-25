@@ -50,6 +50,7 @@ import { HowAComponent } from './how-a/how-a.component';
 import { HowBComponent } from './how-b/how-b.component';
 import { HowCComponent } from './how-c/how-c.component';
 import { HowDComponent } from './how-d/how-d.component';
+import { CalendarComponent } from './calendar/calendar.component';
 
 const config: SocketIoConfig = { url: environment.ioUrl, options: { autoConnect: false } };
 
@@ -89,7 +90,8 @@ const config: SocketIoConfig = { url: environment.ioUrl, options: { autoConnect:
         HowAComponent,
         HowBComponent,
         HowCComponent,
-        HowDComponent
+        HowDComponent,
+        CalendarComponent
     ],
     imports: [
         BrowserModule,
