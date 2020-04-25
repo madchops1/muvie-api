@@ -8,8 +8,8 @@
             Intended for Vjs, Djs, Artists, and Venues.
             <!-- Free visual composition tools for live events &amp; streams. Hey DJs, VJs, Artists, and Venues. -->
         </h2>
-        <a routerLink="/download" class="download">NEW v2 GET IT NOW</a><Br>
-        <a routerLink="/start" class="download">NEW LIVE STREAM TOOL</a><br>
+        <a routerLink="/download" class="download">GET IT NOW</a><Br>
+        <!-- <a routerLink="/start" class="download">NEW LIVE STREAM TOOL</a><br> -->
     </div>
     <div class='macwrap'>
         <img src='../../assets/images/macbook.png' class='macbook' />
@@ -32,23 +32,24 @@
             <img src="../../assets/images/icon.ico" class="ico" />
 
             <div *ngIf="deviceInfo.os == 'Mac'" class="clearfix">
-                <a href="https://visualz-1.s3.us-east-2.amazonaws.com/Visualz-2.0.4.dmg" target="_blank"
+                <a href="https://visualz-1.s3.us-east-2.amazonaws.com/Visualz-2.0.6.dmg" target="_blank"
                     mat-raised-button (click)="downloadMac()" class="pink button">
-                    Download Free
+                    Download Mac
                 </a>
                 <img class="mac" src="../../assets/images/macos.png" />
             </div>
 
             <div *ngIf="deviceInfo.os != 'Mac'" class="clearfix">
-                <a disabled="disabled" mat-raised-button class="pink button">
-                    Currently Unavailable
+                <a href="https://visualz-1.s3.us-east-2.amazonaws.com/Visualz-Setup-2.0.6w.rar" target="_blank"
+                    mat-raised-button (click)="downloadWindows()" class="pink button">
+                    Download Windows
                 </a>
                 <img class="windows" src="../../assets/images/windows.png" />
             </div>
 
         </div>
         <div class="release-notes">
-            <h1>VISUALZ v2.0.4</h1>
+            <h1>VISUALZ v2.0.6</h1>
 
             <div class="">
                 <h2>What's New in Version 2</h2>
@@ -78,23 +79,47 @@
                 </ul>
                 <div class="smaller">
 
+                    <!-- 4/21/20 -->
+                    <h2>Update 2.0.6</h2>
+                    <ul class='new'>
+                        <li>Added Glitch Effect.</li>
+                        <li>Added Replicate scene feature.</li>
+                        <li>Added additional scene change triggers:</li>
+                        <li>Beatx16, Beatx32, Beatx64</li>
+                        <li>Bugfix to playback stopping when moving scenes sometimes.</li>
+                        <li>Bugfix to media file open issue.</li>
+                        <li>Bugfix to fx issue after moving scene to another track.</li>
+                    </ul>
+
+                    <h2>Update 2.0.5</h2>
+                    <ul class='new'>
+                        <li>Performace Improvement.</li>
+                        <li>Windows Version Available.</li>
+                    </ul>
+
                     <!-- 4/20/20 -->
-                    <h2>Changes 2.0.4</h2>
+                    <h2>Update 2.0.4</h2>
                     <ul class='new'>
                         <li>Stream to browser enabled for free use. Allows for remote OBS integration.</li>
                     </ul>
 
                     <!-- 4/15/20 -->
-                    <h2>Bugfixes 2.0.3</h2>
+                    <h2>Update 2.0.3</h2>
                     <ul class='new'>
                         <li>Issue on computers with high resolutions.</li>
                         <li>Audio source selection bug</li>
                     </ul>
 
                     <!-- 4/14/20 -->
-                    <h2>Bugfixes 2.0.2</h2>
+                    <h2>Update 2.0.2</h2>
                     <ul class='new'>
                         <li>Video library loading issue.</li>
+                    </ul>
+
+                    <!-- 4/13/20 -->
+                    <h2>Update 2.0.1</h2>
+                    <ul class='new'>
+                        <li>Mac Version Available.</li>
                     </ul>
                 </div>
             </div>
@@ -110,7 +135,7 @@
     <div class="content-inner-wrapper main-feature">
         <img src="../../assets/images/projection.jpg" />
         <div class="feature-text">
-            <mat-icon aria-hidden="false" aria-label="FanCam" class="ico wide">cast_connected</mat-icon>
+            <mat-icon aria-hidden="false" aria-label="FanCam" class="ico">cast_connected</mat-icon>
             <h1>Audio Graphical</h1>
             <h2>Visualizations to the beat of your music</h2>
             <div class="big-only">
@@ -268,13 +293,58 @@
     <h2>How It Works</h2>
 </header>
 <div class="content-wrapper white">
-    <div class="content-inner-wrapper big-only">
-        <app-htw
-            style="margin:120px auto; background: #333; border-radius: 5px; display: block; box-shadow:0px 10px 60px 0px #aaa;">
-        </app-htw>
+    <div class="content-inner-wrapper">
+
+        <div class="big-only">
+            <app-htw
+                style="margin:120px auto; background: #333; border-radius: 5px; display: block; box-shadow:0px 10px 60px 0px #aaa;">
+            </app-htw>
+        </div>
         <!-- <p class="center">
             If you're ready to learn more checkout the <a routerLink="/user-guide">User Guide</a>.
         </p> -->
+
+
+        <!-- Begin Mailchimp Signup Form -->
+        <link href="//cdn-images.mailchimp.com/embedcode/horizontal-slim-10_7.css" rel="stylesheet" type="text/css">
+        <style type="text/css">
+            #mc_embed_signup {
+                clear: left;
+                width: 100%;
+            }
+
+            /* Add your own Mailchimp form style overrides in your site stylesheet or in this style block.
+        	   We recommend moving this block and the preceding CSS link to the HEAD of your HTML file. */
+        </style>
+
+        <h2 class="email-txt">
+            New features, fx, and user requests are being added regularly.
+            We're also working on user tutorials and more instructional material.
+            Get notified about new releases and other updates.
+        </h2>
+
+        <div id="mc_embed_signup">
+            <form #form
+                action="https://dutchess.us7.list-manage.com/subscribe/post?u=81486f81685beb71289ee6fe1&amp;id=ea72b92f29"
+                method="post" id="mc-embedded-subscribe-form" name="mc-embedded-subscribe-form" class="validate"
+                target="_blank" novalidate>
+                <div id="mc_embed_signup_scroll">
+                    <input style="width:50vw; height:80px; display:block; margin: 0px auto; font-size:35px;"
+                        type="email" value="" name="EMAIL" class="email" id="mce-EMAIL" placeholder="Email address"
+                        required>
+                    <!-- real people should not fill this in and expect good things - do not remove this or risk form bot signups-->
+                    <div style="position: absolute; left: -5000px;" aria-hidden="true">
+                        <input type="text" name="b_81486f81685beb71289ee6fe1_ea72b92f29" tabindex="-1" value="">
+                    </div>
+                    <div class="clear">
+                        <input type="submit" value="SUBSCRIBE" name="subscribe" id="mc-embedded-subscribe"
+                            class="button mat-button" (click)="form.submit()"
+                            style="clear: both; color:#333; height: 70px; font-size: 20px; margin-top: 20px; padding:20px;">
+                    </div>
+                </div>
+            </form>
+
+        </div>
     </div>
 </div>
 
@@ -317,11 +387,14 @@
 </header>
 <div class="content-wrapper dark small-bottom">
     <div class="">
-
         <mat-card class="example-card" *ngFor="let item of collaborators">
             <mat-card-header>
                 <mat-card-title>{{item.name}}</mat-card-title>
-                <mat-card-subtitle>{{item.type}} [{{item.location}}]</mat-card-subtitle>
+                <mat-card-subtitle>
+                    {{item.type}}
+                    <br>
+                    {{item.location}}
+                </mat-card-subtitle>
             </mat-card-header>
             <img mat-card-image src="{{item.image}}" alt="{{item.name}}">
             <mat-card-actions>
@@ -330,51 +403,11 @@
         </mat-card>
 
         <div class="clearfix"></div>
-    </div>
-</div>
 
-<header class="skew">
-    <h2>Keep Up With Us</h2>
-    <h3>Get notified about new releases and other updates.</h3>
-</header>
-<div class="content-wrapper white small-bottom" style="min-height: calc(100vh - 450px);">
-    <div class="">
-
-        <!-- Begin Mailchimp Signup Form -->
-        <link href="//cdn-images.mailchimp.com/embedcode/horizontal-slim-10_7.css" rel="stylesheet" type="text/css">
-        <style type="text/css">
-            #mc_embed_signup {
-                clear: left;
-                width: 100%;
-            }
-
-            /* Add your own Mailchimp form style overrides in your site stylesheet or in this style block.
-	   We recommend moving this block and the preceding CSS link to the HEAD of your HTML file. */
-        </style>
-        <div id="mc_embed_signup">
-            <form #form
-                action="https://dutchess.us7.list-manage.com/subscribe/post?u=81486f81685beb71289ee6fe1&amp;id=ea72b92f29"
-                method="post" id="mc-embedded-subscribe-form" name="mc-embedded-subscribe-form" class="validate"
-                target="_blank" novalidate>
-                <div id="mc_embed_signup_scroll">
-                    <input style="width:50vw; height:80px; display:block; margin: 0px auto; font-size:35px;"
-                        type="email" value="" name="EMAIL" class="email" id="mce-EMAIL" placeholder="Email address"
-                        required>
-                    <!-- real people should not fill this in and expect good things - do not remove this or risk form bot signups-->
-                    <div style="position: absolute; left: -5000px;" aria-hidden="true">
-                        <input type="text" name="b_81486f81685beb71289ee6fe1_ea72b92f29" tabindex="-1" value="">
-                    </div>
-                    <div class="clear">
-                        <input type="submit" value="SUBSCRIBE" name="subscribe" id="mc-embedded-subscribe"
-                            class="button mat-button" (click)="form.submit()"
-                            style="clear: both; color:#333; height: 70px; font-size: 20px; margin-top: 20px; padding:20px;">
-                    </div>
-                </div>
-            </form>
-
-        </div>
-
-        <div class="clearfix"></div>
+        <h2 class="collab">
+            Interested in collaborating?
+            <br>visualzapp.contact@gmail.com
+        </h2>
     </div>
 </div>
 

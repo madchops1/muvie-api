@@ -38,6 +38,10 @@ gridster {
 
 h1 {
     margin-bottom: 40px;
+    
+    @media (max-width: $breakpoint-mobile) {
+        line-height: 42px;
+    }
 }
 
 h2 {
@@ -52,6 +56,15 @@ h3 {
     margin-top: 30px;
     text-align: left;
     font-size: 40px;
+}
+
+.email-txt {
+    line-height: 30px; 
+    font-size: 14px;
+
+    @media (max-width: $breakpoint-mobile) {
+
+    }
 }
 
 p {
@@ -104,6 +117,10 @@ p {
         width: calc(60% - 40px);
         float: left;
 
+        @media (max-width: $breakpoint-mobile) {
+            float: none;
+        }
+
         .macbook {
             //width: 90%;
             //margin: 0px auto;
@@ -111,8 +128,11 @@ p {
             float: left;
 
             @media (max-width: $breakpoint-mobile) {
-                margin-top: 100px;
-                margin-left: -140px;
+                width: 375px;
+                margin-top: 40px;
+                margin-left: 0px;
+                margin-bottom: 40px;
+                float:none;
             }
         }
     }
@@ -127,13 +147,21 @@ p {
         padding: 0 20px;
         width: 40%;
         float: left;
+        position: relative;
+        z-index: 1;
+
+        @media (max-width: $breakpoint-mobile) {
+            width: 100%;
+            float: none;
+        }
 
         h1 {
             font-size: 80px;
             margin: 40px 0 0 0px;
+            //text-shadow: 0 0 10px #ff4c89;
 
             @media (max-width: $breakpoint-mobile) {
-                font-size: 60px;
+                font-size: 50px;
             }
 
         }
@@ -143,7 +171,7 @@ p {
             text-align: left;
 
             @media (max-width: $breakpoint-mobile) {
-                font-size: 14px;
+                font-size: 22px;
             }
         }
 
@@ -164,6 +192,14 @@ p {
 
 .center {
     text-align: center;
+}
+
+.collab {
+    line-height: 30px;
+
+    @media (max-width: $breakpoint-mobile) {
+        font-size: 15px;
+    }
 }
 
 .content-inner-wrapper {
@@ -321,6 +357,8 @@ p {
 
             mat-card-subtitle {
                 font-size: 10px;
+                line-height: 10px;
+                margin-top: -5px !important;
                 white-space: nowrap;
             }
         }
@@ -596,6 +634,31 @@ img {
         float: right;
         clear: both;
     }
+
+    @media (max-width: $breakpoint-mobile) {
+        float: none;
+        width: 100%;
+        padding: 0px;
+
+        a {
+            font-size: 12px;
+            clear: both;
+            float: none;
+            display: block;
+            margin: 40px auto;
+        }
+
+        .ico {
+            float: none;
+            margin: 0px auto;
+            display: block;
+        }
+
+        img {
+            float: none;
+            margin: 0px auto;
+        }
+    }
 }
 
 .release-notes {
@@ -616,6 +679,11 @@ img {
 
     ul {
         margin: 20px 0 20px -25px;
+    }
+
+    @media (max-width: $breakpoint-mobile) {
+        float: none;
+        width: 100%;
     }
 }
 
@@ -658,6 +726,7 @@ img {
         padding-right: 0px;
         margin-top: 40px;
         text-align: center;
+
     }
 
     h1 {
@@ -695,7 +764,7 @@ img {
         }
 
         @media (max-width: $breakpoint-mobile) {
-            margin: 0px auto;
+            margin: 0px auto -50px auto;
             float:none;
         }
     }
@@ -707,7 +776,7 @@ img {
     display: block;
     margin: 25px auto;
 
-    filter: grayscale(100%);
+    //filter: grayscale(100%);
 
     @media (max-width: $breakpoint-mobile) {
         height: calc(60px);
