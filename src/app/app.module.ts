@@ -47,6 +47,9 @@ import { AboutComponent } from './about/about.component';
 import { VideoLibraryComponent } from './video-library/video-library.component';
 import { UserGuideComponent } from './user-guide/user-guide.component';
 import { HowAComponent } from './how-a/how-a.component';
+import { HowBComponent } from './how-b/how-b.component';
+import { HowCComponent } from './how-c/how-c.component';
+import { HowDComponent } from './how-d/how-d.component';
 
 const config: SocketIoConfig = { url: environment.ioUrl, options: { autoConnect: false } };
 
@@ -83,7 +86,10 @@ const config: SocketIoConfig = { url: environment.ioUrl, options: { autoConnect:
         AboutComponent,
         VideoLibraryComponent,
         UserGuideComponent,
-        HowAComponent
+        HowAComponent,
+        HowBComponent,
+        HowCComponent,
+        HowDComponent
     ],
     imports: [
         BrowserModule,
