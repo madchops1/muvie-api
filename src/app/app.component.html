@@ -12,7 +12,7 @@
         <button mat-menu-item routerLink="/start">LIVE STREAM IN BROWSER</button>
         <button mat-menu-item routerLink="/mp4-converter">GIF TO MP4 CONVERTER</button>
     </mat-menu>
-    <button mat-button routerLink="/calendar">CALENDAR</button>
+    <!-- <button mat-button routerLink="/calendar">CALENDAR</button> -->
     <button mat-button [matMenuTriggerFor]="menu1">LEARN</button>
     <mat-menu #menu1="matMenu">
         <button mat-menu-item routerLink="/how-it-works">START HERE</button>
@@ -48,7 +48,7 @@
             <!-- <button mat-menu-item routerLink="/movie">MUSIC VIDEO CREATOR</button> -->
         </mat-menu>
 
-        <button mat-button routerLink="/calendar">CALENDAR</button>
+        <!-- <button mat-button routerLink="/calendar">CALENDAR</button> -->
 
         <button mat-button [matMenuTriggerFor]="menu">LEARN</button>
         <mat-menu #menu="matMenu">
@@ -71,7 +71,8 @@
         <mat-menu #menu3="matMenu">
             <button mat-menu-item routerLink="/profile">ACCOUNT</button>
             <button mat-menu-item (click)="auth.logout()">LOGOUT</button>
-        </mat-menu> -->
+        </mat-menu> 
+        -->
 
     </div>
 
@@ -89,7 +90,6 @@
     <a routerLink="/calendar">Calendar</a> &nbsp;&nbsp;|&nbsp;&nbsp;
     <a routerLink="/how-it-works">Learn</a> &nbsp;&nbsp;|&nbsp;&nbsp;
     <a href="https://www.instagram.com/visualzapp/" target="_blank">Instagram</a>
-
     <br>
 
     <a routerLink="/terms-conditions">Terms &amp; Conditions</a> &nbsp;&nbsp;|&nbsp;&nbsp;
@@ -102,6 +102,7 @@
     <a routerLink="https://www.instagram.com/visualzapp/">Instagram</a>
     -->
     <br>
+
     &copy; VISUALZ Copyright 2019-2020. All Rights Reserved.
     <br>
     v2.0.6 created by <a href="https://karl.pb.studio" target="_blank">Karl</a>
