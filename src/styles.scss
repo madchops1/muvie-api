@@ -224,7 +224,10 @@ p {
         overflow: hidden;
 
         @media (max-width: $breakpoint-mobile) {
-            padding: 60px 40px 80px;
+            padding: 60px 40px 0px !important;
+
+                min-height: calc(100vh - 537px) !important;
+
         }
     }
 
@@ -722,10 +725,14 @@ img {
 
     @media (max-width: $breakpoint-mobile) {
         float: none;
-        width: calc(100%);
-        padding-right: 0px;
-        margin-top: 40px;
+        width: calc(100% - 80px);
+        padding: 40px 10px;
+        right: -110px;
+        margin-top: -320px;
         text-align: center;
+        position: relative;
+        z-index: 0;
+        background:rgba(255,255,255,0.75);
 
     }
 
@@ -736,7 +743,11 @@ img {
         margin-bottom: 30px;
         line-height: 45px;
         @media (max-width: $breakpoint-mobile) {
+            font-size: 30px;
+            line-height: 30px;
             text-align: center;
+            margin-top: 60px;
+            margin-bottom: 10px;
         }
     }
 
@@ -747,15 +758,18 @@ img {
         margin-bottom: 20px;
         @media (max-width: $breakpoint-mobile) {
             text-align: center;
+            line-height: 20px;
+            font-size: 16px;
+            margin-top: 0px !important;
         }
     }
 
     mat-icon {
         display: block;
-        width: 67px;
-        height: 110px;
+        width: 150px;
+        height: 150px;
         color: #333;
-        font-size: 80px;
+        font-size: 150px;
         margin-bottom: 0px;
         float: right;
 
@@ -766,6 +780,9 @@ img {
         @media (max-width: $breakpoint-mobile) {
             margin: 0px auto -50px auto;
             float:none;
+            width: 90px;
+            height: 90px;
+            font-size: 90px;
         }
     }
 
@@ -788,3 +805,4 @@ img {
     display: block;
     margin: 25px auto;
 }
+
