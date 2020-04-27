@@ -21,11 +21,25 @@ export class VisualzComponent implements OnInit {
             link: 'https://m.twitch.tv/beatlabchicago'
         },
         {
+            name: '_bobbymack_',
+            type: 'PRODUCER',
+            location: 'NA',
+            image: '../../assets/images/bobbymack.png',
+            link: 'https://www.instagram.com/_bobbymack_/'
+        },
+        {
             name: 'Desadeca',
             type: 'DJ',
             location: 'Chicago',
             image: '../../assets/images/mckinzy.jpg',
             link: 'https://www.facebook.com/djdesadeca/'
+        },
+        {
+            name: 'D3SIGNER.DR3AMS',
+            type: 'HIP HOP + RAP',
+            location: 'NA',
+            image: '../../assets/images/d3signerdr3ams.png',
+            link: 'https://www.instagram.com/d3signer.dr3ams/'
         },
         {
             name: 'Johnny Nonstop',
@@ -36,7 +50,7 @@ export class VisualzComponent implements OnInit {
         },
         {
             name: 'The Kaizen Club',
-            type: 'PRODUCERS',
+            type: 'ARTISTS',
             location: 'Live Stream',
             image: '../../assets/images/kaizen.jpg',
             link: 'https://www.youtube.com/channel/UCk7yZcoQFKGUWnyvF219LLw/featured'
@@ -44,7 +58,7 @@ export class VisualzComponent implements OnInit {
         {
             name: 'Mike Larry Draw',
             type: 'ARTIST',
-            location: 'NYC',
+            location: 'New York',
             image: '../../assets/images/mikelarry.jpg',
             link: 'https://www.mikelarrydraw.me/work'
         },
@@ -54,6 +68,13 @@ export class VisualzComponent implements OnInit {
             location: 'Chicago',
             image: 'https://visualz-1.s3.us-east-2.amazonaws.com/default-images/markwolff.jpg',
             link: 'https://soundcloud.com/markwolffmusic/'
+        },
+        {
+            name: 'Metic Music',
+            type: 'PRODUCER',
+            location: 'NA',
+            image: '../../assets/images/metic.png',
+            link: 'https://www.instagram.com/meticmusic/'
         },
         {
             name: 'Nick Quicktactstic',
@@ -68,6 +89,13 @@ export class VisualzComponent implements OnInit {
             location: 'Chicago',
             image: 'https://visualz-1.s3.us-east-2.amazonaws.com/default-images/otb.jpg',
             link: 'https://onlythebeat.com/'
+        },
+        {
+            name: 'PJHASBEATS',
+            type: 'PRODUCER',
+            location: 'Seattle',
+            image: '../../assets/images/pjhasbeats.png',
+            link: 'https://www.instagram.com/pjhasbeats/'
         },
         {
             name: 'Sam White',
