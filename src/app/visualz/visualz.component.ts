@@ -22,7 +22,7 @@ export class VisualzComponent implements OnInit {
         },
         {
             name: '_bobbymack_',
-            type: 'PRODUCER',
+            type: 'MUSIC ARTIST',
             location: 'NA',
             image: '../../assets/images/bobbymack.png',
             link: 'https://www.instagram.com/_bobbymack_/'
@@ -57,7 +57,7 @@ export class VisualzComponent implements OnInit {
         },
         {
             name: 'Mike Larry Draw',
-            type: 'ARTIST',
+            type: 'MUSIC ARTIST',
             location: 'New York',
             image: '../../assets/images/mikelarry.jpg',
             link: 'https://www.mikelarrydraw.me/work'
@@ -92,7 +92,7 @@ export class VisualzComponent implements OnInit {
         },
         {
             name: 'PJHASBEATS',
-            type: 'PRODUCER',
+            type: 'MUSIC ARTIST',
             location: 'Seattle',
             image: '../../assets/images/pjhasbeats.png',
             link: 'https://www.instagram.com/pjhasbeats/'
