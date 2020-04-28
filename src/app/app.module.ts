@@ -51,6 +51,7 @@ import { HowBComponent } from './how-b/how-b.component';
 import { HowCComponent } from './how-c/how-c.component';
 import { HowDComponent } from './how-d/how-d.component';
 import { CalendarComponent } from './calendar/calendar.component';
+import { CameraEffectsComponent } from './camera-effects/camera-effects.component';
 
 const config: SocketIoConfig = { url: environment.ioUrl, options: { autoConnect: false } };
 
@@ -91,7 +92,8 @@ const config: SocketIoConfig = { url: environment.ioUrl, options: { autoConnect:
         HowBComponent,
         HowCComponent,
         HowDComponent,
-        CalendarComponent
+        CalendarComponent,
+        CameraEffectsComponent
     ],
     imports: [
         BrowserModule,

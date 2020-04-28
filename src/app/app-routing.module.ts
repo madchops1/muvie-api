@@ -64,6 +64,7 @@ const routes: Routes = [
     { path: 'remote-screen/:pid/:mid/:plan', component: RemoteScreenComponent },
     { path: 'start', component: StreamStartComponent },
     { path: 'live/:key', component: LiveStreamComponent },
+    { path: 'live/obs/:key', component: LiveStreamComponent },
     { path: 'video-library', component: VideoLibraryComponent },
     { path: 'user-guide', component: UserGuideComponent },
     { path: 'calendar', component: CalendarComponent }
