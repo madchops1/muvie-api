@@ -10,6 +10,7 @@ body {
     background-color: #333;
     color: #333;
     overflow-x: hidden;
+    font-size: 1px;
 }
 
 gridster .gridster-row, gridster .gridster-column {
@@ -29,6 +30,7 @@ gridster {
     color: #e91e63;
     padding: 10px;
     letter-spacing: 2px;
+    font-size: 13px;
 
     a {
         color: #fff;
@@ -162,6 +164,7 @@ p {
 
             @media (max-width: $breakpoint-mobile) {
                 font-size: 50px;
+                line-height: 50px;
             }
 
         }
@@ -424,10 +427,12 @@ footer{
 }
 
 header {
+
     background-color: #e91e63;
     padding: 20px;
     position: relative;
     z-index: 1;
+
 
     &.skew {
         transform: skewY(-2deg);
@@ -503,6 +508,7 @@ header {
 
     h2 {
         color: #333;
+        font-size: 20px;
     }
 
     h3 {

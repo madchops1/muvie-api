@@ -41,7 +41,7 @@ export class AppComponent {
                     this.currentRoute.includes('mobile-video') ||
                     this.currentRoute.includes('remote-que') ||
                     this.currentRoute.includes('remote-screen') ||
-                    this.currentRoute.includes('live')
+                    this.currentRoute.includes('live/')
                 ) {
                     this.interactive = true;
                 } else {

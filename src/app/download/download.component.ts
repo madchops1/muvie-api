@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { BrowserModule, DomSanitizer } from '@angular/platform-browser';
+import { MixpanelService } from '../services/mixpanel.service';
 
 @Component({
     selector: 'app-download',
@@ -14,8 +15,9 @@ export class DownloadComponent implements OnInit {
     stripeScriptTest: any = '';
     testMode: Boolean = false;
     yearly: Boolean = false;
+    version: '2.0.7';
 
-    constructor(private sanitizer: DomSanitizer) { }
+    constructor(private sanitizer: DomSanitizer, private mixpanelService: MixpanelService) { }
 
     ngOnInit() {
 
@@ -187,61 +189,63 @@ export class DownloadComponent implements OnInit {
 
     downloadMac(): any {
         console.log('DOWNLOAD MAC CLICKED');
+        this.mixpanelService.track('Download Mac ' + this.version);
+
         //https://kzp2cqupt6.execute-api.us-east-2.amazonaws.com/default/visualzEventEmail
         //this.$gaService.event('download_windows', 'download_page', 'Download Windows');
 
-        //return new Promise((resolve, reject) => {
-        const xhr = new XMLHttpRequest();
-        //this.mid = mid;
-        let params = 'msg=VISUALZ download for Mac from www.visualzstudio.com';
-        xhr.open('POST', 'https://kzp2cqupt6.execute-api.us-east-2.amazonaws.com/default/visualzEventEmail', true);
-        xhr.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
-        xhr.onreadystatechange = () => {
-            if (xhr.readyState === 4) {
-                if (xhr.status === 200) {
-                    const response = xhr.responseText;
-                    //resolve(response);
-                    console.log('EMAIL EVENT RESPONSE: ', response);
-                }
-                else {
-                    console.log('Error');
-                    //reject('err');
-                }
-            }
-        };
-        xhr.send(params);
-        //});
-
+        // //return new Promise((resolve, reject) => {
+        // const xhr = new XMLHttpRequest();
+        // //this.mid = mid;
+        // let params = 'msg=VISUALZ download for Mac from www.visualzstudio.com';
+        // xhr.open('POST', 'https://kzp2cqupt6.execute-api.us-east-2.amazonaws.com/default/visualzEventEmail', true);
+        // xhr.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
+        // xhr.onreadystatechange = () => {
+        //     if (xhr.readyState === 4) {
+        //         if (xhr.status === 200) {
+        //             const response = xhr.responseText;
+        //             //resolve(response);
+        //             console.log('EMAIL EVENT RESPONSE: ', response);
+        //         }
+        //         else {
+        //             console.log('Error');
+        //             //reject('err');
+        //         }
+        //     }
+        // };
+        // xhr.send(params);
+        // //});
     }
 
 
     downloadWindows(): any {
         console.log('DOWNLOAD WINDOWS CLICKED');
+        this.mixpanelService.track('Download Windows ' + this.version);
+
         //https://kzp2cqupt6.execute-api.us-east-2.amazonaws.com/default/visualzEventEmail
         //this.$gaService.event('download_windows', 'download_page', 'Download Windows');
 
-        //return new Promise((resolve, reject) => {
-        const xhr = new XMLHttpRequest();
-        //this.mid = mid;
-        let params = 'msg=VISUALZ download for Windows from www.visualzstudio.com';
-        xhr.open('POST', 'https://kzp2cqupt6.execute-api.us-east-2.amazonaws.com/default/visualzEventEmail', true);
-        xhr.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
-        xhr.onreadystatechange = () => {
-            if (xhr.readyState === 4) {
-                if (xhr.status === 200) {
-                    const response = xhr.responseText;
-                    //resolve(response);
-                    console.log('EMAIL EVENT RESPONSE: ', response);
-                }
-                else {
-                    console.log('Error');
-                    //reject('err');
-                }
-            }
-        };
-        xhr.send(params);
-        //});
-
+        // //return new Promise((resolve, reject) => {
+        // const xhr = new XMLHttpRequest();
+        // //this.mid = mid;
+        // let params = 'msg=VISUALZ download for Windows from www.visualzstudio.com';
+        // xhr.open('POST', 'https://kzp2cqupt6.execute-api.us-east-2.amazonaws.com/default/visualzEventEmail', true);
+        // xhr.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
+        // xhr.onreadystatechange = () => {
+        //     if (xhr.readyState === 4) {
+        //         if (xhr.status === 200) {
+        //             const response = xhr.responseText;
+        //             //resolve(response);
+        //             console.log('EMAIL EVENT RESPONSE: ', response);
+        //         }
+        //         else {
+        //             console.log('Error');
+        //             //reject('err');
+        //         }
+        //     }
+        // };
+        // xhr.send(params);
+        // //});
     }
 
 }

@@ -1,4 +1,6 @@
 import { Injectable } from '@angular/core';
+import QRCode from 'qrcode';
+import { environment } from 'src/environments/environment';
 
 @Injectable({
     providedIn: 'root'
@@ -22,6 +24,14 @@ export class UtilityService {
 
     getFileType(filePath): any {
         return filePath.replace(/\?.+/, '').split('.').pop().toLowerCase();
+    }
+
+    getFileName(filePath): any {
+        filePath = String(filePath);
+        let n = filePath.lastIndexOf('/');
+        let fileName = filePath.substring(n + 1).split('.')[0].toLowerCase();
+        console.log('getFileName: name', fileName);
+        return fileName;
     }
 
     formatPhoneList(list): any {
@@ -189,6 +199,42 @@ export class UtilityService {
 
     generateHexColor(): any {
         return "#" + Math.random().toString(16).slice(2, 8);
+    }
+
+    generateQR(type, mid, pid = false, uid = false): any {
+        return new Promise((resolve, reject) => {
+
+            let url = '';
+            switch (type) {
+
+                // FanCam URL
+                case 'fancam':
+                    url = environment.websiteUrl + '/crowdscreen/' + mid;
+                    break;
+
+                case 'mobile-video':
+                    url = environment.websiteUrl + '/mobile-video/' + mid + '/' + pid + '/' + uid;
+                    break;
+
+                // Remote Control URL
+                case 'remote-que':
+                    url = environment.websiteUrl + '/remote-que/' + mid;
+                    break;
+
+            }
+
+            // Get QR code
+            QRCode.toDataURL(url)
+                .then(dataUrl => {
+                    resolve(dataUrl);
+                    return;
+                })
+                .catch(err => {
+                    console.log(err);
+                    reject(err);
+                    return;
+                });
+        });
     }
 
     randomRange(min, max) {
