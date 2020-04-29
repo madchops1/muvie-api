@@ -17,6 +17,8 @@ export class StreamStartComponent implements OnInit {
     label: any = '';
     objectKeys: any = Object.keys;  // used in view for something
     userId: any;
+    roomStart: any = false;
+    avStart: any = false;
 
     constructor(private router: Router, private httpClient: HttpClient) {
 
@@ -32,6 +34,9 @@ export class StreamStartComponent implements OnInit {
 
     }
 
+    skins(): any {
+        window.scrollTo(0, 100000);
+    }
 
     getRooms(): any {
         return new Promise((resolve, reject) => {
@@ -51,6 +56,18 @@ export class StreamStartComponent implements OnInit {
                 //this.errorTryAgain();
             });
         });
+    }
+
+    toggleRoomStart(): any {
+        this.roomStart = !this.roomStart;
+        window.scrollTo(0, 500);
+
+    }
+
+    toggleAvStart(): any {
+        this.avStart = !this.avStart;
+        window.scrollTo(0, 500);
+
     }
 
     start() {
