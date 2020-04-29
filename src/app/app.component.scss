@@ -5,7 +5,9 @@ $breakpoint-mobile: 768px;
 
     display: none;
     color: #fff;
-    position: relative;
+    position: fixed;
+    top:5px;
+    right: 5px;
     z-index: 3;
 
     @media (max-width: $breakpoint-mobile) {
