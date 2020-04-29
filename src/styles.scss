@@ -113,6 +113,7 @@ p {
             float: left;
 
         }
+        padding-bottom: 20px !important;
     }
     
     .macwrap {
@@ -158,13 +159,13 @@ p {
         }
 
         h1 {
-            font-size: 80px;
+            font-size: 75px;
             margin: 40px 0 0 0px;
             //text-shadow: 0 0 10px #ff4c89;
 
             @media (max-width: $breakpoint-mobile) {
                 font-size: 50px;
-                line-height: 50px;
+                line-height: 55px;
             }
 
         }
@@ -172,9 +173,17 @@ p {
         h2 {
             text-transform: none;
             text-align: left;
+            font-size: 17px;
+            line-height: 20px;
+
+            strong {
+                font-weight: bolder;
+                font-size: 20px;
+            }
 
             @media (max-width: $breakpoint-mobile) {
-                font-size: 22px;
+                font-size: 17px;
+                
             }
         }
 
@@ -223,13 +232,12 @@ p {
     }
 
     &.feature {
-        padding: 60px 40px 40px;
+        padding: 60px 40px 10px;
         overflow: hidden;
 
         @media (max-width: $breakpoint-mobile) {
             padding: 60px 40px 0px !important;
-
-                min-height: calc(100vh - 537px) !important;
+            min-height: calc(100vh - 537px) !important;
 
         }
     }
@@ -306,7 +314,7 @@ p {
 
         li {
             margin: 80px 40px;
-            font-size: 24px;
+            font-size: 20px;
             line-height: 40px;
             display: block;
             width: calc(50% - 80px);
@@ -317,7 +325,7 @@ p {
             h1 {
                 line-height: 60px;
                 margin: 0px;
-                font-size: 34px;
+                font-size: 32px;
                 //letter-spacing: -1px;
                 //white-space: nowrap;
             }
@@ -435,7 +443,7 @@ header {
 
 
     &.skew {
-        transform: skewY(-2deg);
+        //transform: skewY(-2deg);
         margin-top: -30px;
         margin-bottom: -30px;
     }
@@ -712,7 +720,7 @@ img {
         width: calc(50% + 400px);
         margin-right: -400px;
         //margin-bottom: -80px;
-        transform: skewY(-2deg);
+        //transform: skewY(-2deg);
     
         @media (max-width: $breakpoint-mobile) {
             float: none;
@@ -727,7 +735,7 @@ img {
     text-align: right;
     width: calc(50% - 40px);
     padding-right: 40px;
-    margin-top: 140px;
+    margin-top: 100px;
 
     @media (max-width: $breakpoint-mobile) {
         float: none;
@@ -746,7 +754,7 @@ img {
         font-size: 40px;
         text-align: right;
         clear: both;
-        margin-bottom: 30px;
+        margin-bottom: 10px;
         line-height: 45px;
         @media (max-width: $breakpoint-mobile) {
             font-size: 30px;
@@ -762,6 +770,7 @@ img {
         text-align: right;
         line-height: 24px;
         margin-bottom: 20px;
+        margin-top: 10px;
         @media (max-width: $breakpoint-mobile) {
             text-align: center;
             line-height: 20px;

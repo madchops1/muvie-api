@@ -87,7 +87,8 @@ $breakpoint-mobile: 768px;
     position: relative;
     padding: 20px;
     border: 15px solid #e91e63;
-
+    text-decoration: none;
+    
     &.rooms {
         border: 0px;
         width: 20vh;
@@ -125,6 +126,7 @@ $breakpoint-mobile: 768px;
         display: block;
         margin: 20px auto;
         font-size:20px;
+        line-height: 25px;
         text-align: center;
         
 
