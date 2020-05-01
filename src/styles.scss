@@ -10,6 +10,7 @@ body {
     background-color: #333;
     color: #333;
     overflow-x: hidden;
+    font-size: 1px;
 }
 
 gridster .gridster-row, gridster .gridster-column {
@@ -29,6 +30,7 @@ gridster {
     color: #e91e63;
     padding: 10px;
     letter-spacing: 2px;
+    font-size: 13px;
 
     a {
         color: #fff;
@@ -111,6 +113,7 @@ p {
             float: left;
 
         }
+        padding-bottom: 20px !important;
     }
     
     .macwrap {
@@ -156,12 +159,13 @@ p {
         }
 
         h1 {
-            font-size: 80px;
+            font-size: 75px;
             margin: 40px 0 0 0px;
             //text-shadow: 0 0 10px #ff4c89;
 
             @media (max-width: $breakpoint-mobile) {
                 font-size: 50px;
+                line-height: 55px;
             }
 
         }
@@ -169,9 +173,17 @@ p {
         h2 {
             text-transform: none;
             text-align: left;
+            font-size: 17px;
+            line-height: 20px;
+
+            strong {
+                font-weight: bolder;
+                font-size: 20px;
+            }
 
             @media (max-width: $breakpoint-mobile) {
-                font-size: 22px;
+                font-size: 17px;
+                
             }
         }
 
@@ -208,6 +220,13 @@ p {
     display: block;
 }
 
+p {
+    a {
+        color: #e91e63;
+        
+    }
+}
+
 .content-wrapper {
     padding: 100px 40px 140px;
     overflow-x: hidden;
@@ -220,13 +239,12 @@ p {
     }
 
     &.feature {
-        padding: 60px 40px 40px;
+        padding: 60px 40px 10px;
         overflow: hidden;
 
         @media (max-width: $breakpoint-mobile) {
             padding: 60px 40px 0px !important;
-
-                min-height: calc(100vh - 537px) !important;
+            min-height: calc(100vh - 537px) !important;
 
         }
     }
@@ -303,7 +321,7 @@ p {
 
         li {
             margin: 80px 40px;
-            font-size: 24px;
+            font-size: 20px;
             line-height: 40px;
             display: block;
             width: calc(50% - 80px);
@@ -314,7 +332,7 @@ p {
             h1 {
                 line-height: 60px;
                 margin: 0px;
-                font-size: 34px;
+                font-size: 32px;
                 //letter-spacing: -1px;
                 //white-space: nowrap;
             }
@@ -424,13 +442,15 @@ footer{
 }
 
 header {
+
     background-color: #e91e63;
     padding: 20px;
     position: relative;
     z-index: 1;
 
+
     &.skew {
-        transform: skewY(-2deg);
+        //transform: skewY(-2deg);
         margin-top: -30px;
         margin-bottom: -30px;
     }
@@ -503,6 +523,7 @@ header {
 
     h2 {
         color: #333;
+        font-size: 20px;
     }
 
     h3 {
@@ -706,7 +727,7 @@ img {
         width: calc(50% + 400px);
         margin-right: -400px;
         //margin-bottom: -80px;
-        transform: skewY(-2deg);
+        //transform: skewY(-2deg);
     
         @media (max-width: $breakpoint-mobile) {
             float: none;
@@ -721,7 +742,7 @@ img {
     text-align: right;
     width: calc(50% - 40px);
     padding-right: 40px;
-    margin-top: 140px;
+    margin-top: 100px;
 
     @media (max-width: $breakpoint-mobile) {
         float: none;
@@ -740,7 +761,7 @@ img {
         font-size: 40px;
         text-align: right;
         clear: both;
-        margin-bottom: 30px;
+        margin-bottom: 10px;
         line-height: 45px;
         @media (max-width: $breakpoint-mobile) {
             font-size: 30px;
@@ -756,6 +777,7 @@ img {
         text-align: right;
         line-height: 24px;
         margin-bottom: 20px;
+        margin-top: 10px;
         @media (max-width: $breakpoint-mobile) {
             text-align: center;
             line-height: 20px;

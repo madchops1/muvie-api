@@ -1,53 +1,111 @@
 <div class="content-wrapper normal djgif">
     <div class="content-inner-wrapper center dark">
 
-        <h1 class="center bigs">Start a Quaranstream</h1>
+        <h1 class="center bigs">LIVE STREAM TOOLS</h1>
 
-        <p>
-            <strong>
-                IF YOU'RE LOOKING TO ADD VISUALZ TO YOUR OBS STREAM.
-                PLEASE <a routerLink="/download">DOWNLOAD VISUALZ</a>.
-            </strong>
-        </p>
+        <div class="purple">
+            <p>
+                Stay safe &amp; be smart out there. These are troubling times for a lot of us fam.
+            </p>
 
-        <p>
-            Stay safe &amp; be smart out there. These are troubling times.
-        </p>
-        <p>
-            Use this live stream tool for free to reach your friends, fans, and family with your music.
-        </p>
-        <p>
-            As expected there are audio-reactive visuals you can control on your stream.
-        </p>
+            <p>
+                We've been focusing on streaming. Here are some tools intended to improve your stream's visuals.
+            </p>
 
-        <br>
+            <p>
+                As expected there are audio-reactive visuals you can control on your stream.
+            </p>
 
-        <form class="example-form" name="form1">
-            <mat-form-field class="example-full-width">
-                <mat-label>Set Name</mat-label>
-                <input matInput required class="inputy" placeholder="Ex. Sam's Set" [(ngModel)]="label" name="label"
-                    value="">
-            </mat-form-field>
-            <br><Br>
-            <button (click)="start()" mat-raised-button class="pink button bigtext">
-                Start Streaming
-            </button>
-        </form>
+            <p>
+                <a href="https://www.buymeacoffee.com/visualz" target="_blank">
+                    Using for free? Consider buying our developers a coffee.
+                </a>
+            </p>
+        </div>
+        <div class="flex-container" *ngIf="!roomStart && !avStart">
+            <a class="rooms-grid" routerLink="/download">
+                <h3>Add Visualz To LiveStreams & Cameras</h3>
+                <p>
+                    Download v2 to stream visuals. Control realtime visuals in any OBS stream remotely
+                    or in-person. Use Visualz to add effects to your camera source and input to OBS.
+                </p>
+            </a>
+            <a class="rooms-grid" (click)="toggleRoomStart()">
+                <h3>Realtime Party <i>beta</i></h3>
+                <p>
+                    Stream to your fans and friends directly in the browser.
+                    Add audio reactive visuals.
+                </p>
+            </a>
+            <!-- <a class="rooms-grid" (click)="toggleAvStart()">
+                <h3>AV Window</h3>
+                <p>
+                    Open an audio/video window to add effects to your
+                    camera and then input that into OBS or Visualz.
+                </p>
+            </a> -->
+            <a class="rooms-grid" (click)="skins()">
+                <h3>Live Stream Skins</h3>
+                <p>
+                    Add a nice touch to your stream with a skin.
+                    Use these as is, or as a template to create your own.
+                </p>
+            </a>
+        </div>
 
+        <div class="blue" *ngIf="roomStart">
+            <h2>Realtime Party</h2>
+            <p>
+                Create a party name. Push start. Have fun.
+            </p>
+            <form class="example-form" name="form1">
+                <mat-form-field class="example-full-width">
+                    <mat-label>Party Name</mat-label>
+                    <input matInput required class="inputy" placeholder="Ex. Sam's Set" [(ngModel)]="label" name="label"
+                        value="">
+                </mat-form-field>
+                <br><br>
+                <button (click)="toggleRoomStart()" mat-raised-button class="gray button bigtext">
+                    Cancel
+                </button>
+                <button (click)="start()" mat-raised-button class="pink button bigtext">
+                    Start Party
+                </button>
+            </form>
+        </div>
+
+        <!-- <div class="green" *ngIf="avStart">
+            <h2>AV Window</h2>
+            <p>
+                Push Start. Glitch yo' bad self.
+            </p>
+            <form class="example-form" name="form1">
+                
+                <button (click)="toggleAvStart()" mat-raised-button class="gray button bigtext">
+                    Cancel
+                </button>
+                <button (click)="start()" mat-raised-button class="pink button bigtext">
+                    Start
+                </button>
+            </form>
+        </div> -->
     </div>
+    <br><br><br>
 </div>
 
-<header class="skew big-only">
-    <h2>BROWSE STREAMS</h2>
-    <small>*Streams are removed after 24 hours.</small>
+<header class="skew">
+    <h2>BROWSE PUBLIC PARTIES</h2>
+    <small>*Parties are removed after 24 hours.</small>
 </header>
+
 <div class="content-wrapper white feature">
+    <br><br><br>
     <div class="flex-container">
         <!-- <div *ngFor="let key of objectKeys(track.modules[editingModule].settings)"> -->
 
-        <a *ngFor="let room of rooms" class="rooms-grid" [hidden]="!room.label || room.label == ''">
+        <a *ngFor="let room of rooms" class="rooms-grid rooms" [hidden]="!room.label || room.label == ''">
             <h3>{{room.label}}</h3>
-            <p>{{objectKeys(room.guests).length}} Total Watchers</p>
+            <p>{{objectKeys(room.guests).length}} Fam</p>
             <img src="https://robohash.org/{{room.host}}?set=set5"
                 [ngClass]="{'grayscale': (!room.live || room.live == 'false')}" />
             <button mat-raised-button class="pink button" *ngIf="room.live && room.live == 'true'"
@@ -55,6 +113,42 @@
             <button mat-raised-button class="pink button" *ngIf="!room.live || room.live == 'false'" disabled>Off
                 Air</button>
         </a>
+    </div>
+    <br><br><br>
+</div>
 
+<header class="skew">
+    <h2>LIVESTREAM SKINS</h2>
+</header>
+
+<div class="content-wrapper dark feature" id="skins">
+    <br><br><br><br>
+    <div class="flex-container">
+        <!-- <div *ngFor="let key of objectKeys(track.modules[editingModule].settings)"> -->
+
+        <a class="rooms-grid skins" href="https://visualz-1.s3.us-east-2.amazonaws.com/skins/skin-visualz.png"
+            target="_blank">
+            <img src="https://visualz-1.s3.us-east-2.amazonaws.com/skins/skin-visualz.png" />
+        </a>
+        <a class="rooms-grid skins" href="https://visualz-1.s3.us-east-2.amazonaws.com/skins/skin-kaizen.png"
+            target="_blank">
+            <img src="https://visualz-1.s3.us-east-2.amazonaws.com/skins/skin-kaizen.png" />
+        </a>
+        <a class="rooms-grid skins" href="https://visualz-1.s3.us-east-2.amazonaws.com/skins/skin-beatlab.png"
+            target="_blank">
+            <img src="https://visualz-1.s3.us-east-2.amazonaws.com/skins/skin-beatlab.png" />
+        </a>
+        <a class="rooms-grid skins" href="https://visualz-1.s3.us-east-2.amazonaws.com/skins/skin-jimmy.png"
+            target="_blank">
+            <img src="https://visualz-1.s3.us-east-2.amazonaws.com/skins/skin-jimmy.png" />
+        </a>
+
+        <br>
+        <p class="center">
+            LETS BE FAM. VISUALZ WANTS TO HELP/DO YOUR LIVESTREAM OR EVENT'S VISUALS.
+            IF WE COLLAB WITH YOU WE'LL MAKE YOU A FREE SKIN.
+            CONTACT US AT VISUALZAPP.CONTACT@GMAIL.COM
+        </p>
+        <br><br>
     </div>
 </div>

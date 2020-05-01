@@ -6,24 +6,123 @@ $breakpoint-mobile: 768px;
     background-repeat: no-repeat;
 }
 
+.purple {
+    margin-bottom: 40px !important;
+    background: rgba(183,87,255,0.9) !important;
+    padding: 20px !important;
+
+    h2 {
+        color: #fff;
+        font-size: 55px;
+        line-height: 55px;
+        margin-bottom: 20px;
+    }
+
+    p {
+        color: #fff !important;
+
+        a {
+            color: #fff;
+        }
+    }
+}
+
+.blue {
+    background: rgba(0, 196, 255, 0.9) !important;
+    margin-bottom: 40px !important;
+    padding: 20px !important;
+
+    h2 {
+        color: #333;
+        font-size: 55px;
+        line-height: 55px;
+        margin-bottom: 20px;
+    }
+
+    p {
+        color: #333 !important;
+    }
+
+    @media (max-width: $breakpoint-mobile) {
+
+
+    }
+}
+
+
+.green {
+    background: rgba(180, 255, 94, 0.8) !important;
+    margin-bottom: 40px !important;
+    padding: 20px !important;
+
+    h2 {
+        color: #333;
+        font-size: 55px;
+        line-height: 55px;
+        margin-bottom: 20px;
+    }
+
+    p {
+        color: #333 !important;
+    }
+
+    @media (max-width: $breakpoint-mobile) {
+
+
+    }
+}
+
+
 .flex-container {
     display: flex;
     justify-content: center;
     flex-wrap: wrap;
+
 }
 
 .rooms-grid {
-    float: left;
+    //float: left;
     margin: 20px;
-    width: 20vw;
-    height: 160px;
-    background: #333;
+    width: 70vw;
+    //height: 160px;
+    background: rgba(0,0,0,0.5);
     color: #fff;
     cursor: pointer;
     position: relative;
+    padding: 20px;
+    border: 15px solid #e91e63;
+    text-decoration: none;
+    
+    &.rooms {
+        border: 0px;
+        width: 20vh;
+    }
+
+    &.skins {
+        border: 0px;
+        width: 50vh;
+        padding: 0px;
+        background-color: #9be91e !important;
+        
+        @media (max-width: $breakpoint-mobile) {
+            width: 90vw;
+        }
+
+        img {
+            position: relative;
+            top: 0px !important;
+            left: 0px !important;
+            width: 100% !important;
+            height: 100% !important;
+        }
+    }
+
+    @media (max-width: $breakpoint-mobile) {
+        width: 90vw;
+    }
 
     &:hover {
-        background: #000;
+    background: #333;
         cursor: pointer;
     }
 
@@ -31,6 +130,7 @@ $breakpoint-mobile: 768px;
         display: block;
         margin: 20px auto;
         font-size:20px;
+        line-height: 25px;
         text-align: center;
         
 
@@ -54,6 +154,7 @@ $breakpoint-mobile: 768px;
             filter: grayscale(100%);
         }
     }
+
 }
 
 .bigs {
@@ -75,6 +176,11 @@ $breakpoint-mobile: 768px;
 .dark {
     background-color: rgba(0,0,0,0.6);
     padding: 40px;
+
+    @media (max-width: $breakpoint-mobile) {
+        //background-color: none !important;
+        padding: 0px !important;
+    }
 }
 
 .white {

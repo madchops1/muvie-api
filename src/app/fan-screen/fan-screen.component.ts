@@ -44,7 +44,7 @@ export class FanScreenComponent implements OnInit {
     started = false;
     mobile = true;
 
-    facingMode: any = 'environment';
+    facingMode: any = 'user'; // environment
 
     @ViewChild('videoElement') videoElement: any;
     video: any;

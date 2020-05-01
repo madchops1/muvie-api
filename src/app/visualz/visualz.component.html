@@ -1,8 +1,12 @@
 <div class="wrapper pink">
     <div class="main">
-        <h1>Realtime Audio Reactive Experiences</h1>
+        <!-- <h1>Realtime Audio Reactive Experiences</h1> -->
+        <h1>Audio Reactive Visuals For Streams</h1>
         <h2>
-
+            Control realtime visuals in any OBS live stream or event <strong>remotely</strong>
+            or in-person.
+        </h2>
+        <h2>
             Create realtime audio reactive
             visualizations and experiences quickly and easily.
             Intended for VJs, DJs, Bands, Artists, Live Streams, Events, and Venues.
@@ -31,7 +35,7 @@
 
             <img src="../../assets/images/icon.ico" class="ico" />
 
-            <div *ngIf="deviceInfo.os == 'Mac'" class="clearfix">
+            <div *ngIf="deviceInfo.os == 'Mac' || deviceInfo.os == 'iOS'" class="clearfix">
                 <a href="https://visualz-1.s3.us-east-2.amazonaws.com/Visualz-2.0.7.dmg" target="_blank"
                     mat-raised-button (click)="downloadMac()" class="pink button">
                     Download Mac
@@ -39,7 +43,7 @@
                 <img class="mac" src="../../assets/images/macos.png" />
             </div>
 
-            <div *ngIf="deviceInfo.os != 'Mac'" class="clearfix">
+            <div *ngIf="deviceInfo.os != 'Mac' && deviceInfo.os != 'iOS'" class="clearfix">
                 <a href="https://visualz-1.s3.us-east-2.amazonaws.com/Visualz-Setup-2.0.7w.rar" target="_blank"
                     mat-raised-button (click)="downloadWindows()" class="pink button">
                     Download Windows
@@ -169,16 +173,13 @@
         <img src="../../assets/images/feature2.jpg" />
         <div class="feature-text">
             <mat-icon aria-hidden="false" aria-label="FanCam" class="ico">cast_connected</mat-icon>
-            <h1>OBS Integration</h1>
-            <h2>Remote/Local visuals Streaming to a window or browser then sourced into OBS</h2>
+            <h1>LiveStream Visualz + OBS Integration</h1>
+            <h2>Remote/Local visuals streaming sourced into OBS</h2>
             <div class="big-only">
                 <p>
                     Live stream host in New York and your DJs are in Seattle.
                     You need to inject and control live realtime audio reactive
-                    visuals in the live stream but you're in Chicago!?!?
-                </p>
-                <p>
-                    Now you can do all that!
+                    visuals in the live stream but you're in Chicago... DO IT!
                 </p>
             </div>
         </div>
@@ -231,7 +232,7 @@
     </div>
 </div>
 
-<header class="skew white"></header>
+<!-- <header class="skew white"></header> -->
 
 <div class="content-wrapper white feature">
     <div class="content-inner-wrapper main-feature">
@@ -261,17 +262,17 @@
 <div class="content-wrapper dark">
     <div class="content-inner-wrapper">
         <ul class="big">
-            <li>
+            <!-- <li>
                 <mat-icon aria-hidden="false" aria-label="Audio-Reactive">equalizer</mat-icon>
                 <h1>Audio Reactive</h1>
                 <strong>Realtime</strong> beat/amplitude detection and <strong>audio reactive</strong> visual
                 playback.
-            </li>
+            </li> -->
             <li>
                 <mat-icon aria-hidden="false" aria-label="Create Video Fast">view_module</mat-icon>
-                <h1>Create Video Fast</h1>
+                <h1>Create Visuals Fast</h1>
                 <strong>Quickly</strong> drag &amp; drop to <strong>compose</strong> visual sets of tracks with videos,
-                images, effects and more.
+                other media, cameras, effects and more.
             </li>
             <li>
                 <mat-icon aria-hidden="false" aria-label="Effects">flash_on</mat-icon>
@@ -298,7 +299,7 @@
             <li>
                 <mat-icon aria-hidden="false" aria-label="Output">settings_input_hdmi</mat-icon>
                 <h1>Easy Output</h1>
-                Output to projector, tvs, LED screens, lighting hardware, mobile devices, and more.
+                Output to projectors, LED screens, mobile devices, displays of any kind.
             </li>
             <li>
                 <mat-icon aria-hidden="false" aria-label="Mobile Video">important_devices</mat-icon>

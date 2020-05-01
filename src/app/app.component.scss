@@ -5,7 +5,9 @@ $breakpoint-mobile: 768px;
 
     display: none;
     color: #fff;
-    position: relative;
+    position: fixed;
+    top:5px;
+    right: 5px;
     z-index: 3;
 
     @media (max-width: $breakpoint-mobile) {
@@ -30,8 +32,8 @@ $breakpoint-mobile: 768px;
     button {
         color: #fff;
         width: 100vw;
-        padding-top: 40px;
-        padding-bottom: 40px;
+        padding-top: 30px;
+        padding-bottom: 30px;
 
     }
 }
