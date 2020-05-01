@@ -221,6 +221,10 @@ export class UtilityService {
                     url = environment.websiteUrl + '/remote-que/' + mid;
                     break;
 
+                case 'remote-screen':
+                    url = environment.websiteUrl + '/remote-screen/' + String(pid) + '/' + mid;
+                    break;
+
             }
 
             // Get QR code

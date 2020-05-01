@@ -264,6 +264,7 @@ let crowdScreenKeyMap = {};
 let remoteQueKeyMap = {};
 let mobileVideoKeyMap = {};
 let modulePeerMap = {};
+let appPeerMap = {};
 let laserzKeyMap = {};
 let phoneListHolder = [];
 let liveStreamRooms = [];
@@ -506,6 +507,26 @@ io.on('connection', (socket) => {
         });
         socket.broadcast.to(String(mid)).emit('getMobileVideoData', match);
     });
+
+    // Get the peer id from the app and set it in the app peer map
+    socket.on('sendPeerId', async data => {
+        console.log('server received sendPeerId', data);
+        appPeerMap[data.mid] = data;
+        // TODO... maybe trigger the refresh here
+        socket.broadcast.to(String(mid)).emit('sendRemoteScreenRefresh', data);
+    });
+
+    socket.on('requestPeerId', async data => {
+        console.log('server received requestPeerId', data);
+        let match = false;
+        Object.keys(appPeerMap).forEach(key => {
+            if (appPeerMap[key].opid == data.opid) {
+                match = appPeerMap[key].pid;
+            }
+        })
+        socket.broadcast.to(String(mid)).emit('getPeerId', match);
+    });
+
 
     // receive a refresh crowd screen request from the web server
     // and pass it on to the VISUALZ APP
