@@ -429,6 +429,11 @@ io.on('connection', (socket) => {
         socket.broadcast.to(String(mid)).emit('refreshQueRequest', data);
     });
 
+    socket.on("reloadCrowdScreen", async data => {
+        console.log('server received reloadCrowdScreen');
+        socket.broadcast.to(String(mid)).emit('reloadCrowdScreen', data);
+    })
+
     socket.on("play", async data => {
         console.log('server received play');
         socket.broadcast.to(String(mid)).emit('playRequest', data);

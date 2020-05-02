@@ -7,7 +7,8 @@ import { ActivatedRoute, Router, NavigationEnd } from '@angular/router';
 import "p5/lib/addons/p5.sound";
 import "p5/lib/addons/p5.dom";
 import { promise } from 'protractor';
-
+import { UtilityService } from '../utility.service';
+import Peer from 'peerjs';
 const SUPPORTS_MEDIA_DEVICES = 'mediaDevices' in navigator;
 
 @Component({
@@ -24,8 +25,10 @@ export class FanScreenComponent implements OnInit {
     torch: any = false;
     intensity: any = 1;
     crowdScreenBackgroundColor: any = 'transparent';
+    crowdScreenTorchDisplay = 'none';
     crowdScreenFunction: any = '';
     crowdScreenIntensity: any = 1;
+    crowdScreenEnabled: any = false;
 
     interval: any = false;
     currentRoute: any = '';
@@ -43,6 +46,16 @@ export class FanScreenComponent implements OnInit {
     cameraPerm: any = false;
     started = false;
     mobile = true;
+    qr: any = '';
+
+    peer: any = null;
+    video2: any;
+    remotePeerId: any;
+    peerId: any = false;
+    plan: any = 0;
+    stream2: any = false;
+
+    lastEnabled: any = false;
 
     facingMode: any = 'user'; // environment
 
@@ -51,8 +64,9 @@ export class FanScreenComponent implements OnInit {
 
     private _getCrowdScreen: Subscription;
     private _ping: Subscription;
+    private _reloadCrowdScreen: Subscription;
 
-    constructor(private route: ActivatedRoute, private router: Router, private socketService: SocketService) {
+    constructor(private utilityService: UtilityService, private route: ActivatedRoute, private router: Router, private socketService: SocketService) {
 
         // get the mid from the URL
         router.events.subscribe((val) => {
@@ -73,6 +87,11 @@ export class FanScreenComponent implements OnInit {
             this.mobile = false;
         }
 
+        this.utilityService.generateQR('fancam', this.mid).then((res) => {
+            console.log('QR', res);
+            this.qr = res;
+        });
+
         console.log('IS MOBILE:', this.mobile);
 
         // Video element and canvas element for photo taking and preview
@@ -92,21 +111,38 @@ export class FanScreenComponent implements OnInit {
             this.socketService.pong();
         });
 
+        this._reloadCrowdScreen = this.socketService.reloadCrowdScreen.subscribe(() => {
+            window.location.reload();
+        });
+
         // Get crowdscreen data from ws
         this._getCrowdScreen = this.socketService.getCrowdScreen.subscribe(data => {
             console.log('receiving getCrowdScreen', data);
 
             if (!this.takingPic) {
 
-                if (data.function) {
+                if (data.enabled) {
                     this.crowdScreenBackgroundColor = data.backgroundColor;
                     this.crowdScreenFunction = data.function;
                     this.crowdScreenIntensity = data.intensity;
                     this.torch = data.torch;
+                    this.crowdScreenEnabled = true;
+                    this.camera = data.camera;
+                    if (this.crowdScreenBackgroundColor == '#ffffff') {
+                        this.crowdScreenTorchDisplay = 'block';
+                    } else {
+                        this.crowdScreenTorchDisplay = 'none';
+                    }
                     //this.camera = data.camera;
+                } else {
+                    this.crowdScreenBackgroundColor = '';
+                    this.crowdScreenFunction = false;
+                    this.crowdScreenIntensity = 0;
+                    this.torch = false;
+                    this.camera = false;
+                    this.crowdScreenEnabled = false;
+                    this.crowdScreenTorchDisplay = 'none';
                 }
-
-                this.camera = data.camera;
 
                 this.applyConstraints();
 
@@ -136,11 +172,26 @@ export class FanScreenComponent implements OnInit {
                         this.applyConstraints();
                     }, intervalTime);
                 }
-                this.setCamera('environment');
+                this.setCamera();
                 this.applyConstraints();
             }
+
+            //if (this.lastEnabled != this.crowdScreenEnabled) {
+            //    window.location.reload();
+            //}
+            //this.lastEnabled = this.crowdScreenEnabled;
+
+
         });
         this.refreshCrowdScreen();
+
+        //this.video2 = document.getElementById('externalVideo');
+        //this.video2.onloadeddata = () => {
+        //    this.video2.play();
+        //};
+
+        this.connectPeer(); // create the peer and wait for a call
+
     }
 
     start(): any {
@@ -155,18 +206,22 @@ export class FanScreenComponent implements OnInit {
             heartbeat.play();
         };
         heartbeat.play();
+        //this.video2.play();
+        //this.video.play();
     }
 
     flipCam(e): any {
         if (this.facingMode == 'environment') {
-            this.setCamera('user');
+            this.facingMode = 'user';
         } else {
-            this.setCamera('environment');
+            this.facingMode = 'environment';
         }
+        this.setCamera();
     }
 
     unsetCamera(): any {
-        this.setCamera('environment');
+        this.facingMode = 'environment';
+        this.setCamera();
     }
 
     playVideo(): any {
@@ -177,9 +232,9 @@ export class FanScreenComponent implements OnInit {
         //}
     }
 
-    setCamera(facingMode): any {
+    setCamera(): any {
 
-        this.facingMode = facingMode;
+        //this.facingMode = facingMode;
 
         //return new promise();
         console.log('support', SUPPORTS_MEDIA_DEVICES);
@@ -393,5 +448,53 @@ export class FanScreenComponent implements OnInit {
             }
         };
         xhr.send(file);
+    }
+
+    connectPeer() {
+        this.peer = new Peer();
+
+        // When the peer connection opens get the id
+        // - then send the id to the api server ws
+        this.peer.on('open', (id) => {
+            console.log('My peer ID is: ' + id);
+            this.peerId = id;
+            this.socketService.peerId({ windowId: false, peerId: id, mid: this.mid });
+        });
+
+        // Then await for a call
+        this.peer.on('call', (call) => {
+            //console.log('receiving call');
+            //if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
+            //    var constraints = { audio: true, video: false };
+            //    navigator.mediaDevices.getUserMedia(constraints).then((stream1) => {
+            console.log('got userMedia, answering call');
+            call.answer(); // answer the call, send the microphone audio
+            call.on('stream', function (stream2) {
+                this.stream2 = stream2;
+                this.video2 = document.getElementById('externalVideo');
+                this.video2.srcObject = stream2;
+                this.video2.play();
+            });
+            //});
+            //}
+        });
+
+        this.peer.on('close', () => {
+            this.peer = null;
+            this.connectPeer();
+        });
+
+        this.peer.on('disconnected', () => {
+            if (this.peer) {
+                this.peer.reconnect();
+            } else {
+                this.connectPeer();
+            }
+        });
+
+        this.peer.on('error', (err) => {
+            console.log('PEER ERR', err);
+            this.connectPeer();
+        });
     }
 }

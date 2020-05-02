@@ -1,11 +1,21 @@
 <div class="main-wrapper">
     <div class="crowd-preview" [ngStyle]="{'background-color':crowdScreenBackgroundColor}">
 
+        <div class="torch-overlay"
+            [ngStyle]="{'background-color':crowdScreenBackgroundColor, 'display':crowdScreenTorchDisplay && torch}">
+        </div>
+
+        <img class="qr" src="{{this.qr}}" />
+
         <canvas id="canvas"></canvas>
 
-        <!-- Video For Camera Stream -->
+        <div class="goodArea" [hidden]="!camera"></div>
+
         <video class="cam" [ngClass]="{'user': facingMode == 'user' }" #videoElement autoplay muted playsinline
             [hidden]="!camera"></video>
+
+        <!-- Video For Camera Stream -->
+        <div class="videoback"></div>
 
         <div *ngIf="takingPic" class="timer">{{timer}}</div>
 
@@ -15,6 +25,11 @@
 
         <button class="start-button" *ngIf="!started" (click)="start()">
             START
+        </button>
+
+        <button class="start-button wait" *ngIf="crowdScreenEnabled == false">
+            <img class="qr" src="{{this.qr}}" />
+            PLEASE WAIT FOR THE EVENT TO START
         </button>
 
         <button mat-mini-fab color="primary" class="take-pic" *ngIf="!takingPic && cameraPerm && camera"
@@ -31,9 +46,17 @@
             <source src="https://muvievideos.s3.us-east-2.amazonaws.com/SampleVideo_1280x720_2mb.mp4_1.mp4"
                 type="video/mp4">
         </video>
+
+        <video id="externalVideo" [ngClass]="{'active': crowdScreenEnabled }" class="external-video" autoplay muted
+            controls></video>
+
         <!-- 
         <div style='margin:20px;'>
             Mobile: {{mobile}}
+        </div>
+
+        <div style='margin:20px;'>
+            Facing Mode: {{facingMode}}
         </div>
 
         <div style='margin:20px;'>

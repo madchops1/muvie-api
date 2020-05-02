@@ -15,7 +15,7 @@ export class DownloadComponent implements OnInit {
     stripeScriptTest: any = '';
     testMode: Boolean = true;
     yearly: Boolean = false;
-    version: '2.0.6';
+    version: '2.0.7';
 
     constructor(private sanitizer: DomSanitizer, private mixpanelService: MixpanelService) { }
 
