@@ -13,9 +13,9 @@ export class DownloadComponent implements OnInit {
     stripeScript: any = '';
     stripeScriptProd: any = '';
     stripeScriptTest: any = '';
-    testMode: Boolean = false;
+    testMode: Boolean = true;
     yearly: Boolean = false;
-    version: '2.0.6';
+    version: '2.0.7';
 
     constructor(private sanitizer: DomSanitizer, private mixpanelService: MixpanelService) { }
 
@@ -25,37 +25,38 @@ export class DownloadComponent implements OnInit {
         <script>
                 var stripe = Stripe('pk_live_ZPeiS3btumpDQ4L0NgtsynHI');
 
-                var checkoutButtonEducationalProd = document.getElementById('checkout-button-plan_H5V1qwEOIY0IXK');
-                checkoutButtonEducationalProd.addEventListener('click', function () {
-                    // When the customer clicks on the button, redirect
-                    // them to Checkout.
-                    stripe.redirectToCheckout({
-                    items: [{plan: 'plan_H5V1qwEOIY0IXK', quantity: 1}],
+                // var checkoutButtonEducationalProd = document.getElementById('checkout-button-plan_H5V1qwEOIY0IXK');
+                // checkoutButtonEducationalProd.addEventListener('click', function () {
+                //     // When the customer clicks on the button, redirect
+                //     // them to Checkout.
+                //     stripe.redirectToCheckout({
+                //     items: [{plan: 'plan_H5V1qwEOIY0IXK', quantity: 1}],
 
-                    // Do not rely on the redirect to the successUrl for fulfilling
-                    // purchases, customers may not always reach the success_url after
-                    // a successful payment.
-                    // Instead use one of the strategies described in
-                    // https://stripe.com/docs/payments/checkout/fulfillment
-                    successUrl: 'https://www.visualzstudio.com/success',
-                    cancelUrl: 'https://www.visualzstudio.com/canceled',
-                    })
-                    .then(function (result) {
-                    if (result.error) {
-                        // If redirectToCheckout fails due to a browser or network
-                        // error, display the localized error message to your customer.
-                        var displayError = document.getElementById('error-message');
-                        displayError.textContent = result.error.message;
-                    }
-                    });
-                });
+                //     // Do not rely on the redirect to the successUrl for fulfilling
+                //     // purchases, customers may not always reach the success_url after
+                //     // a successful payment.
+                //     // Instead use one of the strategies described in
+                //     // https://stripe.com/docs/payments/checkout/fulfillment
+                //     successUrl: 'https://www.visualzstudio.com/success',
+                //     cancelUrl: 'https://www.visualzstudio.com/canceled',
+                //     })
+                //     .then(function (result) {
+                //     if (result.error) {
+                //         // If redirectToCheckout fails due to a browser or network
+                //         // error, display the localized error message to your customer.
+                //         var displayError = document.getElementById('error-message');
+                //         displayError.textContent = result.error.message;
+                //     }
+                //     });
+                // });
 
-                var checkoutButtonCommercialProd = document.getElementById('checkout-button-plan_H5V8KwiRi8BxEK');
+                /* normal price: checkout-button-plan_H5V8KwiRi8BxEK */
+                var checkoutButtonCommercialProd = document.getElementById('checkout-button-plan_HCHnNpbdcUHUCL');
                 checkoutButtonCommercialProd.addEventListener('click', function () {
                     // When the customer clicks on the button, redirect
                     // them to Checkout.
                     stripe.redirectToCheckout({
-                    items: [{plan: 'plan_H5V8KwiRi8BxEK', quantity: 1}],
+                    items: [{plan: 'plan_HCHnNpbdcUHUCL', quantity: 1}],
 
                     // Do not rely on the redirect to the successUrl for fulfilling
                     // purchases, customers may not always reach the success_url after
@@ -81,37 +82,38 @@ export class DownloadComponent implements OnInit {
             <script>
                 var stripe = Stripe('pk_test_JxsCHvXtYWoMblng27w9oah5');
 
-                var checkoutButtonEducationalTest = document.getElementById('checkout-button-plan_H5UfUDScLylpyD');
-                checkoutButtonEducationalTest.addEventListener('click', function () {
-                    // When the customer clicks on the button, redirect
-                    // them to Checkout.
-                    stripe.redirectToCheckout({
-                    items: [{plan: 'plan_H5UfUDScLylpyD', quantity: 1}],
+                // var checkoutButtonEducationalTest = document.getElementById('checkout-button-plan_H5UfUDScLylpyD');
+                // checkoutButtonEducationalTest.addEventListener('click', function () {
+                //     // When the customer clicks on the button, redirect
+                //     // them to Checkout.
+                //     stripe.redirectToCheckout({
+                //     items: [{plan: 'plan_H5UfUDScLylpyD', quantity: 1}],
 
-                    // Do not rely on the redirect to the successUrl for fulfilling
-                    // purchases, customers may not always reach the success_url after
-                    // a successful payment.
-                    // Instead use one of the strategies described in
-                    // https://stripe.com/docs/payments/checkout/fulfillment
-                    successUrl: 'http://localhost:4200/success',
-                    cancelUrl: 'http://localhost:4200/canceled',
-                    })
-                    .then(function (result) {
-                    if (result.error) {
-                        // If redirectToCheckout fails due to a browser or network
-                        // error, display the localized error message to your customer.
-                        var displayError = document.getElementById('error-message');
-                        displayError.textContent = result.error.message;
-                    }
-                    });
-                });
+                //     // Do not rely on the redirect to the successUrl for fulfilling
+                //     // purchases, customers may not always reach the success_url after
+                //     // a successful payment.
+                //     // Instead use one of the strategies described in
+                //     // https://stripe.com/docs/payments/checkout/fulfillment
+                //     successUrl: 'http://localhost:4200/success',
+                //     cancelUrl: 'http://localhost:4200/canceled',
+                //     })
+                //     .then(function (result) {
+                //     if (result.error) {
+                //         // If redirectToCheckout fails due to a browser or network
+                //         // error, display the localized error message to your customer.
+                //         var displayError = document.getElementById('error-message');
+                //         displayError.textContent = result.error.message;
+                //     }
+                //     });
+                // });
 
-                var checkoutButtonCommercialTest = document.getElementById('checkout-button-plan_H5UhS6ktwnPAfO');
+                /* normal price: checkout-button-plan_H5UhS6ktwnPAfO */
+                var checkoutButtonCommercialTest = document.getElementById('checkout-button-plan_HCHlDgrJZXt7r0');
                 checkoutButtonCommercialTest.addEventListener('click', function () {
                     // When the customer clicks on the button, redirect
                     // them to Checkout.
                     stripe.redirectToCheckout({
-                    items: [{plan: 'plan_H5UhS6ktwnPAfO', quantity: 1}],
+                    items: [{plan: 'plan_HCHlDgrJZXt7r0', quantity: 1}],
 
                     // Do not rely on the redirect to the successUrl for fulfilling
                     // purchases, customers may not always reach the success_url after

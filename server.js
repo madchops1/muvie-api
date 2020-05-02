@@ -27,7 +27,7 @@ const toJson = require('unsplash-js').toJson;
 
 const Pexels = require('node-pexels').Client;
 
-const visualzLatest = '2.0.6';
+const visualzLatest = '2.0.7';
 const kill = []; // array of versions eg. ['2.0.0']
 const killMsg = 'This version is dead.';
 
@@ -264,6 +264,7 @@ let crowdScreenKeyMap = {};
 let remoteQueKeyMap = {};
 let mobileVideoKeyMap = {};
 let modulePeerMap = {};
+let appPeerMap = {};
 let laserzKeyMap = {};
 let phoneListHolder = [];
 let liveStreamRooms = [];
@@ -428,6 +429,11 @@ io.on('connection', (socket) => {
         socket.broadcast.to(String(mid)).emit('refreshQueRequest', data);
     });
 
+    socket.on("reloadCrowdScreen", async data => {
+        console.log('server received reloadCrowdScreen');
+        socket.broadcast.to(String(mid)).emit('reloadCrowdScreen', data);
+    })
+
     socket.on("play", async data => {
         console.log('server received play');
         socket.broadcast.to(String(mid)).emit('playRequest', data);
@@ -506,6 +512,26 @@ io.on('connection', (socket) => {
         });
         socket.broadcast.to(String(mid)).emit('getMobileVideoData', match);
     });
+
+    // Get the peer id from the app and set it in the app peer map
+    socket.on('sendPeerId', async data => {
+        console.log('server received sendPeerId', data);
+        appPeerMap[data.mid] = data;
+        // TODO... maybe trigger the refresh here
+        socket.broadcast.to(String(mid)).emit('sendRemoteScreenRefresh', data);
+    });
+
+    socket.on('requestPeerId', async data => {
+        console.log('server received requestPeerId', data);
+        let match = false;
+        Object.keys(appPeerMap).forEach(key => {
+            if (appPeerMap[key].opid == data.opid) {
+                match = appPeerMap[key].pid;
+            }
+        })
+        socket.broadcast.to(String(mid)).emit('getPeerId', match);
+    });
+
 
     // receive a refresh crowd screen request from the web server
     // and pass it on to the VISUALZ APP
