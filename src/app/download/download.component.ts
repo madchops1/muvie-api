@@ -13,7 +13,7 @@ export class DownloadComponent implements OnInit {
     stripeScript: any = '';
     stripeScriptProd: any = '';
     stripeScriptTest: any = '';
-    testMode: Boolean = true;
+    testMode: Boolean = false;
     yearly: Boolean = false;
     version: '2.0.7';
 
