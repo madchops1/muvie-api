@@ -233,6 +233,13 @@ p {
     //background-color: #fff;
     min-height: calc(100vh - 288px);
 
+    &.collab {
+        @media (max-width: $breakpoint-mobile) {
+            padding-left: 0px;
+            padding-right: 0px;
+        }
+    }
+
     &.small-bottom {
         padding-bottom: 80px;
         padding-top: 140px;
