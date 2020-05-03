@@ -28,6 +28,13 @@ export class VisualzComponent implements OnInit {
             link: 'https://www.instagram.com/_bobbymack_/'
         },
         {
+            name: 'D3SIGNER.DR3AMS',
+            type: 'HIP HOP + RAP',
+            location: 'NA',
+            image: '../../assets/images/d3signerdr3ams.png',
+            link: 'https://www.instagram.com/d3signer.dr3ams/'
+        },
+        {
             name: 'Desadeca',
             type: 'DJ',
             location: 'Chicago',
@@ -35,11 +42,25 @@ export class VisualzComponent implements OnInit {
             link: 'https://www.facebook.com/djdesadeca/'
         },
         {
-            name: 'D3SIGNER.DR3AMS',
-            type: 'HIP HOP + RAP',
+            name: 'dj_psoriasis',
+            type: 'Artist',
             location: 'NA',
-            image: '../../assets/images/d3signerdr3ams.png',
-            link: 'https://www.instagram.com/d3signer.dr3ams/'
+            image: '../../assets/images/psoriasis.jpg',
+            link: 'https://www.instagram.com/dj_psoriasis/'
+        },
+        {
+            name: 'friendkerrek',
+            type: 'ARTIST',
+            location: 'NA',
+            image: '../../assets/images/friendkerrek.jpg',
+            link: 'https://www.instagram.com/friendkerrek/'
+        },
+        {
+            name: 'Gogg Doppia G',
+            type: 'Dj/Beatmaker',
+            location: 'Italy',
+            image: '../../assets/images/gogg.jpg',
+            link: 'https://www.instagram.com/gogg_doppia_g/'
         },
         {
             name: 'Johnny Nonstop',
@@ -110,6 +131,20 @@ export class VisualzComponent implements OnInit {
             location: 'Indiana',
             image: '../../assets/images/evan.jpg',
             link: 'https://www.facebook.com/SlippinJimmysHouse/'
+        },
+        {
+            name: 'seanplaynice',
+            type: 'ARTIST',
+            location: 'NA',
+            image: '../../assets/images/playnice.jpg',
+            link: 'https://www.instagram.com/seanplaynice/'
+        },
+        {
+            name: 'SPEIG',
+            type: 'DJ',
+            location: 'NA',
+            image: '../../assets/images/speig.jpg',
+            link: 'https://www.instagram.com/therealspeig/'
         },
         //,
         // {
