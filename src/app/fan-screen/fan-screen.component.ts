@@ -468,7 +468,7 @@ export class FanScreenComponent implements OnInit {
             //    var constraints = { audio: true, video: false };
             //    navigator.mediaDevices.getUserMedia(constraints).then((stream1) => {
             console.log('got userMedia, answering call');
-            call.answer(); // answer the call, send the microphone audio
+            call.answer(); // answer the call, 
             call.on('stream', function (stream2) {
                 this.stream2 = stream2;
                 this.video2 = document.getElementById('externalVideo');
