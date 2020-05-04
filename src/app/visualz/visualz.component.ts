@@ -45,21 +45,21 @@ export class VisualzComponent implements OnInit {
             name: 'dj_psoriasis',
             type: 'Artist',
             location: 'NA',
-            image: '../../assets/images/psoriasis.jpg',
+            image: '../../assets/images/psoriasis1.jpg',
             link: 'https://www.instagram.com/dj_psoriasis/'
         },
         {
             name: 'friendkerrek',
             type: 'ARTIST',
             location: 'NA',
-            image: '../../assets/images/friendkerrek.jpg',
+            image: '../../assets/images/friendkerrek1.jpg',
             link: 'https://www.instagram.com/friendkerrek/'
         },
         {
             name: 'Gogg Doppia G',
             type: 'Dj/Beatmaker',
             location: 'Italy',
-            image: '../../assets/images/gogg.jpg',
+            image: '../../assets/images/gogg1.jpg',
             link: 'https://www.instagram.com/gogg_doppia_g/'
         },
         {
@@ -136,14 +136,14 @@ export class VisualzComponent implements OnInit {
             name: 'seanplaynice',
             type: 'ARTIST',
             location: 'NA',
-            image: '../../assets/images/playnice.jpg',
+            image: '../../assets/images/playnice1.jpg',
             link: 'https://www.instagram.com/seanplaynice/'
         },
         {
             name: 'SPEIG',
             type: 'DJ',
             location: 'NA',
-            image: '../../assets/images/speig.jpg',
+            image: '../../assets/images/speig1.jpg',
             link: 'https://www.instagram.com/therealspeig/'
         },
         //,
