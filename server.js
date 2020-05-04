@@ -537,12 +537,12 @@ io.on('connection', (socket) => {
     // and pass it on to the VISUALZ APP
     socket.on("refreshCrowdScreen", async data => {
 
-        console.log('server received refreshCrowdScreen');
+        console.log('server received refreshCrowdScreen', mid, data);
 
-        io.of('/').adapter.clients([String(mid)], (err, clients) => {
-            console.log('CONNECTIONS', mid, clients);
-            socket.broadcast.to(String(mid)).emit('refreshCrowdScreenRequest', clients.length);
-        });
+        //io.of('/').adapter.clients([String(mid)], (err, clients) => {
+        //    console.log('CONNECTIONS', mid, clients);
+        socket.broadcast.to(String(mid)).emit('refreshCrowdScreenRequest', {}); //clients.length);
+        //});
 
         //socket.broadcast.to(String(mid)).emit('refreshCrowdScreenRequest', data);
 
