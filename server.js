@@ -27,7 +27,7 @@ const toJson = require('unsplash-js').toJson;
 
 const Pexels = require('node-pexels').Client;
 
-const visualzLatest = '2.0.7';
+const visualzLatest = '2.1.0';
 const kill = []; // array of versions eg. ['2.0.0']
 const killMsg = 'This version is dead.';
 

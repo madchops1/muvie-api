@@ -487,7 +487,6 @@ export class FanScreenComponent implements OnInit {
         this.getIce().then((res: any) => {
 
             this.peer = new Peer({
-                debug: 3,
                 config: {
                     'iceServers': res
                 }

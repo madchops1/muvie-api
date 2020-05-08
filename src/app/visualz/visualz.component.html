@@ -36,16 +36,16 @@
             <img src="../../assets/images/icon.ico" class="ico" />
 
             <div *ngIf="deviceInfo.os == 'Mac' || deviceInfo.os == 'iOS'" class="clearfix">
-                <a href="https://visualz-1.s3.us-east-2.amazonaws.com/Visualz-2.0.7.dmg" target="_blank"
-                    mat-raised-button (click)="downloadMac()" class="pink button">
+                <a href="https://github.com/madchops1/visualz-releases/releases/download/v2.1.0/Visualz-2.1.0.dmg"
+                    target="_blank" mat-raised-button (click)="downloadMac()" class="pink button">
                     Download Mac
                 </a>
                 <img class="mac" src="../../assets/images/macos.png" />
             </div>
 
             <div *ngIf="deviceInfo.os != 'Mac' && deviceInfo.os != 'iOS'" class="clearfix">
-                <a href="https://visualz-1.s3.us-east-2.amazonaws.com/Visualz-Setup-2.0.7w.rar" target="_blank"
-                    mat-raised-button (click)="downloadWindows()" class="pink button">
+                <a href="https://github.com/madchops1/visualz-releases/releases/download/v2.1.0/Visualz-Setup-2.1.0.exe"
+                    target="_blank" mat-raised-button (click)="downloadWindows()" class="pink button">
                     Download Windows
                 </a>
                 <img class="windows" src="../../assets/images/windows.png" />
@@ -53,7 +53,7 @@
 
         </div>
         <div class="release-notes">
-            <h1>VISUALZ v2.0.7</h1>
+            <h1>VISUALZ v2.1.0</h1>
 
             <div class="">
                 <h2>What's New in Version 2</h2>
@@ -82,6 +82,17 @@
                     <li>Much, much, more.</li>
                 </ul>
                 <div class="smaller">
+
+                    <!-- 5/7/20 -->
+                    <h2>Update 2.1.0</h2>
+                    <ul class='new'>
+                        <li>Update to image overlay/mask fx.</li>
+                        <li>Updates to FanCam.</li>
+                        <li>UI/UX Improvements.</li>
+                        <li>Added visuals main controller stream to FanCam.</li>
+                        <li>Added turn ice servers for streaming better yo.</li>
+                        <li>Added auto updates. So no more re-installing.</li>
+                    </ul>
 
                     <!-- -->
                     <h2>Update 2.0.7</h2>
