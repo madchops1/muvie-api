@@ -51,51 +51,88 @@ export class RemoteScreenComponent implements OnInit {
         });
     }
 
-    connectPeer() {
-        this.peer = new Peer();
-
-        // When the peer connection opens get the id
-        // - then send the id to the api server ws
-        this.peer.on('open', (id) => {
-            console.log('My peer ID is: ' + id);
-            this.peerId = id;
-            this.socketService.peerId({ windowId: false, peerId: id, mid: this.mid });
-        });
-
-        // Then await for a call
-        this.peer.on('call', (call) => {
-            //console.log('receiving call');
-            //if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
-            //    var constraints = { audio: true, video: false };
-            //    navigator.mediaDevices.getUserMedia(constraints).then((stream1) => {
-            console.log('got userMedia, answering call');
-            call.answer(); // answer the call, send the microphone audio
-            call.on('stream', function (stream2) {
-                this.stream2 = stream2;
-                this.video = document.getElementById('externalVideo');
-                this.video.srcObject = stream2;
-                this.video.play();
-            });
-            //});
-            //}
-        });
-
-        this.peer.on('close', () => {
-            this.peer = null;
-            this.connectPeer();
-        });
-
-        this.peer.on('disconnected', () => {
-            if (this.peer) {
-                this.peer.reconnect();
+    formatIceForPeerJs(servers) {
+        let ice = [];
+        servers.v.iceServers.urls.forEach(element => {
+            let server;
+            if (element.includes('turn')) {
+                server = { url: element, username: servers.v.iceServers.username, credential: servers.v.iceServers.credential };
             } else {
-                this.connectPeer();
+                server = { url: element };
             }
+            ice.push(server);
+        });
+        return ice;
+    }
+
+    getIce() {
+        return new Promise((resolve, reject) => {
+            let xhr = new XMLHttpRequest();
+            xhr.onreadystatechange = ($evt) => {
+                if (xhr.readyState == 4 && xhr.status == 200) {
+                    let res = JSON.parse(xhr.responseText);
+                    res = this.formatIceForPeerJs(res);
+                    resolve(res);
+                    console.log("response: ", res);
+                }
+            }
+            xhr.open("PUT", "https://global.xirsys.net/_turn/Visualz", true);
+            xhr.setRequestHeader("Authorization", "Basic " + btoa("madchops1:436d074e-9019-11ea-8c43-0242ac150002"));
+            xhr.setRequestHeader("Content-Type", "application/json");
+            xhr.send(JSON.stringify({ "format": "urls" }));
+        });
+    }
+
+    connectPeer() {
+        this.getIce().then((res: any) => {
+            this.peer = new Peer({
+                config: res.v
+            });
+
+            // When the peer connection opens get the id
+            // - then send the id to the api server ws
+            this.peer.on('open', (id) => {
+                console.log('My peer ID is: ' + id);
+                this.peerId = id;
+                this.socketService.peerId({ windowId: false, peerId: id, mid: this.mid });
+            });
+
+            // Then await for a call
+            this.peer.on('call', (call) => {
+                //console.log('receiving call');
+                //if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
+                //    var constraints = { audio: true, video: false };
+                //    navigator.mediaDevices.getUserMedia(constraints).then((stream1) => {
+                console.log('got userMedia, answering call');
+                call.answer(); // answer the call, send the microphone audio
+                call.on('stream', function (stream2) {
+                    this.stream2 = stream2;
+                    this.video = document.getElementById('externalVideo');
+                    this.video.srcObject = stream2;
+                    this.video.play();
+                });
+                //});
+                //}
+            });
+
+            this.peer.on('close', () => {
+                this.peer = null;
+                this.connectPeer();
+            });
+
+            this.peer.on('disconnected', () => {
+                if (this.peer) {
+                    this.peer.reconnect();
+                } else {
+                    this.connectPeer();
+                }
+            });
+
+            this.peer.on('error', (err) => {
+                console.log('PEER ERR', err);
+                this.connectPeer();
+            });
         });
 
-        this.peer.on('error', (err) => {
-            console.log('PEER ERR', err);
-            this.connectPeer();
-        });
     }
 }
