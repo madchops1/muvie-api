@@ -86,7 +86,10 @@ export class RemoteScreenComponent implements OnInit {
     connectPeer() {
         this.getIce().then((res: any) => {
             this.peer = new Peer({
-                config: res.v
+                debug: 3,
+                config: {
+                    'iceServers': res
+                }
             });
 
             // When the peer connection opens get the id
