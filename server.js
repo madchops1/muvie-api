@@ -27,7 +27,7 @@ const toJson = require('unsplash-js').toJson;
 
 const Pexels = require('node-pexels').Client;
 
-const visualzLatest = '2.0.7';
+const visualzLatest = '2.1.0';
 const kill = []; // array of versions eg. ['2.0.0']
 const killMsg = 'This version is dead.';
 
@@ -1041,7 +1041,7 @@ app.post('/api/sms/reply', (req, res) => {
 // creates a seat by uploading a file to s3
 app.post("/api/createSeat", async function (req, res) {
     let key = req.body.mid; //'27540e6c-3929-4733-bc0b-314f657dec0b';
-    let email = req.body.email;
+    let email = req.body.email.toLowerCase();
     let plan = 0;
 
     console.log('key');
@@ -1065,7 +1065,7 @@ app.post("/api/createSeat", async function (req, res) {
                 //    throw err;
                 //}
 
-                console.log('CUSTOMERS', customers.data[0]);
+                //console.log('CUSTOMERS', customers.data[0]);
 
                 if (customers.data.length && customers.data[0].subscriptions.data.length) {
                     for (i = 0; i < customers.data[0].subscriptions.data.length; i++) {
@@ -1075,7 +1075,7 @@ app.post("/api/createSeat", async function (req, res) {
                         if (customers.data[0].subscriptions.data[i].status == 'active') {
 
                             let nickName = customers.data[0].subscriptions.data[i].plan.nickname;
-                            console.log('plan', nickName);
+                            //console.log('plan', nickName);
 
                             if (nickName.indexOf('Visualz') !== -1 && nickName.indexOf('Educational') !== -1) {
                                 if (plan <= 1) {
@@ -1130,11 +1130,8 @@ app.post("/api/createSeat", async function (req, res) {
 });
 
 app.post("/api/authSeat", async function (req, res) {
-
     console.log(req.body);
     try {
-
-
         let key = req.body.mid; //'27540e6c-3929-4733-bc0b-314f657dec0b';
         await request('https://' + process.env.KEYSTORE + '.s3.us-east-2.amazonaws.com/' + key + '.json', function (error, response, body) {
             if (!error && response.statusCode == 200) {

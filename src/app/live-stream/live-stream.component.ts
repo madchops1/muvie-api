@@ -1618,72 +1618,101 @@ export class LiveStreamComponent implements OnInit {
         });
     }
 
+    formatIceForPeerJs(servers) {
+        let ice = [];
+        servers.v.iceServers.urls.forEach(element => {
+            let server;
+            if (element.includes('turn')) {
+                server = { url: element, username: servers.v.iceServers.username, credential: servers.v.iceServers.credential };
+            } else {
+                server = { url: element };
+            }
+            ice.push(server);
+        });
+        return ice;
+    }
+
+    getIce() {
+        return new Promise((resolve, reject) => {
+            let xhr = new XMLHttpRequest();
+            xhr.onreadystatechange = ($evt) => {
+                if (xhr.readyState == 4 && xhr.status == 200) {
+                    let res = JSON.parse(xhr.responseText);
+                    res = this.formatIceForPeerJs(res);
+                    resolve(res);
+                    console.log("response: ", res);
+                }
+            }
+            xhr.open("PUT", "https://global.xirsys.net/_turn/Visualz", true);
+            xhr.setRequestHeader("Authorization", "Basic " + btoa("madchops1:436d074e-9019-11ea-8c43-0242ac150002"));
+            xhr.setRequestHeader("Content-Type", "application/json");
+            xhr.send(JSON.stringify({ "format": "urls" }));
+        });
+    }
+
     createPeer() {
         //this.peer = null;
         return new Promise((resolve, reject) => {
-            this.peer = new Peer({
-                //host: location.hostname,
-                //host: 'visualz.ngrok.com',
-                //path: '/peer-server'
-                //port: 9000//,
-                //secure: false,
-                //path: '/peer-server'
-            });
 
-            this.peer = new Peer();
+            this.getIce().then((res: any) => {
 
-            //this.peer = new Peer();
+                this.peer = new Peer({
+                    config: {
+                        'iceServers': res
+                    }
+                });
 
-            this.peer.on('open', (id) => {
-                console.log('My peer ID is: ' + id);
-                this.peerId = id;
-                resolve(id);
-            });
-            this.peer.on('call', (call) => {
-                // send audio to TODO...
+                this.peer.on('open', (id) => {
+                    console.log('My peer ID is: ' + id);
+                    this.peerId = id;
+                    resolve(id);
+                });
+                this.peer.on('call', (call) => {
+                    // send audio to TODO...
 
-                let cnvs: any = document.getElementById('renderCanvas');
-                this.mediaStream = cnvs.captureStream();
+                    let cnvs: any = document.getElementById('renderCanvas');
+                    this.mediaStream = cnvs.captureStream();
 
-                console.log(this.mediaStream.getVideoTracks(), this.mic.stream.getAudioTracks());
-                //this.mediaStream.addTrack(this.mic.stream.getAudioTracks()[0]);
-                //let tracks:
-                let videoTrack: any = this.mediaStream.getVideoTracks()[0];
-                let audioTrack: any = this.mic.stream.getAudioTracks()[0];
-                let stream3: MediaStream = new MediaStream([videoTrack, audioTrack]);
+                    console.log(this.mediaStream.getVideoTracks(), this.mic.stream.getAudioTracks());
+                    //this.mediaStream.addTrack(this.mic.stream.getAudioTracks()[0]);
+                    //let tracks:
+                    let videoTrack: any = this.mediaStream.getVideoTracks()[0];
+                    let audioTrack: any = this.mic.stream.getAudioTracks()[0];
+                    let stream3: MediaStream = new MediaStream([videoTrack, audioTrack]);
 
-                //call.answer(this.mediaStream); // answer the call, send the stream...
-                if (this.live) {
-                    call.answer(stream3); // answer the call, send the stream...
-                    console.log('Answered Call!');
-                }
-                // call.on('stream', function (stream) {
-                //     video = document.getElementById('externalVideo');
-                //     video.srcObject = stream;
-                // });
-            });
-            this.peer.on('close', () => {
-                //this.peer = null;
-                this.peerId = false;
-            });
-            this.peer.on('disconnected', () => {
-                this.peer.reconnect();
-            });
-            this.peer.on('error', (err) => {
-                this.peerId = false;
+                    //call.answer(this.mediaStream); // answer the call, send the stream...
+                    if (this.live) {
+                        call.answer(stream3); // answer the call, send the stream...
+                        console.log('Answered Call!');
+                    }
+                    // call.on('stream', function (stream) {
+                    //     video = document.getElementById('externalVideo');
+                    //     video.srcObject = stream;
+                    // });
+                });
+                this.peer.on('close', () => {
+                    //this.peer = null;
+                    this.peerId = false;
+                });
+                this.peer.on('disconnected', () => {
+                    this.peer.reconnect();
+                });
+                this.peer.on('error', (err) => {
+                    this.peerId = false;
 
-                console.log('PEER ERR', typeof err, err);
+                    console.log('PEER ERR', typeof err, err);
 
-                if (err.message.includes('Server has reached its concurrent user limit')) {
-                    this.errorText('Max user limit. Try again.');
-                    return;
-                }
+                    if (err.message.includes('Server has reached its concurrent user limit')) {
+                        this.errorText('Max user limit. Try again.');
+                        return;
+                    }
 
-                if (err.message.includes('Could not connect to peer')) {
-                    this.errorText('Host is not currently streaming. Try back.');
-                    return;
-                }
+                    if (err.message.includes('Could not connect to peer')) {
+                        this.errorText('Host is not currently streaming. Try back.');
+                        return;
+                    }
 
+                });
             });
         });
     }

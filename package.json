@@ -1,6 +1,6 @@
 {
     "name": "muvie",
-    "version": "2.0.7",
+    "version": "2.1.0",
     "scripts": {
         "ng": "ng",
         "start": "node server.js",

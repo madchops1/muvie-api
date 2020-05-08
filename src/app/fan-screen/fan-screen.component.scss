@@ -110,7 +110,9 @@ canvas {
 }
 
 .goodArea {
-    border: 1px solid blue;
+    border: 4px solid #fff;
+    border-radius: 5px;
+    opacity: 0.6;
     width: 30vw;
     position: absolute;
     z-index: 3;
