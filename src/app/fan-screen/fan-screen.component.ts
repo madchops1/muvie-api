@@ -454,10 +454,10 @@ export class FanScreenComponent implements OnInit {
         let ice = [];
         servers.v.iceServers.urls.forEach(element => {
             let server;
-            if (element.includes('turn')) {
-                server = { url: element, username: servers.v.iceServers.username, credential: servers.v.iceServers.credential };
-            } else {
+            if (element.includes('stun')) {
                 server = { url: element };
+            } else {
+                server = { url: element, username: servers.v.iceServers.username, credential: servers.v.iceServers.credential };
             }
             ice.push(server);
         });
