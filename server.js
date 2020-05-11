@@ -589,6 +589,19 @@ io.on('connection', (socket) => {
         }
     });
 
+    socket.on("makeV2", async data => {
+        try {
+            console.log('calling api makeV2', data);
+            let req = { fields: false };
+            req.fields = data;
+            let makeVideo = await make.MakeV2(req);
+            //socket.emit('madeV2', makeVideo);
+            socket.broadcast.to(String(mid)).emit('madeV2', makeVideo);
+        } catch (err) {
+            console.log(err);
+        }
+    });
+
     //
     // Livestream Socket Stuff
     //
@@ -930,6 +943,7 @@ app.all('*', function (req, res, next) {
 
 //}
 
+// took too long so used socket
 app.post("/api/make", async function (req, res) {
     try {
         console.log('calling api make', req.fields);
@@ -1002,6 +1016,11 @@ app.post("/api/extractFrame", async function (req, res) {
         handleError(res, err, 'nope');
     }
 });
+
+// app.post("/api/makeVideo", async function (req, res) {
+//     console.log('calling api makeVideo');
+//     let getVideo = await ma
+// });
 
 // Twilio webhook
 app.post('/api/sms/reply', (req, res) => {

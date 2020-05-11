@@ -360,4 +360,71 @@ let Make = function (req) {
     });
 }
 
+let MakeV2 = function (req) {
+    return new Promise(function (resolve, reject) {
+
+        let combinedFile;
+        let withWatermark;
+
+        //
+        console.log('req body', req.body);
+
+        try {
+
+            async.series([
+                function (callback) {
+                    addAudio(req.body.videoFile, req.body.audioFile).then(function (res) {
+                        combinedFile = res;
+                        callback(null, 'with audio');
+                    });
+                },
+                function (callback) {
+                    addWatermark(combinedFile).then(function (res) {
+                        withWatermark = res;
+                        callback(null, 'with watermark');
+                    });
+                },
+                function (callback) {
+                    copySegment('src/assets/' + withWatermark, withWatermark).then(function (res) {
+                        remoteWithWatermark = res;
+                        callback(null, 'final copy to s3');
+                    }, function (err) {
+                        console.log(err);
+                        return false;
+                    });
+                }
+            ],
+                // optional callback
+                function (err, results) {
+                    // results is now equal to ['one', 'two']
+                    if (err) {
+                        reject(err);
+                        return false;
+                    }
+                    //mergedVideoName = await mergeVideo(clips, totalVideoDuration, audioDuration);
+                    //withAudioVideoName = await addAudio(mergedVideoName, req.fields.audio);
+                    // withWatermark = await addWatermark(withAudioVideoName);
+
+                    let response = {
+                        video: brokenClips,
+                        mergedVideoName: mergedVideoName,
+                        withAudioVideoName: withAudioVideoName,
+                        withWatermark: '/' + withWatermark,
+                        remoteWithWatermark: remoteWithWatermark
+                    }
+                    resolve(response);
+                    return;
+                });
+
+
+
+
+        } catch (err) {
+            reject(err);
+            return false;
+        }
+    });
+}
+
 module.exports.Make = Make;
+module.exports.MakeV2 = MakeV2;
