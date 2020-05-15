@@ -4,37 +4,57 @@ const path = require('path');
 const concat = require('./concat');
 const fs = require('file-system');
 const aws = require('aws-sdk');
-const S3_BUCKET = process.env.S3_BUCKET;
+const S3_BUCKET = 'visualz-1';
 aws.config.region = 'us-east-2';
 let videoStitch = require('video-stitch');
 let async = require("async");
+//let basePath = '/Users/madchops/Documents/workspace/muvie-api/';
+let basePath = '';
 
-let addWatermark = function (videoFile) {
+let addWatermark = function (videoFile, scale = "640") {
     return new Promise(function (resolve, reject) {
         let outputFile = 'watermark_' + videoFile;
-        ffmpeg()
-            .input(videoFile)
-            .input('watermark.png')
-            .videoCodec('libx264')
-            .outputOptions('-pix_fmt yuv420p')
-            .complexFilter([
-                "[0:v]scale=640:-1[bg];[bg][1:v]overlay=W-w-10:H-h-10"
-            ])
-            .on('error', function (err) {
-                console.log(err);
-                reject(err);
-            })
-            .on('end', function () {
-                console.log('resolve with watermark', outputFile);
-                resolve(outputFile);
-            })
-            .save('src/assets/' + outputFile);
+        try {
+            ffmpeg()
+                .input(basePath + videoFile)
+                .input(basePath + 'watermark.png')
+                .videoCodec('libx264')
+                .outputOptions('-pix_fmt yuv420p')
+                .complexFilter([
+                    "[0:v]scale=" + scale + ":-1[bg];[bg][1:v]overlay=W-w-10:H-h-10"
+                    //"[0:v]scale=" + scale + ":-1[bg];[bg][1:v]overlay=W-w-10:H-h-10"
+                ])
+                .on('error', function (err) {
+                    console.log(err);
+                    reject(err);
+                    return false;
+                })
+                .on('end', function () {
+                    console.log('resolve with watermark', outputFile);
+                    resolve(outputFile);
+                })
+                .save('src/assets/' + outputFile);
+        } catch (err) {
+            console.log('err', err);
+            reject(err);
+            return false;
+        }
     });
+}
+
+let getFilename = function (url) {
+    if (url) {
+        var m = url.toString().match(/.*\/(.+?)\./);
+        if (m && m.length > 1) {
+            return m[1];
+        }
+    }
+    return "";
 }
 
 let addAudio = function (videoFile, audioFile) {
     return new Promise(function (resolve, reject) {
-        let outputFile = 'audio_final_' + videoFile;
+        let outputFile = 'audio_final_' + getFilename(videoFile) + '.mp4';
         ffmpeg()
             .input(videoFile)
             .input(audioFile)
@@ -107,7 +127,7 @@ let getSegment = function (file, start, end, i) {
 
 let copySegment = function (file, dest) {
     return new Promise(async function (resolve, reject) {
-        fs.readFile(file, function (err, data) {
+        fs.readFile(basePath + file, function (err, data) {
             if (err) { reject(err); }
 
             var base64data = new Buffer(data, 'binary');
@@ -179,8 +199,6 @@ let mergeVideo = function (clips, videoDuration, audioDuration) {
             });
         });
         */
-
-
 
         let i = 0;
         let j = 0;
@@ -346,40 +364,38 @@ let Make = function (req) {
                     return;
                 });
 
-
-
-
         } catch (err) {
             reject(err);
             return false;
         }
 
-
-
         //concat.Concat(clips);
     });
 }
 
-let MakeV2 = function (req) {
+let MakeV2 = function (data) {
     return new Promise(function (resolve, reject) {
 
         let combinedFile;
         let withWatermark;
+        let remoteWithWatermark;
+        let scale = data.scale;
 
         //
-        console.log('req body', req.body);
+        console.log('req body', data);
 
         try {
 
             async.series([
                 function (callback) {
-                    addAudio(req.body.videoFile, req.body.audioFile).then(function (res) {
+                    addAudio(data.videoFile, data.audioFile).then(function (res) {
                         combinedFile = res;
                         callback(null, 'with audio');
                     });
                 },
                 function (callback) {
-                    addWatermark(combinedFile).then(function (res) {
+                    console.log('combinedFile', combinedFile);
+                    addWatermark(combinedFile, scale).then(function (res) {
                         withWatermark = res;
                         callback(null, 'with watermark');
                     });
@@ -406,11 +422,7 @@ let MakeV2 = function (req) {
                     // withWatermark = await addWatermark(withAudioVideoName);
 
                     let response = {
-                        video: brokenClips,
-                        mergedVideoName: mergedVideoName,
-                        withAudioVideoName: withAudioVideoName,
-                        withWatermark: '/' + withWatermark,
-                        remoteWithWatermark: remoteWithWatermark
+                        video: remoteWithWatermark
                     }
                     resolve(response);
                     return;
@@ -426,5 +438,62 @@ let MakeV2 = function (req) {
     });
 }
 
+let MakeV2Commercial = function (data) {
+    return new Promise(function (resolve, reject) {
+
+        let combinedFile;
+        let remote;
+
+        //
+        console.log('req body', data);
+
+        //try {
+
+        async.series([
+            function (callback) {
+                addAudio(data.videoFile, data.audioFile).then(function (res) {
+                    combinedFile = res;
+                    callback(null, 'with audio');
+                });
+            },
+            function (callback) {
+                copySegment(combinedFile, combinedFile).then(function (res) {
+                    remote = res;
+                    callback(null, 'final copy to s3');
+                }, function (err) {
+                    console.log(err);
+                    return false;
+                });
+            }
+        ],
+            // optional callback
+            function (err, results) {
+                // results is now equal to ['one', 'two']
+                if (err) {
+                    reject(err);
+                    return false;
+                }
+                //mergedVideoName = await mergeVideo(clips, totalVideoDuration, audioDuration);
+                //withAudioVideoName = await addAudio(mergedVideoName, req.fields.audio);
+                // withWatermark = await addWatermark(withAudioVideoName);
+
+                let response = {
+                    video: remote
+                }
+                resolve(response);
+                //return;
+            });
+
+
+
+
+        //} catch (err) {
+        //    reject(err);
+        //    return false;
+        //}
+    });
+}
+
 module.exports.Make = Make;
 module.exports.MakeV2 = MakeV2;
+module.exports.MakeV2Commercial = MakeV2Commercial;

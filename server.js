@@ -345,9 +345,8 @@ io.on('connection', (socket) => {
 
     // ping/pong crowd screens, and laserz, every 4 sec to keep them connected
     setInterval(() => {
-        //console.log('ping');
-        //console.log('')
 
+        console.log('Master Ping', mid)
 
         // console.log('crowdScreenKeyMap', Object.keys(crowdScreenKeyMap).length);
         // console.log('liveStreamRooms', Object.keys(liveStreamRooms).length);
@@ -363,6 +362,7 @@ io.on('connection', (socket) => {
             //let clients = //''io.sockets.clients(String(mid)); // all users from room
             //socket.broadcast.to(String(mid)).emit('ping');
             socket.broadcast.to(String(roomMid)).emit('ping');
+            console.log('ping ALPHA', String(roomMid));
             //let clients = io.sockets.clients(String(mid)); // all users from room
             //console.log('CONNECTIONS', mid, clients);
         }
@@ -382,6 +382,8 @@ io.on('connection', (socket) => {
             io.of('/').adapter.clients([String(name)], (err, clients) => {
                 //console.log('CONNECTIONS', name, clients);
                 socket.broadcast.to(String(name)).emit('clientCount', clients.length);
+                console.log('ping BETA', String(name));
+
             });
 
             // 6 hour limit room cleanup
@@ -590,16 +592,22 @@ io.on('connection', (socket) => {
     });
 
     socket.on("makeV2", async data => {
-        try {
-            console.log('calling api makeV2', data);
-            let req = { fields: false };
-            req.fields = data;
-            let makeVideo = await make.MakeV2(req);
-            //socket.emit('madeV2', makeVideo);
-            socket.broadcast.to(String(mid)).emit('madeV2', makeVideo);
-        } catch (err) {
-            console.log(err);
+        //try {
+        console.log('calling api makeV2', data);
+        let makeVideo;
+        // Educational and Commercial licenses
+        if (data.plan == 0) {
+            makeVideo = await make.MakeV2(data);
+        } else {
+            console.log('COMMERCIAL');
+            makeVideo = await make.MakeV2Commercial(data);
         }
+        console.log('mid', mid);
+        socket.broadcast.to(String(mid)).emit('makeV2Complete', makeVideo);
+        socket.broadcast.to(String(mid)).emit('makeV2Complete', makeVideo);
+        //} catch (err) {
+        //    console.log(err);
+        //}
     });
 
     //
@@ -713,7 +721,7 @@ app.get('/api/videos', function (req, res) {
         artist.collections.forEach((collection) => {
             let path = 'video-library/' + artist.name + '/' + collection.name + '/'
             listDirectories(path).then((contents) => {
-                console.log('CHUCKY', contents);
+                //console.log('CHUCKY', contents);
                 contents.Contents.shift();
                 collection.videos = contents.Contents;
             });
