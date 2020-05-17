@@ -143,7 +143,7 @@ let copySegment = function (file, dest) {
 
                 //console.log(this);
                 console.log('Successfully uploaded package.');
-                resolve('https://muvievideos.s3.us-east-2.amazonaws.com/' + dest);
+                resolve('https://visualz-1.s3.us-east-2.amazonaws.com/' + dest);
             });
 
         });
