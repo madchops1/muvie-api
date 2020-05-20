@@ -25,7 +25,7 @@ let getFrame = (req) => {
             await extractFrame({
                 input: encodeURI(filePath),
                 output: 'src/assets/' + outputFile,
-                offset: 1000 // seek offset in milliseconds
+                offset: 500 // seek offset in milliseconds
             });
             console.log('BETA', outputFile);
             resolve(outputFile);
@@ -58,6 +58,14 @@ let getFrame = (req) => {
 let sendMp4ToS3 = (file, dest) => {
     return new Promise(async function (resolve, reject) {
         fs.readFile(file, (err, data) => {
+
+            if (!data) {
+                reject('no data buffer');
+                return;
+            }
+            console.log('LOL', data);
+
+
             if (err) { reject(err); }
 
             let base64data = new Buffer(data, 'binary');

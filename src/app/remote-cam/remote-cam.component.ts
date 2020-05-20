@@ -113,33 +113,75 @@ export class RemoteCamComponent implements OnInit {
         });
     }
 
+
+    formatIceForPeerJs(servers) {
+        let ice = [];
+        servers.v.iceServers.urls.forEach(element => {
+            let server;
+            if (element.includes('stun')) {
+                server = { url: element };
+            } else {
+                server = { url: element, username: servers.v.iceServers.username, credential: servers.v.iceServers.credential };
+            }
+            ice.push(server);
+        });
+        return ice;
+    }
+
+    getIce() {
+        return new Promise((resolve, reject) => {
+            let xhr = new XMLHttpRequest();
+            xhr.onreadystatechange = ($evt) => {
+                if (xhr.readyState == 4 && xhr.status == 200) {
+                    let res = JSON.parse(xhr.responseText);
+                    res = this.formatIceForPeerJs(res);
+                    resolve(res);
+                    console.log("response: ", res);
+                }
+            }
+            xhr.open("PUT", "https://global.xirsys.net/_turn/Visualz", true);
+            xhr.setRequestHeader("Authorization", "Basic " + btoa("madchops1:436d074e-9019-11ea-8c43-0242ac150002"));
+            xhr.setRequestHeader("Content-Type", "application/json");
+            xhr.send(JSON.stringify({ "format": "urls" }));
+        });
+    }
+
     createPeer() {
         //this.peer = null;
         return new Promise((resolve, reject) => {
 
             if (this.peerId) { resolve(this.peerId); return; }
 
-            this.peer = new Peer({});
+            this.getIce().then((res: any) => {
 
-            this.peer.on('open', (id) => {
-                console.log('My peer ID is: ' + id);
-                this.peerId = id;
-                this.socketService.mapModulePeer({ pid: this.peerId, sid: this.sid });
-                resolve(id);
-            });
+                this.peer = new Peer({
+                    config: {
+                        'iceServers': res
+                    }
+                });
 
-            this.peer.on('close', () => {
-                //this.peer = null;
-                this.peerId = false;
-            });
+                //this.peer = new Peer({});
 
-            this.peer.on('disconnected', () => {
-                this.peer.reconnect();
-            });
+                this.peer.on('open', (id) => {
+                    console.log('My peer ID is: ' + id);
+                    this.peerId = id;
+                    this.socketService.mapModulePeer({ pid: this.peerId, sid: this.sid });
+                    resolve(id);
+                });
 
-            this.peer.on('error', (err) => {
-                console.log('PEER ERR', err);
-                this.peerId = false;
+                this.peer.on('close', () => {
+                    //this.peer = null;
+                    this.peerId = false;
+                });
+
+                this.peer.on('disconnected', () => {
+                    this.peer.reconnect();
+                });
+
+                this.peer.on('error', (err) => {
+                    console.log('PEER ERR', err);
+                    this.peerId = false;
+                });
             });
         });
     }

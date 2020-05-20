@@ -27,7 +27,7 @@ const toJson = require('unsplash-js').toJson;
 
 const Pexels = require('node-pexels').Client;
 
-const visualzLatest = '2.1.1';
+const visualzLatest = '2.1.2';
 const kill = []; // array of versions eg. ['2.0.0']
 const killMsg = 'This version is dead.';
 
@@ -257,7 +257,7 @@ function newLiveStreamRoom() {
         email: '',
         guests: [],
         delete: false
-    }
+    };
 }
 
 let crowdScreenKeyMap = {};
@@ -268,10 +268,11 @@ let appPeerMap = {};
 let laserzKeyMap = {};
 let phoneListHolder = [];
 let liveStreamRooms = [];
-
+let crowdScreenKey = '';
 
 var io = require('socket.io')(server);
 let mainSocket = false;
+
 io.on('connection', (socket) => {
     mainSocket = socket;
     let mid = socket.handshake.query.mid;
@@ -280,6 +281,28 @@ io.on('connection', (socket) => {
     let userId = socket.handshake.query.userId;
     let peerId = socket.handshake.query.peerId;
     let label = socket.handshake.query.label;
+    let heartbeatInterval;
+
+    heartbeatInterval = setInterval(() => {
+        //socket.broadcast.in(String(mid)).emit('heart', { mid: String(mid) });
+        //socket.broadcast.in(String(mid)).emit('heart', { mid: String(mid) });
+        io.to(String(mid)).emit('heart');
+        //console.log('heart', String(mid));
+    }, 20000);
+
+    //console.log('ROOMS ALPHA', socket.rooms);
+
+    // Join the mid room
+    socket.join(String(mid), (err) => {
+        if (err) {
+            console.log('err', err);
+        } else {
+            console.log('JOINED', String(mid));
+        }
+    });
+
+    //console.log('Client connected', String(mid));
+    //console.log('ROOMS BETA', socket.rooms);
 
     if (remoteQueKey) {
         if (!remoteQueKeyMap[remoteQueKey]) {
@@ -287,7 +310,7 @@ io.on('connection', (socket) => {
         }
     }
 
-    console.log('roomName', roomName);
+    //console.log('roomName', roomName);
 
     if (roomName && roomName != 'false') {
 
@@ -327,13 +350,66 @@ io.on('connection', (socket) => {
         }
     }
 
+
+    // ping/pong crowd screens, and laserz, every 4 sec to keep them connected
+    //setInterval(() => {
+
+    //console.log('ALPHA PING', mid);
+    //console.log('crowdScreenKeyMap', Object.keys(crowdScreenKeyMap).length);
+    // console.log('liveStreamRooms', Object.keys(liveStreamRooms).length);
+    // console.log('remoteQueKeyMap', Object.keys(remoteQueKeyMap).length);
+    // console.log('mobileVideoKeyMap', Object.keys(mobileVideoKeyMap).length);
+    // console.log('modulePeerMap', Object.keys(modulePeerMap).length);
+    //console.log('--------------------------');
+
+
+
+    // //console.log('CrowdScreenMap:');
+    //for (let key in crowdScreenKeyMap) {
+    //let roomMid = crowdScreenKeyMap[key];
+    //console.log(roomMid);
+    //let clients = //''io.sockets.clients(String(mid)); // all users from room
+    //socket.broadcast.to(String(mid)).emit('ping');
+
+
+
+    //console.log('CROWD H', String(mid));
+    //let clients = io.sockets.clients(String(mid)); // all users from room
+    //console.log('CONNECTIONS', mid, clients);
+    //}
+
+    // //console.log('LiveStreamRooms:');
+    // Object.keys(liveStreamRooms).forEach(key => {
+
+    //     //console.log('', key, liveStreamRooms[key]);
+
+    //     let name = liveStreamRooms[key].name;
+    //     let started = liveStreamRooms[key].started / 1000;
+    //     let now = Date.now() / 1000;
+
+    //     //console.log(name);
+    //     socket.broadcast.to(String(name)).emit('ping');
+    //     //let clients = //''io.sockets.clients(String(mid)); // all users from room
+    //     io.of('/').adapter.clients([String(name)], (err, clients) => {
+    //         //console.log('CONNECTIONS', name, clients);
+    //         socket.broadcast.to(String(name)).emit('clientCount', clients.length);
+    //         console.log('ROOM PING', String(name));
+
+    //     });
+
+    //     // 6 hour limit room cleanup
+    //     if (now - started > 86400) {
+    //         // Mark for deletion, unecessary
+    //         liveStreamRooms[key].delete = true;
+
+    //         // delete
+    //         delete liveStreamRooms[key];
+    //     }
+    // });
+    //}, 4000);
+
     // clean up rooms @TODO
-
-    socket.join(String(mid));
-    console.log('Client connected', mid);
-
     socket.on('disconnect', () => {
-
         console.log('Client disconnected', mid);
         // if there is a room and this is the host then not live
         if (liveStreamRooms[mid]) {
@@ -341,76 +417,33 @@ io.on('connection', (socket) => {
                 liveStreamRooms[mid].live = false;
             }
         }
-    });
 
-    // ping/pong crowd screens, and laserz, every 4 sec to keep them connected
-    setInterval(() => {
-        //console.log('ping');
-        //console.log('')
-
-
-        // console.log('crowdScreenKeyMap', Object.keys(crowdScreenKeyMap).length);
-        // console.log('liveStreamRooms', Object.keys(liveStreamRooms).length);
-        // console.log('remoteQueKeyMap', Object.keys(remoteQueKeyMap).length);
-        // console.log('mobileVideoKeyMap', Object.keys(mobileVideoKeyMap).length);
-        // console.log('modulePeerMap', Object.keys(modulePeerMap).length);
-        // console.log('--------------------------');
-
-        //console.log('CrowdScreenMap:');
-        for (let key in crowdScreenKeyMap) {
-            let roomMid = crowdScreenKeyMap[key];
-            //console.log(roomMid);
-            //let clients = //''io.sockets.clients(String(mid)); // all users from room
-            //socket.broadcast.to(String(mid)).emit('ping');
-            socket.broadcast.to(String(roomMid)).emit('ping');
-            //let clients = io.sockets.clients(String(mid)); // all users from room
-            //console.log('CONNECTIONS', mid, clients);
+        // Cleanup Crowdscreenkeys
+        if (crowdScreenKeyMap[crowdScreenKey]) {
+            delete crowdScreenKeyMap[crowdScreenKey];
         }
 
-        //console.log('LiveStreamRooms:');
-        Object.keys(liveStreamRooms).forEach(key => {
-
-            //console.log('', key, liveStreamRooms[key]);
-
-            let name = liveStreamRooms[key].name;
-            let started = liveStreamRooms[key].started / 1000;
-            let now = Date.now() / 1000;
-
-            //console.log(name);
-            socket.broadcast.to(String(name)).emit('ping');
-            //let clients = //''io.sockets.clients(String(mid)); // all users from room
-            io.of('/').adapter.clients([String(name)], (err, clients) => {
-                //console.log('CONNECTIONS', name, clients);
-                socket.broadcast.to(String(name)).emit('clientCount', clients.length);
-            });
-
-            // 6 hour limit room cleanup
-            if (now - started > 86400) {
-                // Mark for deletion, unecessary
-                liveStreamRooms[key].delete = true;
-
-                // delete
-                delete liveStreamRooms[key];
-            }
-        });
-
-    }, 4000);
-
-    socket.on("pong", () => {
-        console.log('server received pong');
+        // Stop heart
+        clearTimeout(heartbeatInterval);
     });
 
-    socket.on("test", value => {
+    socket.on("beat", async value => {
+        //console.log('beat', value);
+        //socket.broadcast.in(String(mid)).emit('heart', value);
+        //io.to(String(mid)).emit('heart');
+    });
+
+    socket.on("test", async value => {
         console.log('server received test', value);
-        socket.emit("testclient", value);
+        socket.emit('testclient', value);
     });
 
-    socket.on("peerId", value => {
+    socket.on("peerId", async value => {
         console.log('server received peerId', value);
         socket.broadcast.to(String(value.mid)).emit('peerIdUpdate', value);
     });
 
-    socket.on("refreshSignal", value => {
+    socket.on("refreshSignal", async value => {
         console.log('server received refreshSignal', value);
         socket.broadcast.to(String(value)).emit('refreshSignal');
     });
@@ -464,7 +497,7 @@ io.on('connection', (socket) => {
     // and send it the website
     socket.on("sendCrowdScreen", async data => {
         console.log('server received sendCrowdScreen', crowdScreenKeyMap, data);
-        let crowdScreenKey = data.key;
+        crowdScreenKey = data.key;
         if (crowdScreenKey) {
             if (!crowdScreenKeyMap[crowdScreenKey]) {
                 crowdScreenKeyMap[crowdScreenKey] = data.mid;
@@ -589,6 +622,20 @@ io.on('connection', (socket) => {
         }
     });
 
+    socket.on("makeV2", async data => {
+        console.log('calling api makeV2', data);
+        let makeVideo;
+        // Educational and Commercial licenses
+        if (data.plan == 0) {
+            makeVideo = await make.MakeV2(data);
+        } else {
+            console.log('COMMERCIAL');
+            makeVideo = await make.MakeV2Commercial(data);
+        }
+        console.log('makeV2 Done, mid:', mid);
+        io.in(String(mid)).emit('makeV2Complete', makeVideo);
+    });
+
     //
     // Livestream Socket Stuff
     //
@@ -596,7 +643,6 @@ io.on('connection', (socket) => {
     //     console.log('server received host check');
     //     socket.broadcast.to(String(mid)).emit('getCrowdScreenImage', data);
     // });
-
 
     // // Twilio webhook
     // app.post('/api/sms/reply', (req, res) => {
@@ -700,7 +746,7 @@ app.get('/api/videos', function (req, res) {
         artist.collections.forEach((collection) => {
             let path = 'video-library/' + artist.name + '/' + collection.name + '/'
             listDirectories(path).then((contents) => {
-                console.log('CHUCKY', contents);
+                //console.log('CHUCKY', contents);
                 contents.Contents.shift();
                 collection.videos = contents.Contents;
             });
@@ -930,6 +976,7 @@ app.all('*', function (req, res, next) {
 
 //}
 
+// took too long so used socket
 app.post("/api/make", async function (req, res) {
     try {
         console.log('calling api make', req.fields);
@@ -1002,6 +1049,11 @@ app.post("/api/extractFrame", async function (req, res) {
         handleError(res, err, 'nope');
     }
 });
+
+// app.post("/api/makeVideo", async function (req, res) {
+//     console.log('calling api makeVideo');
+//     let getVideo = await ma
+// });
 
 // Twilio webhook
 app.post('/api/sms/reply', (req, res) => {
