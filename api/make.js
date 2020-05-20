@@ -135,7 +135,7 @@ let copySegment = function (file, dest) {
             var s3 = new aws.S3();
             s3.putObject({
                 Bucket: S3_BUCKET,
-                Key: dest,
+                Key: 'music-videos/' + dest,
                 Body: base64data,
                 ACL: 'public-read'
             }, function (err, resp) {
@@ -143,7 +143,7 @@ let copySegment = function (file, dest) {
 
                 //console.log(this);
                 console.log('Successfully uploaded package.');
-                resolve('https://visualz-1.s3.us-east-2.amazonaws.com/' + dest);
+                resolve('https://visualz-1.s3.us-east-2.amazonaws.com/music-videos/' + dest);
             });
 
         });
@@ -427,9 +427,6 @@ let MakeV2 = function (data) {
                     resolve(response);
                     return;
                 });
-
-
-
 
         } catch (err) {
             reject(err);
