@@ -488,7 +488,8 @@ export class FanScreenComponent implements OnInit {
 
             this.peer = new Peer({
                 config: {
-                    'iceServers': res
+                    'iceServers': res,
+                    'iceTransportPolicy': 'relay'
                 }
             });
 

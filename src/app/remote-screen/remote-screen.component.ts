@@ -87,7 +87,8 @@ export class RemoteScreenComponent implements OnInit {
         this.getIce().then((res: any) => {
             this.peer = new Peer({
                 config: {
-                    'iceServers': res
+                    'iceServers': res,
+                    'iceTransportPolicy': 'relay'
                 }
             });
 

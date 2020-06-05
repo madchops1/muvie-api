@@ -156,7 +156,8 @@ export class RemoteCamComponent implements OnInit {
 
                 this.peer = new Peer({
                     config: {
-                        'iceServers': res
+                        'iceServers': res,
+                        'iceTransportPolicy': 'relay'
                     }
                 });
 

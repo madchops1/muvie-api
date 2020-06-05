@@ -2,7 +2,7 @@
 var sslRedirect = require('heroku-ssl-redirect');
 const express = require('express');
 const helmet = require('helmet');
-const formidableMiddleware = require('express-formidable');
+//const formidableMiddleware = require('express-formidable');
 const bodyParser = require("body-parser");
 const concat = require('./api/concat');
 const signS3 = require('./api/sign-s3');
@@ -17,7 +17,8 @@ const request = require('request');
 const fs = require('fs');
 const AWS = require('aws-sdk');
 const Async = require('async');
-const { ExpressPeerServer } = require('peer');
+//const { ExpressPeerServer } = require('peer');
+require('newrelic');
 
 const fetch = require('node-fetch');
 global.fetch = fetch;
@@ -27,7 +28,7 @@ const toJson = require('unsplash-js').toJson;
 
 const Pexels = require('node-pexels').Client;
 
-const visualzLatest = '2.1.3';
+const visualzLatest = '2.1.4';
 const kill = []; // array of versions eg. ['2.0.0']
 const killMsg = 'This version is dead.';
 
@@ -697,11 +698,11 @@ app.get('/api/env', function (req, res) {
     res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS');
     res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization, Content-Length, X-Requested-With');
 
-    const { AUTH0_CLIENT_ID, AUTH0_DOMAIN } = process.env;
+    const { AUTH0_CLIENT_ID, AUTH0_DOMAIN, XIRSYS_CHANNEL, XIRSYS_IDENTITY, XIRSYS_SECRET } = process.env;
     if (!AUTH0_CLIENT_ID && !AUTH0_DOMAIN) {
         return res.status(400).json({ message: 'No env set.' });
     }
-    res.json({ AUTH0_CLIENT_ID, AUTH0_DOMAIN });
+    res.json({ AUTH0_CLIENT_ID, AUTH0_DOMAIN, XIRSYS_CHANNEL, XIRSYS_IDENTITY, XIRSYS_SECRET });
 });
 
 // Get the latest version
