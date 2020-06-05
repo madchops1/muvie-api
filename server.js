@@ -17,7 +17,8 @@ const request = require('request');
 const fs = require('fs');
 const AWS = require('aws-sdk');
 const Async = require('async');
-const { ExpressPeerServer } = require('peer');
+//const { ExpressPeerServer } = require('peer');
+require('newrelic');
 
 const fetch = require('node-fetch');
 global.fetch = fetch;
