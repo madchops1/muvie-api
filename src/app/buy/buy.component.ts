@@ -1,3 +1,7 @@
+/**
+ * Deprcated
+ * The v1 buy page for visualz
+ */
 import { Component, OnInit } from '@angular/core';
 import { BrowserModule, DomSanitizer } from '@angular/platform-browser'
 

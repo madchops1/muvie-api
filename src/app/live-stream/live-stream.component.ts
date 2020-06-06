@@ -1,7 +1,7 @@
-import { Component, OnInit, NgZone, ViewChild, ViewChildren, HostListener, ElementRef } from '@angular/core';
+import { Component, OnInit, NgZone, ViewChild, HostListener, ElementRef } from '@angular/core';
 import Peer from 'peerjs';
 import { HttpClient } from '@angular/common/http';
-import { Observable, Subscription } from 'rxjs';
+import { Subscription } from 'rxjs';
 
 import { GridsterConfig, GridsterItem, DisplayGrid, GridType, GridsterItemComponentInterface } from 'angular-gridster2';
 import { ActivatedRoute, Router, NavigationEnd } from '@angular/router';
@@ -11,9 +11,10 @@ import * as p5 from 'p5';
 import 'p5/lib/addons/p5.sound';
 import 'p5/lib/addons/p5.dom';
 
-import { UtilityService } from '../utility.service';
+import { UtilityService } from '../services/utility.service';
+import { ProjectService } from '../services/project.service';
 import { environment } from 'src/environments/environment';
-import * as Stats from 'stats-js';
+//import * as Stats from 'stats-js';
 
 export enum KEY_CODE {
     ESC = 27,
@@ -1089,6 +1090,7 @@ export class LiveStreamComponent implements OnInit {
     // Environment stuff
     public websiteUrl: any = environment.websiteUrl;
     public environment: any = environment;
+    public environmentalVariables: any;
     public apiUrl: any = environment.ioUrl;
     info: any = true;
     track: any = {
@@ -1305,6 +1307,7 @@ export class LiveStreamComponent implements OnInit {
 
     constructor(
         private ngZone: NgZone,
+        private projectService: ProjectService,
         private utilityService: UtilityService,
         private route: ActivatedRoute,
         private router: Router,
@@ -1349,82 +1352,84 @@ export class LiveStreamComponent implements OnInit {
         this.initModGrid();
 
         // Init Grid
-        this.createPeer().then(() => {
+        this.projectService.getEnvironment().then((res) => {
+            this.environmentalVariables = res;
+            this.createPeer().then(() => {
 
-            // Connect to websocket server
-            this.socketService.connect(this.roomName, true, this.userId, this.peerId);
+                // Connect to websocket server
+                this.socketService.connect(this.roomName, true, this.userId, this.peerId);
 
-            // ws ping/pong
-            this._ping = this.socketService.ping.subscribe(() => {
-                //console.log('receiving ping, sending pong');
-                this.socketService.pong();
-            });
-
-            // Get client count data from ws
-            this._clientCount = this.socketService.clientCount.subscribe(data => {
-                //console.log('receiving clientCount', data);
-                this.currentGuests = parseInt(data) - 1;
-            });
-
-            // Get the refreshSignal
-            this._refreshSignal = this.socketService.refreshSignal.subscribe(data => {
-                window.location.reload();
-            });
-
-            console.log('connected');
-
-
-            console.log('Who am I?');
-            setTimeout(() => {
-                // Am I host
-                this.amIHost(this.roomName, this.userId, this.peerId, this.label).then(() => {
-
-                    this.everythingLoaded = true;
-
-                    // No I am not a host
-                    if (!this.host) {
-
-                        // As a guest call Host here 
-                        console.log('I am a guest.');
-                        this.hostVideoHidden = true;
-                        this.guestVideoHidden = false;
-                        this.getRoom(this.roomName).then((room) => {
-                            console.log('room', room)
-                            if (room.data.live && room.data.live == 'true') {
-                                this.callHostAndStream(this.hostPeerId);
-                            } else {
-                                this.notLive = true;
-                                //alert('This stream is not live at the moment. Please try back.');
-                            }
-                        });
-
-                    }
-                    // Yes I am the host
-                    else {
-
-                        // Draw Canvas
-                        console.log('I am the host.');
-                        this.hostVideoHidden = false;
-                        this.guestVideoHidden = true;
-
-                        this.getSources();
-                        this.setupVideo();
-                        this.setupAudio();
-                        this.drawCanvas();
-                        this.mainLoading = false;
-
-                    }
-
-                }, (err) => {
-                    console.log('Beta err', err);
+                // ws ping/pong
+                this._ping = this.socketService.ping.subscribe(() => {
+                    //console.log('receiving ping, sending pong');
+                    this.socketService.pong();
                 });
 
-            }, 500);
+                // Get client count data from ws
+                this._clientCount = this.socketService.clientCount.subscribe(data => {
+                    //console.log('receiving clientCount', data);
+                    this.currentGuests = parseInt(data) - 1;
+                });
 
-        }, (err) => {
-            console.log('Alpha err', err);
+                // Get the refreshSignal
+                this._refreshSignal = this.socketService.refreshSignal.subscribe(data => {
+                    window.location.reload();
+                });
+
+                console.log('connected');
+
+
+                console.log('Who am I?');
+                setTimeout(() => {
+                    // Am I host
+                    this.amIHost(this.roomName, this.userId, this.peerId, this.label).then(() => {
+
+                        this.everythingLoaded = true;
+
+                        // No I am not a host
+                        if (!this.host) {
+
+                            // As a guest call Host here 
+                            console.log('I am a guest.');
+                            this.hostVideoHidden = true;
+                            this.guestVideoHidden = false;
+                            this.getRoom(this.roomName).then((room) => {
+                                console.log('room', room)
+                                if (room.data.live && room.data.live == 'true') {
+                                    this.callHostAndStream(this.hostPeerId);
+                                } else {
+                                    this.notLive = true;
+                                    //alert('This stream is not live at the moment. Please try back.');
+                                }
+                            });
+
+                        }
+                        // Yes I am the host
+                        else {
+
+                            // Draw Canvas
+                            console.log('I am the host.');
+                            this.hostVideoHidden = false;
+                            this.guestVideoHidden = true;
+
+                            this.getSources();
+                            this.setupVideo();
+                            this.setupAudio();
+                            this.drawCanvas();
+                            this.mainLoading = false;
+
+                        }
+
+                    }, (err) => {
+                        console.log('Beta err', err);
+                    });
+
+                }, 500);
+
+            }, (err) => {
+                console.log('Alpha err', err);
+            });
         });
-
     }
 
     goLive(e): any {
@@ -1618,45 +1623,17 @@ export class LiveStreamComponent implements OnInit {
         });
     }
 
-    formatIceForPeerJs(servers) {
-        let ice = [];
-        servers.v.iceServers.urls.forEach(element => {
-            let server;
-            if (element.includes('stun')) {
-                server = { url: element };
-            } else {
-                server = { url: element, username: servers.v.iceServers.username, credential: servers.v.iceServers.credential };
-            }
-            ice.push(server);
-        });
-        return ice;
-    }
-
-    getIce() {
-        return new Promise((resolve, reject) => {
-            let xhr = new XMLHttpRequest();
-            xhr.onreadystatechange = ($evt) => {
-                if (xhr.readyState == 4 && xhr.status == 200) {
-                    let res = JSON.parse(xhr.responseText);
-                    res = this.formatIceForPeerJs(res);
-                    resolve(res);
-                    console.log("response: ", res);
-                }
-            }
-            xhr.open("PUT", "https://global.xirsys.net/_turn/Visualz", true);
-            xhr.setRequestHeader("Authorization", "Basic " + btoa("madchops1:436d074e-9019-11ea-8c43-0242ac150002"));
-            xhr.setRequestHeader("Content-Type", "application/json");
-            xhr.send(JSON.stringify({ "format": "urls" }));
-        });
-    }
-
     createPeer() {
         //this.peer = null;
         return new Promise((resolve, reject) => {
 
-            this.getIce().then((res: any) => {
+            this.projectService.getIce(this.environmentalVariables).then((res: any) => {
 
                 this.peer = new Peer({
+                    secure: true,
+                    host: this.environmentalVariables.PEERJS_SERVER,
+                    port: 443,
+                    debug: 3,
                     config: {
                         'iceServers': res,
                         'iceTransportPolicy': 'relay'
@@ -1668,6 +1645,7 @@ export class LiveStreamComponent implements OnInit {
                     this.peerId = id;
                     resolve(id);
                 });
+
                 this.peer.on('call', (call) => {
                     // send audio to TODO...
 

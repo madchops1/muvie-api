@@ -30,7 +30,6 @@ import { TermsComponent } from './terms/terms.component';
 import { PrivacyComponent } from './privacy/privacy.component';
 import { BookComponent } from './book/book.component';
 import { ResourcesComponent } from './resources/resources.component';
-import { FanCamComponent } from './fan-cam/fan-cam.component';
 import { FanScreenComponent } from './fan-screen/fan-screen.component';
 import { RemoteCamComponent } from './remote-cam/remote-cam.component';
 import { RemoteQueComponent } from './remote-que/remote-que.component';
@@ -72,7 +71,6 @@ const config: SocketIoConfig = { url: environment.ioUrl, options: { autoConnect:
         PrivacyComponent,
         BookComponent,
         ResourcesComponent,
-        FanCamComponent,
         FanScreenComponent,
         RemoteCamComponent,
         RemoteQueComponent,

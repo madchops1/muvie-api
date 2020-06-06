@@ -18,7 +18,6 @@ import { TermsComponent } from './terms/terms.component';
 import { PrivacyComponent } from './privacy/privacy.component';
 import { BookComponent } from './book/book.component';
 import { ResourcesComponent } from './resources/resources.component';
-import { FanCamComponent } from './fan-cam/fan-cam.component';
 import { FanScreenComponent } from './fan-screen/fan-screen.component';
 import { RemoteCamComponent } from './remote-cam/remote-cam.component';
 import { RemoteQueComponent } from './remote-que/remote-que.component';
@@ -29,7 +28,7 @@ import { RemoteScreenComponent } from './remote-screen/remote-screen.component';
 import { LiveStreamComponent } from './live-stream/live-stream.component';
 import { StreamStartComponent } from './stream-start/stream-start.component';
 import { VideoLibraryComponent } from './video-library/video-library.component';
-import { AuthGuard } from './auth.guard';
+import { AuthGuard } from './services/auth.guard';
 import { Mp4ConverterComponent } from './mp4-converter/mp4-converter.component';
 import { UserGuideComponent } from './user-guide/user-guide.component';
 import { CalendarComponent } from './calendar/calendar.component';
@@ -48,7 +47,6 @@ const routes: Routes = [
     { path: 'update', component: DownloadComponent },
     { path: 'book', component: BookComponent },
     { path: 'resources', component: ResourcesComponent },
-    { path: 'crowdcam/:mid', component: FanCamComponent },
     { path: 'crowdscreen/:mid', component: FanScreenComponent },
     { path: 'mobile-video/:mid/:pid/:sid', component: RemoteCamComponent },
     { path: 'remote-que/:mid', component: RemoteQueComponent },

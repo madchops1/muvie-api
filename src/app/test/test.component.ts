@@ -3,7 +3,7 @@ import Seriously from '../../assets/Seriously.js-master/seriously.js';
 import Vingette from '../../assets/Seriously.js-master/effects/seriously.vignette.js';
 import Blend from '../../assets/Seriously.js-master/effects/seriously.blend.js';
 import DirectionBlur from '../../assets/Seriously.js-master/effects/seriously.directionblur.js';
-import { ProjectService } from '../project.service';
+import { ProjectService } from '../services/project.service';
 
 @Component({
     selector: 'app-test',
