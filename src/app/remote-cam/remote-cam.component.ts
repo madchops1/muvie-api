@@ -1,6 +1,6 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { Observable, Subscription } from 'rxjs';
-import { SocketService } from '../socket.service';
+import { SocketService } from '../services/socket.service';
 import { ActivatedRoute, Router, NavigationEnd } from '@angular/router';
 import { UtilityService } from '../services/utility.service';
 import { ProjectService } from '../services/project.service';

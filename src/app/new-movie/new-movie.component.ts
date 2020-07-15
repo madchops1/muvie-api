@@ -8,7 +8,7 @@ import { Observable, Subscription } from 'rxjs';
 import { Observer } from 'rxjs';
 import { UploadService } from '../upload/upload.service';
 import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
-import { SocketService } from '../socket.service';
+import { SocketService } from '../services/socket.service';
 import { ProjectService } from '../services/project.service';
 import { Router } from '@angular/router';
 

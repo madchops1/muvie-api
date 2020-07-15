@@ -5,7 +5,7 @@ import { Subscription } from 'rxjs';
 
 import { GridsterConfig, GridsterItem, DisplayGrid, GridType, GridsterItemComponentInterface } from 'angular-gridster2';
 import { ActivatedRoute, Router, NavigationEnd } from '@angular/router';
-import { SocketService } from '../socket.service';
+import { SocketService } from '../services/socket.service';
 
 import * as p5 from 'p5';
 import 'p5/lib/addons/p5.sound';

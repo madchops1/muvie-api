@@ -32,6 +32,8 @@ import { AuthGuard } from './services/auth.guard';
 import { Mp4ConverterComponent } from './mp4-converter/mp4-converter.component';
 import { UserGuideComponent } from './user-guide/user-guide.component';
 import { CalendarComponent } from './calendar/calendar.component';
+import { AccountComponent } from './account/account.component';
+import { MarketplaceComponent } from './marketplace/marketplace.component';
 
 const routes: Routes = [
     { path: '', component: VisualzComponent },
@@ -53,6 +55,11 @@ const routes: Routes = [
     { path: 'laserz/:mid', component: LaserzComponent },
     { path: 'welcome/:v', component: WelcomeComponent },
     {
+        path: 'account',
+        component: AccountComponent,
+        canActivate: [AuthGuard]
+    },
+    {
         path: 'profile',
         component: ProfileComponent,
         canActivate: [AuthGuard]
@@ -65,7 +72,8 @@ const routes: Routes = [
     { path: 'live/obs/:key', component: LiveStreamComponent },
     { path: 'video-library', component: VideoLibraryComponent },
     { path: 'user-guide', component: UserGuideComponent },
-    { path: 'calendar', component: CalendarComponent }
+    { path: 'calendar', component: CalendarComponent },
+    { path: 'marketplace', component: MarketplaceComponent }
     // { path: 'filter', component: FilterComponent },
     // { path: 'upload', component: UploadComponent },
     // { path: 'test', component: TestComponent }

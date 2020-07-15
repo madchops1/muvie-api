@@ -1,7 +1,7 @@
 //<reference path="./image-capture.d.ts" />
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { Subscription } from 'rxjs';
-import { SocketService } from '../socket.service';
+import { SocketService } from '../services/socket.service';
 import { ActivatedRoute, Router, NavigationEnd } from '@angular/router';
 import "p5/lib/addons/p5.sound";
 import "p5/lib/addons/p5.dom";
@@ -454,7 +454,6 @@ export class FanScreenComponent implements OnInit {
         };
         xhr.send(file);
     }
-
 
     connectPeer() {
 

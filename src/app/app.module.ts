@@ -2,7 +2,7 @@ import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { MatMenuModule, MatFormFieldModule, MatInputModule, MatSlideToggleModule, MatIconModule, MatButtonModule, MatTooltipModule, MatToolbarModule, MatButtonToggleModule, MatSidenavModule, MatRadioModule, MatCheckboxModule, MatSliderModule, MatCardModule, MatGridListModule, MatProgressSpinnerModule, MatToolbar } from '@angular/material';
+import { MatMenuModule, MatSelectModule, MatFormFieldModule, MatInputModule, MatSlideToggleModule, MatIconModule, MatButtonModule, MatTooltipModule, MatToolbarModule, MatButtonToggleModule, MatSidenavModule, MatRadioModule, MatCheckboxModule, MatSliderModule, MatCardModule, MatGridListModule, MatProgressSpinnerModule, MatToolbar, MatSelect, MatDialogModule } from '@angular/material';
 import { FormsModule } from '@angular/forms';
 
 import { AppRoutingModule } from './app-routing.module';
@@ -50,6 +50,9 @@ import { HowBComponent } from './how-b/how-b.component';
 import { HowCComponent } from './how-c/how-c.component';
 import { HowDComponent } from './how-d/how-d.component';
 import { CalendarComponent } from './calendar/calendar.component';
+import { AccountComponent } from './account/account.component';
+import { MarketplaceComponent } from './marketplace/marketplace.component';
+import { MarketplaceDialogAddComponent } from './marketplace-dialog-add/marketplace-dialog-add.component';
 
 const config: SocketIoConfig = { url: environment.ioUrl, options: { autoConnect: false } };
 
@@ -89,7 +92,10 @@ const config: SocketIoConfig = { url: environment.ioUrl, options: { autoConnect:
         HowBComponent,
         HowCComponent,
         HowDComponent,
-        CalendarComponent
+        CalendarComponent,
+        AccountComponent,
+        MarketplaceComponent,
+        MarketplaceDialogAddComponent
     ],
     imports: [
         BrowserModule,
@@ -97,6 +103,7 @@ const config: SocketIoConfig = { url: environment.ioUrl, options: { autoConnect:
         BrowserAnimationsModule,
         MatFormFieldModule,
         MatInputModule,
+        MatDialogModule,
         MatMenuModule,
         MatToolbarModule,
         MatButtonModule,
@@ -109,6 +116,7 @@ const config: SocketIoConfig = { url: environment.ioUrl, options: { autoConnect:
         MatRadioModule,
         MatSidenavModule,
         MatIconModule,
+        MatSelectModule,
         MatSlideToggleModule,
         MatTooltipModule,
         GridsterModule,
