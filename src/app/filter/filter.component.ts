@@ -1,3 +1,7 @@
+/**
+ * Originally part of muvie, now not used in visualz... some filtering/fx page 
+ * using seriously js
+ */
 import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 import Seriously from '../../assets/Seriously.js-master/seriously.js';
 import Vingette from '../../assets/Seriously.js-master/effects/seriously.vignette.js';
@@ -5,7 +9,7 @@ import Blend from '../../assets/Seriously.js-master/effects/seriously.blend.js';
 import DirectionBlur from '../../assets/Seriously.js-master/effects/seriously.directionblur.js';
 import CameraShake from '../../assets/Seriously.js-master/transforms/seriously.camerashake.js';
 import TvGlitch from '../../assets/Seriously.js-master/effects/seriously.tvglitch.js';
-import { ProjectService } from '../project.service';
+import { ProjectService } from '../services/project.service';
 
 @Component({
     selector: 'app-filter',

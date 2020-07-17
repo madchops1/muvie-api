@@ -1,8 +1,7 @@
-//Install express server
 var sslRedirect = require('heroku-ssl-redirect');
 const express = require('express');
 const helmet = require('helmet');
-const formidableMiddleware = require('express-formidable');
+//const formidableMiddleware = require('express-formidable');
 const bodyParser = require("body-parser");
 const concat = require('./api/concat');
 const signS3 = require('./api/sign-s3');
@@ -28,7 +27,7 @@ const toJson = require('unsplash-js').toJson;
 
 const Pexels = require('node-pexels').Client;
 
-const visualzLatest = '2.1.3';
+const visualzLatest = '2.1.4';
 const kill = []; // array of versions eg. ['2.0.0']
 const killMsg = 'This version is dead.';
 
@@ -173,10 +172,10 @@ const s3 = new AWS.S3({
 });
 
 // List directories in a directory
-function listDirectories(directory = 'video-library/') {
+function listDirectories(directory = 'video-library/', bucket = 'visualz-1') {
     return new Promise((resolve, reject) => {
         const s3params = {
-            Bucket: 'visualz-1',
+            Bucket: bucket,
             MaxKeys: 20,
             Delimiter: '/',
             Prefix: directory
@@ -698,11 +697,11 @@ app.get('/api/env', function (req, res) {
     res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS');
     res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization, Content-Length, X-Requested-With');
 
-    const { AUTH0_CLIENT_ID, AUTH0_DOMAIN } = process.env;
+    const { AUTH0_CLIENT_ID, AUTH0_DOMAIN, XIRSYS_CHANNEL, XIRSYS_IDENTITY, XIRSYS_SECRET, PEERJS_SERVER } = process.env;
     if (!AUTH0_CLIENT_ID && !AUTH0_DOMAIN) {
         return res.status(400).json({ message: 'No env set.' });
     }
-    res.json({ AUTH0_CLIENT_ID, AUTH0_DOMAIN });
+    res.json({ AUTH0_CLIENT_ID, AUTH0_DOMAIN, XIRSYS_CHANNEL, XIRSYS_IDENTITY, XIRSYS_SECRET, PEERJS_SERVER });
 });
 
 // Get the latest version
@@ -745,7 +744,7 @@ app.get('/api/videos', function (req, res) {
 
     videoLibrary.forEach((artist) => {
         artist.collections.forEach((collection) => {
-            let path = 'video-library/' + artist.name + '/' + collection.name + '/'
+            let path = 'video-library/' + artist.name + '/' + collection.name + '/';
             listDirectories(path).then((contents) => {
                 //console.log('CHUCKY', contents);
                 contents.Contents.shift();
@@ -757,6 +756,17 @@ app.get('/api/videos', function (req, res) {
     setTimeout(() => {
         res.status(200).json(videoLibrary);
     }, 2000);
+});
+
+// Get the marketplace
+app.get('/api/marketplace', function (req, res) {
+    res.header('Access-Control-Allow-Origin', '*');
+    res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS');
+    res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization, Content-Length, X-Requested-With');
+    let path = 'marketplace-packs/';
+    listDirectories(path).then((contents) => {
+        res.status(200).json(contents);
+    });
 });
 
 // Get photos from unsplash
@@ -1180,6 +1190,21 @@ app.post("/api/createSeat", async function (req, res) {
     } catch (err) {
         handleError(res, err, 'nope');
     }
+});
+
+app.post("/api/authSeat/email", async function (req, res) {
+
+    let path = '/';
+    listDirectories(path, 'viualzkeystore').then((contents) => {
+        console.log('CHUCKY', contents);
+        contents.Contents.shift();
+        let keys = contents.Contents;
+        console.log('DUCKY', keys);
+
+        //keys.forEach(() => {
+        //})
+
+    });
 });
 
 app.post("/api/authSeat", async function (req, res) {

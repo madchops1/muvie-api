@@ -1,10 +1,10 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { Observer } from 'rxjs';
-import { environment } from '../environments/environment';
+import { environment } from '../../environments/environment';
 
 import { Socket } from 'ngx-socket-io';
-import { Document } from './models/document';
+import { Document } from '../models/document';
 
 @Injectable({
     providedIn: 'root'

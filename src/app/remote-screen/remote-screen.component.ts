@@ -1,9 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { ViewChild, HostListener, ElementRef, NgZone, ApplicationRef } from '@angular/core';
 import { Observable, Subscription } from 'rxjs';
-import { SocketService } from '../socket.service';
+import { SocketService } from '../services/socket.service';
 import { ActivatedRoute, Router, NavigationEnd } from '@angular/router';
-import { UtilityService } from '../utility.service';
+import { UtilityService } from '../services/utility.service';
+import { ProjectService } from '../services/project.service';
 import Peer from 'peerjs';
 
 @Component({
@@ -13,6 +14,7 @@ import Peer from 'peerjs';
 })
 export class RemoteScreenComponent implements OnInit {
 
+    environmentalVariables: any;
     currentRoute: any = '';
     peer: any = null;
     video: any;
@@ -24,7 +26,7 @@ export class RemoteScreenComponent implements OnInit {
     stream2: any = false;
     private _remoteScreenRefresh: Subscription;
 
-    constructor(private utilityService: UtilityService, private route: ActivatedRoute, private router: Router, private socketService: SocketService) {
+    constructor(private projectService: ProjectService, private utilityService: UtilityService, private route: ActivatedRoute, private router: Router, private socketService: SocketService) {
         router.events.subscribe((val) => {
             if (val instanceof NavigationEnd) {
                 this.currentRoute = val.url;
@@ -39,55 +41,33 @@ export class RemoteScreenComponent implements OnInit {
     }
 
     ngOnInit() {
-        this.socketService.connect(this.mid);   // connect to the api server socket
+        this.socketService.connect(this.mid); // connect to the api server socket
         this.utilityService.generateQR('remote-screen', this.mid, this.plan).then((res) => {
             console.log('QR', res);
             this.qr = res;
         });
-        this.connectPeer();                     // create the peer and wait for a call
+
+        this.projectService.getEnvironment().then((res) => {
+            this.environmentalVariables = res;
+            this.connectPeer(); // create the peer and wait for a call
+        });
+
         // Get the refreshSignal
         this._remoteScreenRefresh = this.socketService.remoteScreenRefresh.subscribe(data => {
             window.location.reload();
         });
     }
 
-    formatIceForPeerJs(servers) {
-        let ice = [];
-        servers.v.iceServers.urls.forEach(element => {
-            let server;
-            if (element.includes('stun')) {
-                server = { url: element };
-            } else {
-                server = { url: element, username: servers.v.iceServers.username, credential: servers.v.iceServers.credential };
-            }
-            ice.push(server);
-        });
-        return ice;
-    }
-
-    getIce() {
-        return new Promise((resolve, reject) => {
-            let xhr = new XMLHttpRequest();
-            xhr.onreadystatechange = ($evt) => {
-                if (xhr.readyState == 4 && xhr.status == 200) {
-                    let res = JSON.parse(xhr.responseText);
-                    res = this.formatIceForPeerJs(res);
-                    resolve(res);
-                    console.log("response: ", res);
-                }
-            }
-            xhr.open("PUT", "https://global.xirsys.net/_turn/Visualz", true);
-            xhr.setRequestHeader("Authorization", "Basic " + btoa("madchops1:436d074e-9019-11ea-8c43-0242ac150002"));
-            xhr.setRequestHeader("Content-Type", "application/json");
-            xhr.send(JSON.stringify({ "format": "urls" }));
-        });
-    }
-
     connectPeer() {
-        this.getIce().then((res: any) => {
+        this.projectService.getIce(this.environmentalVariables).then((res: any) => {
             this.peer = new Peer({
+                secure: true,
+                host: this.environmentalVariables.PEERJS_SERVER,
+                port: 443,
+                debug: 3,
                 config: {
-                    'iceServers': res
+                    'iceServers': res,
+                    'iceTransportPolicy': 'relay'
                 }
             });
 

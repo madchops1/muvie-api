@@ -1,7 +1,9 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { Observable, Subscription } from 'rxjs';
-import { SocketService } from '../socket.service';
+import { SocketService } from '../services/socket.service';
 import { ActivatedRoute, Router, NavigationEnd } from '@angular/router';
+import { UtilityService } from '../services/utility.service';
+import { ProjectService } from '../services/project.service';
 import Peer from 'peerjs';
 
 const SUPPORTS_MEDIA_DEVICES = 'mediaDevices' in navigator;
@@ -14,6 +16,7 @@ const SUPPORTS_MEDIA_DEVICES = 'mediaDevices' in navigator;
 
 export class RemoteCamComponent implements OnInit {
 
+    environmentalVariables: any;
     userAgent: any = false;
     mobile: any = true; // start true on purpose
     currentRoute: any = '';
@@ -40,7 +43,7 @@ export class RemoteCamComponent implements OnInit {
     private _ping: Subscription;
     private _getMobileVideoData: Subscription;
 
-    constructor(private route: ActivatedRoute, private router: Router, private socketService: SocketService) {
+    constructor(private projectService: ProjectService, private utilityService: UtilityService, private route: ActivatedRoute, private router: Router, private socketService: SocketService) {
 
         // get the mid, peerid, and scene/module uuid from the URL
         router.events.subscribe((val) => {
@@ -94,9 +97,12 @@ export class RemoteCamComponent implements OnInit {
 
         this.socketService.requestMobileVideoData({ opid: this.pid });
 
-        setTimeout(() => {
-            this.setCamera(this.facingMode);
-        }, 2000);
+        this.projectService.getEnvironment().then((res) => {
+            this.environmentalVariables = res;
+            setTimeout(() => {
+                this.setCamera(this.facingMode);
+            }, 1500);
+        });
     }
 
     callPeer(id) {
@@ -113,50 +119,22 @@ export class RemoteCamComponent implements OnInit {
         });
     }
 
-
-    formatIceForPeerJs(servers) {
-        let ice = [];
-        servers.v.iceServers.urls.forEach(element => {
-            let server;
-            if (element.includes('stun')) {
-                server = { url: element };
-            } else {
-                server = { url: element, username: servers.v.iceServers.username, credential: servers.v.iceServers.credential };
-            }
-            ice.push(server);
-        });
-        return ice;
-    }
-
-    getIce() {
-        return new Promise((resolve, reject) => {
-            let xhr = new XMLHttpRequest();
-            xhr.onreadystatechange = ($evt) => {
-                if (xhr.readyState == 4 && xhr.status == 200) {
-                    let res = JSON.parse(xhr.responseText);
-                    res = this.formatIceForPeerJs(res);
-                    resolve(res);
-                    console.log("response: ", res);
-                }
-            }
-            xhr.open("PUT", "https://global.xirsys.net/_turn/Visualz", true);
-            xhr.setRequestHeader("Authorization", "Basic " + btoa("madchops1:436d074e-9019-11ea-8c43-0242ac150002"));
-            xhr.setRequestHeader("Content-Type", "application/json");
-            xhr.send(JSON.stringify({ "format": "urls" }));
-        });
-    }
-
     createPeer() {
         //this.peer = null;
         return new Promise((resolve, reject) => {
 
             if (this.peerId) { resolve(this.peerId); return; }
 
-            this.getIce().then((res: any) => {
+            this.projectService.getIce(this.environmentalVariables).then((res: any) => {
 
                 this.peer = new Peer({
+                    secure: true,
+                    host: this.environmentalVariables.PEERJS_SERVER,
+                    port: 443,
+                    debug: 3,
                     config: {
-                        'iceServers': res
+                        'iceServers': res,
+                        'iceTransportPolicy': 'relay'
                     }
                 });
 

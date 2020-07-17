@@ -1,13 +1,12 @@
 //<reference path="./image-capture.d.ts" />
-
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { Observable, Subscription } from 'rxjs';
-import { SocketService } from '../socket.service';
+import { Subscription } from 'rxjs';
+import { SocketService } from '../services/socket.service';
 import { ActivatedRoute, Router, NavigationEnd } from '@angular/router';
 import "p5/lib/addons/p5.sound";
 import "p5/lib/addons/p5.dom";
-import { promise } from 'protractor';
-import { UtilityService } from '../utility.service';
+import { UtilityService } from '../services/utility.service';
+import { ProjectService } from '../services/project.service';
 import Peer from 'peerjs';
 const SUPPORTS_MEDIA_DEVICES = 'mediaDevices' in navigator;
 
@@ -17,6 +16,8 @@ const SUPPORTS_MEDIA_DEVICES = 'mediaDevices' in navigator;
     styleUrls: ['./fan-screen.component.scss']
 })
 export class FanScreenComponent implements OnInit {
+
+    environmentalVariables: any;
 
     mid: any = '';
     userAgent: any = '';
@@ -66,7 +67,7 @@ export class FanScreenComponent implements OnInit {
     private _ping: Subscription;
     private _reloadCrowdScreen: Subscription;
 
-    constructor(private utilityService: UtilityService, private route: ActivatedRoute, private router: Router, private socketService: SocketService) {
+    constructor(private projectService: ProjectService, private utilityService: UtilityService, private route: ActivatedRoute, private router: Router, private socketService: SocketService) {
 
         // get the mid from the URL
         router.events.subscribe((val) => {
@@ -190,7 +191,11 @@ export class FanScreenComponent implements OnInit {
         //    this.video2.play();
         //};
 
-        this.connectPeer(); // create the peer and wait for a call
+        // get vars and then connect
+        this.projectService.getEnvironment().then((res) => {
+            this.environmentalVariables = res;
+            this.connectPeer(); // create the peer and wait for a call
+        });
 
     }
 
@@ -450,45 +455,18 @@ export class FanScreenComponent implements OnInit {
         xhr.send(file);
     }
 
-    formatIceForPeerJs(servers) {
-        let ice = [];
-        servers.v.iceServers.urls.forEach(element => {
-            let server;
-            if (element.includes('stun')) {
-                server = { url: element };
-            } else {
-                server = { url: element, username: servers.v.iceServers.username, credential: servers.v.iceServers.credential };
-            }
-            ice.push(server);
-        });
-        return ice;
-    }
-
-    getIce() {
-        return new Promise((resolve, reject) => {
-            let xhr = new XMLHttpRequest();
-            xhr.onreadystatechange = ($evt) => {
-                if (xhr.readyState == 4 && xhr.status == 200) {
-                    let res = JSON.parse(xhr.responseText);
-                    res = this.formatIceForPeerJs(res);
-                    resolve(res);
-                    console.log("response: ", res);
-                }
-            }
-            xhr.open("PUT", "https://global.xirsys.net/_turn/Visualz", true);
-            xhr.setRequestHeader("Authorization", "Basic " + btoa("madchops1:436d074e-9019-11ea-8c43-0242ac150002"));
-            xhr.setRequestHeader("Content-Type", "application/json");
-            xhr.send(JSON.stringify({ "format": "urls" }));
-        });
-    }
-
     connectPeer() {
 
-        this.getIce().then((res: any) => {
+        this.projectService.getIce(this.environmentalVariables).then((res: any) => {
 
             this.peer = new Peer({
+                secure: true,
+                host: this.environmentalVariables.PEERJS_SERVER,
+                port: 443,
+                debug: 3,
                 config: {
-                    'iceServers': res
+                    'iceServers': res,
+                    'iceTransportPolicy': 'relay'
                 }
             });
 

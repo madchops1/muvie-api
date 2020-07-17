@@ -1,11 +1,15 @@
+/**
+ * Originally used in muvie
+ * not used anymore
+ */
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { HttpClient, HttpParams, HttpRequest, HttpEvent } from '@angular/common/http';
 import { Observable, Subscription } from 'rxjs';
 import { Observer } from 'rxjs';
 import { UploadService } from '../upload/upload.service';
 import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
-import { SocketService } from '../socket.service';
-import { ProjectService } from '../project.service';
+import { SocketService } from '../services/socket.service';
+import { ProjectService } from '../services/project.service';
 import { Router } from '@angular/router';
 
 

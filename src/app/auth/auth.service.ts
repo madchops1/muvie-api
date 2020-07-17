@@ -9,6 +9,7 @@ import { Router } from '@angular/router';
     providedIn: 'root'
 })
 export class AuthService {
+
     // Create an observable of Auth0 instance of client
     auth0Client$ = (from(
         createAuth0Client({
@@ -20,6 +21,7 @@ export class AuthService {
         shareReplay(1), // Every subscription receives the same shared value
         catchError(err => throwError(err))
     );
+
     // Define observables for SDK methods that return promises by default
     // For each Auth0 SDK method, first ensure the client instance is ready
     // concatMap: Using the client instance, call SDK method; SDK returns a promise
