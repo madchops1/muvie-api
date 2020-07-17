@@ -8,7 +8,7 @@
     <button mat-button routerLink="/download">GET IT NOW</button>
     <button mat-button routerLink="/live-stream-tools">LIVE STREAM TOOLS</button>
     <!-- <button mat-button routerLink="/calendar">CALENDAR</button> -->
-    <button mat-button routerLink="/marketplace">MARKETPLACE</button>
+    <!-- <button mat-button routerLink="/marketplace">MARKETPLACE</button> -->
     <button mat-button [matMenuTriggerFor]="menu1">LEARN</button>
     <mat-menu #menu1="matMenu">
         <button mat-menu-item routerLink="/how-it-works">START HERE</button>
@@ -38,7 +38,7 @@
             <button mat-menu-item routerLink="/movie">MUSIC VIDEO CREATOR</button>
         </mat-menu> -->
         <!-- <button mat-button routerLink="/calendar">CALENDAR</button> -->
-        <button mat-button routerLink="/marketplace">MARKETPLACE</button>
+        <!-- <button mat-button routerLink="/marketplace">MARKETPLACE</button> -->
         <button mat-button [matMenuTriggerFor]="menu">LEARN</button>
         <mat-menu #menu="matMenu">
             <button mat-menu-item routerLink="/how-it-works">START HERE</button>
@@ -47,8 +47,9 @@
             <button mat-menu-item routerLink="/support">COMMUNITY</button>
             <!-- <button mat-menu-item>visualzapp.contact@gmail.com</button> -->
         </mat-menu>
-        <!-- <button href="mailto:visualzapp.contact@gmail.com" mat-button>CONTACT</button> -->
-        <button mat-raised-button class="btn btn-primary btn-margin" *ngIf="!auth.loggedIn" (click)="auth.login()">
+        <button href="mailto:visualzapp.contact@gmail.com" mat-button>CONTACT</button>
+
+        <!-- <button mat-raised-button class="btn btn-primary btn-margin" *ngIf="!auth.loggedIn" (click)="auth.login()">
             LOG IN
         </button>
         <button mat-button [matMenuTriggerFor]="menu3" *ngIf="auth.loggedIn" class="btn btn-primary btn-margin">
@@ -58,8 +59,7 @@
             <button mat-menu-item routerLink="/profile">PROFILE</button>
             <button mat-menu-item routerLink="/account">ACCOUNT</button>
             <button mat-menu-item (click)="auth.logout()">LOGOUT</button>
-        </mat-menu>
-
+        </mat-menu> -->
     </div>
 
     <div class="clearfix"></div>
@@ -74,11 +74,10 @@
     <a routerLink="/about">About</a> &nbsp;&nbsp;|&nbsp;&nbsp;
     <a routerLink="/download">Get It Now</a> &nbsp;&nbsp;|&nbsp;&nbsp;
     <!-- <a routerLink="/calendar">Calendar</a> &nbsp;&nbsp;|&nbsp;&nbsp; -->
-    <a routerLink="/marketplace">Marketplace</a> &nbsp;&nbsp;|&nbsp;&nbsp;
+    <!-- <a routerLink="/marketplace">Marketplace</a> &nbsp;&nbsp;|&nbsp;&nbsp; -->
     <a routerLink="/how-it-works">Learn</a> &nbsp;&nbsp;|&nbsp;&nbsp;
     <a href="https://www.instagram.com/visualzapp/" target="_blank">Instagram</a>
     <br>
-
     <a routerLink="/terms-conditions">Terms &amp; Conditions</a> &nbsp;&nbsp;|&nbsp;&nbsp;
     <a routerLink="/privacy-policy">Privacy Policy</a> &nbsp;&nbsp;|&nbsp;&nbsp;
     <a href="mailto:visualzapp.contact@gmail.com">visualzapp.contact@gmail.com</a>
