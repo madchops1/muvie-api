@@ -58,6 +58,7 @@ h3 {
     margin-top: 30px;
     text-align: left;
     font-size: 40px;
+    line-height: 30px;
 }
 
 .email-txt {
@@ -77,6 +78,24 @@ p {
 .pink {
     background-color: #e91e63;
     color: #fff;
+}
+
+.invert {
+    max-width: 1000px;
+    display: block;
+    margin: 0px auto;
+    
+    @media (max-width: $breakpoint-mobile) {
+        a {
+            margin: 0px auto;
+            width: 200px;
+            display: block;
+        }
+    }
+
+    img {
+        filter: invert(1);
+    }
 }
 
 .interactive-wrapper{
@@ -308,8 +327,8 @@ p {
         padding: 0px;
 
         iframe {
-            width: 100%;
-            height: 600px;
+            width: 60%;
+            //height: 600px;
             position: relative;
             display: block;
             margin: 0 auto;
@@ -659,6 +678,10 @@ img {
         //border-radius: 10px;
         margin: 20px 0px 25px;
         float: right;
+
+        @media (max-width: $breakpoint-mobile) {
+            margin-bottom: 40px !important;
+        }
     }
 
     img {

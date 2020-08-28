@@ -21,13 +21,37 @@
     <div class="clearfix"></div>
 </div>
 
-<!-- 
-<div class="content-wrapper youtube">
-    <iframe src="https://www.youtube.com/embed/ePmL8W_N1lA?rel=0&amp;controls=0" frameborder="0"
-        allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-</div> -->
+<div class="content-wrapper dark" style="min-height: 150px !important; padding-bottom: 40px !important;">
+    <div class="">
+        <h3 class="center" style="font-size: 30px;">
+            VISUALZ IS RECCOMENDED AND USED BY
+        </h3>
+        <div class="invert">
+            <a href='https://www.opendoors.la/' target="_blank">
+                <img src="../../assets/images/opendoors.png" />
+            </a>
+            <a href='https://burningman.org/' target="_blank">
+                <img src="../../assets/images/burningman.png" />
+            </a>
+            <a href='https://kindling.burningman.org/' target="_blank">
+                <img src="../../assets/images/kindling.png" />
+            </a>
+            <a href='https://www.jnktn.tv/' target="_blank">
+                <img src="../../assets/images/jnktntv.png" />
+            </a>
+            <a href='https://www.youtube.com/channel/UCk7yZcoQFKGUWnyvF219LLw' target="_blank">
+                <img src="../../assets/images/kaizen.png" />
+            </a>
+        </div>
+    </div>
+</div>
 
-<header class="skew"></header>
+<div class="content-wrapper youtube">
+    <iframe width="710" height="399" src="https://www.youtube.com/embed/UyZFcEHbCBM?rel=0&amp;controls=0"
+        frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
+        allowfullscreen></iframe>
+</div>
+
 
 <div class="content-wrapper dark">
     <div class="content-inner-wrapper">
@@ -35,20 +59,22 @@
 
             <img src="../../assets/images/icon.ico" class="ico" />
 
-            <div *ngIf="deviceInfo.os == 'Mac' || deviceInfo.os == 'iOS'" class="clearfix">
+            <!-- <div *ngIf="deviceInfo.os == 'Mac' || deviceInfo.os == 'iOS'" class="clearfix"> -->
+            <div class="clearfix">
+                <img class="mac" src="../../assets/images/macos.png" />
                 <a href="https://github.com/madchops1/visualz-releases/releases/download/v2.1.5/Visualz-2.1.5.dmg"
                     target="_blank" mat-raised-button (click)="downloadMac()" class="pink button">
                     Download Mac
                 </a>
-                <img class="mac" src="../../assets/images/macos.png" />
             </div>
 
-            <div *ngIf="deviceInfo.os != 'Mac' && deviceInfo.os != 'iOS'" class="clearfix">
+            <!-- <div *ngIf="deviceInfo.os != 'Mac' && deviceInfo.os != 'iOS'" class="clearfix"> -->
+            <div class="clearfix">
+                <img class="windows" src="../../assets/images/windows.png" />
                 <a href="https://github.com/madchops1/visualz-releases/releases/download/v2.1.5/Visualz-Setup-2.1.5.exe"
                     target="_blank" mat-raised-button (click)="downloadWindows()" class="pink button">
                     Download Windows
                 </a>
-                <img class="windows" src="../../assets/images/windows.png" />
             </div>
 
         </div>

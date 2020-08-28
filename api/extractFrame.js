@@ -25,7 +25,8 @@ let getFrame = (req) => {
             await extractFrame({
                 input: encodeURI(filePath),
                 output: 'src/assets/' + outputFile,
-                offset: 500 // seek offset in milliseconds
+                offset: 500, // seek offset in milliseconds
+                quality: 1
             });
             console.log('BETA', outputFile);
             resolve(outputFile);
