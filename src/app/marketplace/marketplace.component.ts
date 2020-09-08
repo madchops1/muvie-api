@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
+import { MatDialog, MatDialogConfig, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { MarketplaceDialogAddComponent } from '../marketplace-dialog-add/marketplace-dialog-add.component';
 
 @Component({
@@ -10,7 +10,16 @@ import { MarketplaceDialogAddComponent } from '../marketplace-dialog-add/marketp
 
 export class MarketplaceComponent implements OnInit {
 
-    pack: [];
+    pack: any = {
+        name: '',
+        description: '',
+        price: 0,
+        rawFiles: [],
+        setFile: '',
+        coverFile: ''
+    };
+
+    mode: any = { value: 'side' };
 
     constructor(private dialog: MatDialog) {
 
@@ -18,6 +27,7 @@ export class MarketplaceComponent implements OnInit {
 
     ngOnInit() {
         this.getPacks();
+        //this.mode.value = 'side';
 
     }
 
@@ -26,8 +36,19 @@ export class MarketplaceComponent implements OnInit {
 
     }
 
-    openAddDialog(): any {
+    openAddDialog(): void {
 
+        console.log('openAddDialog');
+
+        const dialogRef = this.dialog.open(MarketplaceDialogAddComponent, {
+            width: '600px',
+            data: { pack: this.pack }
+        });
+
+        dialogRef.afterClosed().subscribe(result => {
+            console.log('The dialog was closed', result);
+            this.pack = result;
+        });
     }
 
 }

@@ -1,3 +1,59 @@
-<p>
-  marketplace-dialog-add works!
-</p>
+<div class="dialog-wrapper">
+
+    <!-- <div *ngIf="!auth.loggedIn" class="center">
+        Please log in to submit VISUALZ sets as VJ packs to the marketplace.
+        <br><br>
+        <button mat-raised-button class="btn btn-primary btn-margin" *ngIf="!auth.loggedIn" (click)="auth.login()">
+            LOG IN
+        </button>
+    </div> -->
+
+    <div>
+        <h1 mat-dialog-title>Create VJ Pack</h1>
+        <div mat-dialog-content>
+
+            <!-- <div class="preview">
+                <div class="left"></div>
+                <div class="right"></div>
+                <div class="shadow"></div>
+            </div> -->
+
+            <p>Create a name for your VJ pack.</p>
+            <mat-form-field>
+                <mat-label>Name</mat-label>
+                <input matInput [(ngModel)]="data.name">
+            </mat-form-field>
+
+            <p>Write a short description of your VJ Pack.</p>
+            <mat-form-field class="wide">
+                <mat-label>Description</mat-label>
+                <input matInput [(ngModel)]="data.description">
+            </mat-form-field>
+
+            <p>Set a fair price. Somewhere between $1-20, based on the production quality and quantity of content.</p>
+            <mat-form-field>
+                <mat-label>Price</mat-label>
+                <input matInput [(ngModel)]="data.price">
+            </mat-form-field>
+
+            <p>Upload any original image or video files you want to include for your customers with the VJ pack. <a
+                    href="">Help?</a></p>
+            <input type="file" multiple (change)="uploadRawFiles($event)" placeholder="Select Raw Files">
+            <!-- <button mat-button color="primary" (click)="uploadRawFiles()">Upload Raw Files</button> -->
+
+            <p>Make a VISUALZ set or track with your original files and then upload the set file. Eg.
+                <strong>set-name[set].visualz</strong>. <a href="">Help?</a></p>
+            <input type="file" (change)="uploadSetFile($event)" placeholder="Select .visualz File" accept=".visualz">
+            <!-- <button mat-button color="primary" (click)="uploadSetFile()">Upload .visualz File</button> -->
+
+            <p>Make and upload a preview video of your set with VISUALZ.<a href="">Help?</a></p>
+            <input type="file" (change)="uploadMp4File($event)" placeholder="Select .mp4 file" accept=".mp4">
+            <!-- <button mat-button color="primary" (click)="uploadCoverImage()">Upload Cover Image</button> -->
+
+        </div>
+        <div mat-dialog-actions>
+            <button mat-button (click)="onNoClick()">Cancel</button>
+            <button mat-button [mat-dialog-close]="data" cdkFocusInitial>Submit VJ Pack</button>
+        </div>
+    </div>
+</div>

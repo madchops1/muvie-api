@@ -14,7 +14,6 @@ export class AppComponent {
     userProfile: any;
     menu: any = false;
 
-
     // detect the route
     constructor(private route: ActivatedRoute, private router: Router, private auth: AuthService) {
 

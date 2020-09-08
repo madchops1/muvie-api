@@ -509,6 +509,7 @@ header {
 
     .nav {
         float: right;
+        margin-top: 7px;
 
         @media (max-width: $breakpoint-mobile) {
             display: none;

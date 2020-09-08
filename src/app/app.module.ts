@@ -128,6 +128,9 @@ const config: SocketIoConfig = { url: environment.ioUrl, options: { autoConnect:
         FormsModule,
         DeviceDetectorModule.forRoot()
     ],
+    entryComponents: [
+        MarketplaceDialogAddComponent,
+    ],
     providers: [
     ],
     bootstrap: [AppComponent]

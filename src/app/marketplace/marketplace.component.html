@@ -3,26 +3,23 @@
     <mat-drawer-content class="main-content">
 
         <h2>MARKETPLACE</h2>
-        <p>Welcome to the VISUALZ MARKETPLACE. Here artists sell their graphic packs. Plus all packs are audio-reactive
-            and ready to use in your event or live-stream right now.</p>
+        <p>Welcome to the VISUALZ MARKETPLACE. Find the best audio-reactive VJ packs ready to use in your event or
+            live-stream right now and support the industry's best visual artists.</p>
 
         <div class="flex-container">
             <!-- <div *ngFor="let key of objectKeys(track.modules[editingModule].settings)"> -->
-
             <!-- <div *ngFor="let pack of packs" class="marketplace-grid">
-
             </div> -->
-
         </div>
 
-        <button mat-fab color="primary" class="add" click="openAddDialog()"
+        <button mat-fab color="primary" class="add" (click)="openAddDialog()"
             aria-label="Upload your own graphics into VISUALZ MARKETPLACE PACKS.">
             <mat-icon>add</mat-icon>
         </button>
 
         <mat-form-field>
             <mat-label>Sidenav mode</mat-label>
-            <mat-select #mode value=" side">
+            <mat-select #mode value="side">
                 <mat-option value="side">Side</mat-option>
                 <mat-option value="over">Over</mat-option>
                 <mat-option value="push">Push</mat-option>

@@ -223,12 +223,117 @@ var server = app.listen(process.env.PORT || 8080, function () {
     console.log("App now running on port", port);
 });
 
-// const peerServer = ExpressPeerServer(server, {
-//     debug: true,
-//     path: '/peer-server'
+// Database.
+//const { Client } = require('pg');
+const { Sequelize, DataTypes, Model } = require('sequelize');
+
+const sequelize = new Sequelize('postgres://fyfobnxmvuvjxq:0847439a3baa9b26b7ad04acfc25527caa38192fa3d1291e85aa2379563de4ae@ec2-174-129-255-35.compute-1.amazonaws.com:5432/daptt9dfu2q8jc', {
+    dialectOptions: {
+        ssl: {
+            require: true,
+            rejectUnauthorized: false,
+        },
+        keepAlive: true,
+    },
+    ssl: true
+});
+
+dbConnect();
+
+async function dbConnect() {
+    try {
+        await sequelize.authenticate();
+        console.log('Connection has been established successfully.');
+    } catch (error) {
+        console.error('Unable to connect to the database:', error);
+    }
+};
+
+//const marketplaceSet = require('./api/marketplaceSet');
+class Set extends Model { }
+class SetRawFile extends Model { }
+
+Set.init({
+    // Model attributes are defined here
+    id: {
+        type: DataTypes.INTEGER,
+        autoIncrement: true,
+        primaryKey: true
+    },
+    artistId: {
+        type: DataTypes.INTEGER
+    },
+    name: {
+        type: DataTypes.STRING
+    },
+    description: {
+        type: DataTypes.STRING
+    },
+    price: {
+        type: DataTypes.DECIMAL(10, 2)
+    },
+    coverImage: {
+        type: DataTypes.STRING
+    },
+    setFile: {
+        type: DataTypes.STRING
+    },
+    active: {
+        type: DataTypes.BOOLEAN,
+        allowNull: false,
+        defaultValue: true
+    }
+}, {
+    // Other model options go here
+    sequelize, // We need to pass the connection instance
+    modelName: 'Set' // We need to choose the model name
+});
+
+SetRawFile.init({
+    id: {
+        type: DataTypes.INTEGER,
+        autoIncrement: true,
+        primaryKey: true
+    },
+    set_id: {
+        type: DataTypes.INTEGER,
+        references: {
+            // This is a reference to another model
+            model: Set,
+            key: 'id'
+        }
+    },
+    setFile: {
+        type: DataTypes.STRING
+    }
+}, {
+    sequelize,
+    modelName: 'SetRawFile'
+});
+
+syncModels();
+
+async function syncModels() {
+    await sequelize.sync({ alter: true });
+    console.log("All models were synchronized successfully.");
+}
+
+// const client = new Client({
+//     connectionString: process.env.DATABASE_URL,
+//     ssl: {
+//         rejectUnauthorized: false
+//     }
 // });
 
-// app.use('/peerjs', peerServer);
+// client.connect();
+
+// client.query('SELECT table_schema,table_name FROM information_schema.tables;', (err, res) => {
+//     if (err) throw err;
+//     for (let row of res.rows) {
+//         console.log(JSON.stringify(row));
+//     }
+//     client.end();
+// });
 
 // guest uids are in their local storage
 function newGuest() {
@@ -1251,4 +1356,8 @@ app.post("/api/removeSeat", async function (req, res) {
     } catch (err) {
         handleError(res, err, 'nope');
     }
+});
+
+app.post("/api/addSet", async function (req, res) {
+    
 });
