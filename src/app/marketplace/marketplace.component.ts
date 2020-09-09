@@ -10,15 +10,6 @@ import { MarketplaceDialogAddComponent } from '../marketplace-dialog-add/marketp
 
 export class MarketplaceComponent implements OnInit {
 
-    pack: any = {
-        name: '',
-        description: '',
-        price: 0,
-        rawFiles: [],
-        setFile: '',
-        coverFile: ''
-    };
-
     mode: any = { value: 'side' };
 
     constructor(private dialog: MatDialog) {
@@ -42,12 +33,10 @@ export class MarketplaceComponent implements OnInit {
 
         const dialogRef = this.dialog.open(MarketplaceDialogAddComponent, {
             width: '600px',
-            data: { pack: this.pack }
         });
 
         dialogRef.afterClosed().subscribe(result => {
             console.log('The dialog was closed', result);
-            this.pack = result;
         });
     }
 

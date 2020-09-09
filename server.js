@@ -261,7 +261,7 @@ Set.init({
         primaryKey: true
     },
     artistId: {
-        type: DataTypes.INTEGER
+        type: DataTypes.STRING
     },
     name: {
         type: DataTypes.STRING
@@ -282,11 +282,17 @@ Set.init({
         type: DataTypes.BOOLEAN,
         allowNull: false,
         defaultValue: true
+    },
+    approved: {
+        type: DataTypes.BOOLEAN,
+        allowNull: false,
+        defaultValue: false
     }
 }, {
     // Other model options go here
     sequelize, // We need to pass the connection instance
-    modelName: 'Set' // We need to choose the model name
+    modelName: 'Set', // We need to choose the model name
+    tableName: 'sets'
 });
 
 SetRawFile.init({
@@ -308,13 +314,14 @@ SetRawFile.init({
     }
 }, {
     sequelize,
-    modelName: 'SetRawFile'
+    modelName: 'SetRawFile',
+    tagbleName: 'setrawfiles'
 });
 
 syncModels();
 
 async function syncModels() {
-    await sequelize.sync({ alter: true });
+    await sequelize.sync({ force: true }); // force or alter
     console.log("All models were synchronized successfully.");
 }
 
@@ -370,7 +377,6 @@ let remoteQueKeyMap = {};
 let mobileVideoKeyMap = {};
 let modulePeerMap = {};
 let appPeerMap = {};
-let laserzKeyMap = {};
 let phoneListHolder = [];
 let liveStreamRooms = [];
 let crowdScreenKey = '';
@@ -741,40 +747,6 @@ io.on('connection', (socket) => {
         io.in(String(mid)).emit('makeV2Complete', makeVideo);
     });
 
-    //
-    // Livestream Socket Stuff
-    //
-    // socket.on("hostCheck", async data => {
-    //     console.log('server received host check');
-    //     socket.broadcast.to(String(mid)).emit('getCrowdScreenImage', data);
-    // });
-
-    // // Twilio webhook
-    // app.post('/api/sms/reply', (req, res) => {
-    //     console.log('received an sms at twilio number', req.body.Body, req);
-
-    //     const twiml = new MessagingResponse();
-    //     let key = req.body.Body;
-
-    //     if (crowdScreenKeyMap[key]) {
-
-    //         // send the text to the user to connect
-    //         twiml.message('Click the link to connect. ' + crowdScreenUrl + '/crowdscreen/' + crowdScreenKeyMap[key]);
-
-    //         // send the number to the app
-
-
-    //     } else if (remoteQueKeyMap[key]) {
-    //         twiml.message('Click the link to connect. ' + crowdScreenUrl + '/remote-que/' + remoteQueKeyMap[key]);
-    //     } else if (laserzKeyMap[key]) {
-    //         twiml.message('Click the link to connect. ' + crowdScreenUrl + '/laserz/' + laserzKeyMap[key]);
-    //     } else {
-    //         twiml.message('Connection Error :(');
-    //     }
-
-    //     res.writeHead(200, { 'Content-Type': 'text/xml' });
-    //     res.end(twiml.toString());
-    // });
 
 });
 
@@ -1358,6 +1330,24 @@ app.post("/api/removeSeat", async function (req, res) {
     }
 });
 
-app.post("/api/addSet", async function (req, res) {
-    
+app.post("/api/submitVjPack", async function (req, res) {
+    console.log('ALPHA', req.body.pack);
+    let pack = JSON.parse(req.body.pack);
+    //console.log('GOLF', pack);
+    if (!pack.artistId) {
+        handleError(res, 'No Artist Id', 'nope');
+    } else {
+        // let query = "INSERT INTO Sets SET ";
+        // query += "`artistId` = '" + pack.artistId + "',";
+        // query += "`name`='" + pack.name + "',";
+        // query += "`description`='" + pack.description + "',";
+        // query += "`price`='" + pack.price + "',";
+        // query += "`coverImage`='" + pack.mp4File.url + "',";
+        // query += "`setFile`='" + pack.setFile.url + "',";
+
+        let query = "INSERT INTO sets (artistId,name,description,price,coverImage,setFile) VALUES ('" + pack.artistId + "','" + pack.name + "','" + pack.description + "','" + pack.price + "','" + pack.mp4File.url + "',`setFile`='" + pack.setFile.url + "')";
+        sequelize.query(query).then((res) => {
+            console.log(res);
+        });
+    }
 });
