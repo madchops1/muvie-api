@@ -43,7 +43,9 @@ export class MarketplaceDialogAddComponent implements OnInit {
         //console.log('userString', userString);
         this.auth.userProfile$.subscribe((profile) => {
             //console.log('profile', profile);
-            this.pack.artistId = profile.email;
+            if (profile) {
+                this.pack.artistId = profile.email;
+            }
         });
     }
 

@@ -1,14 +1,14 @@
 <div class="dialog-wrapper">
 
-    <!-- <div *ngIf="!auth.loggedIn" class="center">
+    <div *ngIf="!auth.loggedIn" class="center">
         Please log in to submit VISUALZ sets as VJ packs to the marketplace.
         <br><br>
         <button mat-raised-button class="btn btn-primary btn-margin" *ngIf="!auth.loggedIn" (click)="auth.login()">
             LOG IN
         </button>
-    </div> -->
+    </div>
 
-    <div>
+    <div *ngIf="auth.loggedIn">
         <h1 mat-dialog-title>Create VJ Pack</h1>
         <div mat-dialog-content>
 

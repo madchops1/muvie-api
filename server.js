@@ -287,6 +287,16 @@ Set.init({
         type: DataTypes.BOOLEAN,
         allowNull: false,
         defaultValue: false
+    },
+    createdAt: {
+        type: DataTypes.DATE,
+        allowNull: false,
+        defaultValue: sequelize.literal('NOW()')
+    },
+    updatedAt: {
+        type: DataTypes.DATE,
+        allowNull: false,
+        defaultValue: sequelize.literal('NOW()')
     }
 }, {
     // Other model options go here
@@ -301,7 +311,7 @@ SetRawFile.init({
         autoIncrement: true,
         primaryKey: true
     },
-    set_id: {
+    SetId: {
         type: DataTypes.INTEGER,
         references: {
             // This is a reference to another model
@@ -309,19 +319,34 @@ SetRawFile.init({
             key: 'id'
         }
     },
-    setFile: {
+    file: {
         type: DataTypes.STRING
+    },
+    createdAt: {
+        type: DataTypes.DATE,
+        allowNull: false,
+        defaultValue: sequelize.literal('NOW()')
+    },
+    updatedAt: {
+        type: DataTypes.DATE,
+        allowNull: false,
+        defaultValue: sequelize.literal('NOW()')
     }
 }, {
     sequelize,
     modelName: 'SetRawFile',
-    tagbleName: 'setrawfiles'
+    tableName: 'setrawfiles'
 });
 
+// Sync 
 syncModels();
 
+// Associations
+Set.hasMany(SetRawFile);
+SetRawFile.belongsTo(Set);
+
 async function syncModels() {
-    await sequelize.sync({ force: true }); // force or alter
+    await sequelize.sync(); // { force: true } or { alter: true }
     console.log("All models were synchronized successfully.");
 }
 
@@ -1021,6 +1046,27 @@ app.get('/api/livestream/amihost', async (req, res) => {
 
 });
 
+app.get("/api/search", async function (req, res) {
+    res.header('Access-Control-Allow-Origin', '*');
+    res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS');
+    res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization, Content-Length, X-Requested-With');
+    console.log('received a get request to search', req.query);
+    Set.findAll({
+        where: {
+            active: true
+        },
+        include: [{
+            model: SetRawFile
+        }]
+    }).then((res2) => {
+        console.log('HOTEL', res2);
+        res.write(JSON.stringify(res2));
+        res.end();
+    }, (err) => {
+        handleError(res, err, 'nope');
+    });
+});
+
 // Website Entrypoint
 app.get("*", (req, res) => {
     //console.log('ALPHA');
@@ -1337,17 +1383,35 @@ app.post("/api/submitVjPack", async function (req, res) {
     if (!pack.artistId) {
         handleError(res, 'No Artist Id', 'nope');
     } else {
-        // let query = "INSERT INTO Sets SET ";
-        // query += "`artistId` = '" + pack.artistId + "',";
-        // query += "`name`='" + pack.name + "',";
-        // query += "`description`='" + pack.description + "',";
-        // query += "`price`='" + pack.price + "',";
-        // query += "`coverImage`='" + pack.mp4File.url + "',";
-        // query += "`setFile`='" + pack.setFile.url + "',";
 
-        let query = "INSERT INTO sets (artistId,name,description,price,coverImage,setFile) VALUES ('" + pack.artistId + "','" + pack.name + "','" + pack.description + "','" + pack.price + "','" + pack.mp4File.url + "',`setFile`='" + pack.setFile.url + "')";
-        sequelize.query(query).then((res) => {
-            console.log(res);
+        // Insert Pack
+        const insertedPack = await Set.create({
+            artistId: pack.artistId,
+            name: pack.name,
+            description: pack.description,
+            price: pack.price,
+            coverImage: pack.mp4File.url,
+            setFile: pack.setFile.url
+        }).then(async (res2) => {
+            console.log('CHUCk', res2);
+            // Insert Raw Files
+            for (let i = 0; i < pack.rawFiles.length; i++) {
+                const file = pack.rawFiles[i];
+                const insert = await SetRawFile.create({
+                    SetId: res2.id,
+                    file: file.url
+                }).then((res3) => {
+                    console.log(res3);
+                });
+            }
+
+            // Response
+            res.header('Access-Control-Allow-Origin', '*');
+            res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS');
+            res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization, Content-Length, X-Requested-With');
+            res.status(200).json();
+        }, (err) => {
+            handleError(res, err, 'nope');
         });
     }
 });

@@ -1,6 +1,7 @@
 <mat-drawer-container class="marketplace-container" [hasBackdrop]="hasBackdrop.value">
     <mat-drawer #drawer [mode]="mode.value" class="drawer">I'm a drawer</mat-drawer>
     <mat-drawer-content class="main-content">
+        <button mat-raised-button (click)="drawer.toggle()" class="advanced">Filter</button>
 
         <h2>MARKETPLACE</h2>
         <p>Welcome to the VISUALZ MARKETPLACE. Find the best audio-reactive VJ packs ready to use in your event or
@@ -16,7 +17,11 @@
             aria-label="Upload your own graphics into VISUALZ MARKETPLACE PACKS.">
             <mat-icon>add</mat-icon>
         </button>
-
+        <form name="searchform">
+            <input type="text" value="" class="search" (change)="search()" [(ngModel)]="query" name="query"
+                placeholder="Search..." />
+        </form>
+        <!-- 
         <mat-form-field>
             <mat-label>Sidenav mode</mat-label>
             <mat-select #mode value="side">
@@ -32,7 +37,6 @@
                 <mat-option [value]="true">True</mat-option>
                 <mat-option [value]="false">False</mat-option>
             </mat-select>
-        </mat-form-field>
-        <button mat-raised-button (click)="drawer.toggle()">Toggle drawer</button>
+        </mat-form-field> -->
     </mat-drawer-content>
 </mat-drawer-container>
