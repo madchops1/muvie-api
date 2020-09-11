@@ -20,6 +20,7 @@
 
 .mat-drawer-container {
     margin-bottom: 20px;
+    background-color: transparent !important;
 }
 
 .search {
@@ -27,13 +28,56 @@
     height: 80px;
     font-size: 50px;
     line-height: 50px;
-    margin: 0px auto;
+    margin: 0px auto 40px;
     border-radius: 6px;
     display: block;
+    
 }
 
 .advanced {
     position: absolute;
     top: 10px;
     left: 10px;
+}
+
+.third {
+    width: 40vw;
+    line-height: 25px;
+    display: block;
+    margin: 20px auto 40px;
+    font-size: 12px;
+}
+
+
+
+.flex-container {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+
+}
+
+.marketplace-grid {
+    margin: 20px;
+    width: 33vw;
+    background: rgba(0,0,0,0.5);
+    color: #fff;
+    cursor: pointer;
+    position: relative;
+    padding: 20px;
+    text-decoration: none;
+    border-radius: 6px;
+
+    .card {
+        position: absolute;
+        top: 0px;
+        left: 0px;
+        background-color: rgba(0,0,0,0.8);
+        padding: 20px;
+        width: calc(100% - 40px);
+    }
+
+    video {
+        width: 100%;
+    }
 }

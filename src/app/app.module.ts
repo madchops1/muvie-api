@@ -53,6 +53,9 @@ import { CalendarComponent } from './calendar/calendar.component';
 import { AccountComponent } from './account/account.component';
 import { MarketplaceComponent } from './marketplace/marketplace.component';
 import { MarketplaceDialogAddComponent } from './marketplace-dialog-add/marketplace-dialog-add.component';
+import { TutorialsComponent } from './tutorials/tutorials.component';
+import { CartComponent } from './cart/cart.component';
+import { ExamplesComponent } from './examples/examples.component';
 
 const config: SocketIoConfig = { url: environment.ioUrl, options: { autoConnect: false } };
 
@@ -95,7 +98,10 @@ const config: SocketIoConfig = { url: environment.ioUrl, options: { autoConnect:
         CalendarComponent,
         AccountComponent,
         MarketplaceComponent,
-        MarketplaceDialogAddComponent
+        MarketplaceDialogAddComponent,
+        TutorialsComponent,
+        CartComponent,
+        ExamplesComponent
     ],
     imports: [
         BrowserModule,

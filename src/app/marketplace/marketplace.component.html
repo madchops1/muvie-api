@@ -1,26 +1,38 @@
 <mat-drawer-container class="marketplace-container" [hasBackdrop]="hasBackdrop.value">
     <mat-drawer #drawer [mode]="mode.value" class="drawer">I'm a drawer</mat-drawer>
     <mat-drawer-content class="main-content">
+
         <button mat-raised-button (click)="drawer.toggle()" class="advanced">Filter</button>
 
-        <h2>MARKETPLACE</h2>
-        <p>Welcome to the VISUALZ MARKETPLACE. Find the best audio-reactive VJ packs ready to use in your event or
-            live-stream right now and support the industry's best visual artists.</p>
+        <h1 class="center">MARKETPLACE</h1>
 
-        <div class="flex-container">
-            <!-- <div *ngFor="let key of objectKeys(track.modules[editingModule].settings)"> -->
-            <!-- <div *ngFor="let pack of packs" class="marketplace-grid">
-            </div> -->
-        </div>
+        <p class="third">
+            Welcome to the VISUALZ MARKETPLACE. Find the best audio-reactive VJ packs from from the
+            industry leading visual artists. Ready to use right now in your live-stream, projections, or LED walls.
+        </p>
 
         <button mat-fab color="primary" class="add" (click)="openAddDialog()"
             aria-label="Upload your own graphics into VISUALZ MARKETPLACE PACKS.">
             <mat-icon>add</mat-icon>
         </button>
+
         <form name="searchform">
             <input type="text" value="" class="search" (change)="search()" [(ngModel)]="query" name="query"
                 placeholder="Search..." />
         </form>
+
+        <div class="flex-container">
+            <!-- <div *ngFor="let key of objectKeys(track.modules[editingModule].settings)"> -->
+            <div *ngFor="let pack of results" class="marketplace-grid">
+                <div class="card">
+                    {{pack.name}}
+                </div>
+                <video class="pack-video" controls>
+                    <source src="{{pack.coverImage}}" type="video/mp4">
+                </video>
+            </div>
+        </div>
+
         <!-- 
         <mat-form-field>
             <mat-label>Sidenav mode</mat-label>

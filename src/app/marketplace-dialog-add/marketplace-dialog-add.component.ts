@@ -14,7 +14,9 @@ let async = require("async");
 export class MarketplaceDialogAddComponent implements OnInit {
 
     message: any = '';
-    loading: any = false;
+    loadingRawFiles: any = false;
+    loadingMp4File: any = false;
+    loadingSetFile: any = false;
     pack: any = {
         name: '',
         description: '',
@@ -25,6 +27,7 @@ export class MarketplaceDialogAddComponent implements OnInit {
         artistId: ''
     };
     button: any = 'Submit';
+    success: any = false;
     //auth.userProfile$.source: any;
 
     constructor(
@@ -38,14 +41,8 @@ export class MarketplaceDialogAddComponent implements OnInit {
     }
 
     ngOnInit() {
-        console.log('ngOnInit', this.auth);
-        //let userString = JSON.parse(this.auth.userProfile$);
-        //console.log('userString', userString);
         this.auth.userProfile$.subscribe((profile) => {
-            //console.log('profile', profile);
-            if (profile) {
-                this.pack.artistId = profile.email;
-            }
+            this.pack.artistId = profile.email;
         });
     }
 
@@ -53,6 +50,7 @@ export class MarketplaceDialogAddComponent implements OnInit {
         let rawFiles = event.target.files;
         const promises = [];
         this.message = 'Uploading raw files.';
+        this.loadingRawFiles = true;
         for (let i = 0; i < rawFiles.length; i++) {
             let file = rawFiles[i];
             let promise = (callback) => {
@@ -66,6 +64,7 @@ export class MarketplaceDialogAddComponent implements OnInit {
             (err, results) => {
                 console.log('ALPHA', err, results);
                 this.pack.rawFiles = results;
+                this.loadingRawFiles = false;
                 if (err) {
                     this.message = 'Error uploading raw files.';
                     return false;
@@ -78,23 +77,29 @@ export class MarketplaceDialogAddComponent implements OnInit {
     uploadSetFile(event) {
         let setFile = event.target.files[0];
         this.message = 'Uploading .visualz file.';
+        this.loadingSetFile = true;
         this.getSignedRequest(setFile).then((res) => {
             console.log('ECHO', res);
             this.pack.setFile = res;
             this.message = '';
+            this.loadingSetFile = false;
         }, (err) => {
             this.message = 'Error uploading .visualz file.';
+            this.loadingSetFile = false;
         });
     }
 
     uploadMp4File(event) {
         let mp4File = event.target.files[0];
         this.message = 'Uploading .mp4 preview file.';
+        this.loadingMp4File = true;
         this.getSignedRequest(mp4File).then((res) => {
             this.pack.mp4File = res;
             this.message = '';
+            this.loadingMp4File = false;
         }, (err) => {
             this.message = 'Error uploading .mp4 file.';
+            this.loadingMp4File = false;
         });
     }
 
@@ -140,6 +145,11 @@ export class MarketplaceDialogAddComponent implements OnInit {
     }
 
     validate(): any {
+        if (this.loadingMp4File == true || this.loadingRawFiles == true || this.loadingSetFile == true) {
+            this.message = "Still uploading files...";
+            return false;
+        }
+
         if (this.pack.rawFiles.length == 0) {
             this.message = "Please upload raw files.";
             return false;
@@ -147,10 +157,12 @@ export class MarketplaceDialogAddComponent implements OnInit {
 
         if (!this.pack.setFile) {
             this.message = "Please upload a .visualz file.";
+            return false;
         }
 
         if (!this.pack.mp4File) {
             this.message = "Please upload a .mp4 file.";
+            return false;
         }
         this.message = '';
     }
@@ -195,10 +207,17 @@ export class MarketplaceDialogAddComponent implements OnInit {
 
             this.submitApiRequest().then((res) => {
                 console.log('DELTA', res);
-                this.dialogRef.close();
                 this.message = "Your VJ pack has been submitted for approval.";
                 this.mixpanelService.track('VJ Pack Submission');
-                this.button = "Submit";
+                this.success = true;
+
+                setTimeout(() => {
+                    this.success = false;
+                    this.dialogRef.close();
+                    this.button = "Submit";
+                    this.message = "";
+                }, 3000);
+
             }, (err) => {
                 this.message = "Error submitting.";
                 this.button = "Submit";

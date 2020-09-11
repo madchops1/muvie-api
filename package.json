@@ -57,6 +57,8 @@
         "helmet": "^3.21.2",
         "heroku-ssl-redirect": "0.0.4",
         "image-capture": "^0.4.0",
+        "mailchimp-api-v3": "^1.14.0",
+        "md5": "^2.3.0",
         "mixpanel-browser": "^2.29.1",
         "mongodb": "^3.2.3",
         "newrelic": "^6.8.0",

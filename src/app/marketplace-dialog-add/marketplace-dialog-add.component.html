@@ -1,5 +1,9 @@
 <div class="dialog-wrapper">
 
+    <div *ngIf="success" class="success">
+        <h2 class="center">VJ Pack submitted.</h2>
+    </div>
+
     <div *ngIf="!auth.loggedIn" class="center">
         Please log in to submit VISUALZ sets as VJ packs to the marketplace.
         <br><br>
@@ -8,7 +12,7 @@
         </button>
     </div>
 
-    <div *ngIf="auth.loggedIn">
+    <div *ngIf="auth.loggedIn && !success">
         <h1 mat-dialog-title>Create VJ Pack</h1>
         <div mat-dialog-content>
 

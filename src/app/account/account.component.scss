@@ -1,0 +1,30 @@
+.download-area{
+    h2 {
+        margin: 0px;
+        text-align: right;
+        padding: 0px;
+    }
+}
+
+.content-inner-wrapper {
+    margin-bottom: 20px;
+    margin-top: 20px;
+    border-bottom: 1px solid #666;
+    padding-bottom: 20px
+}
+
+.ico {
+    border-radius: 100px;
+}
+
+.pack {
+    background-color: #666;
+    border-radius: 4px;
+    width: 100px;
+    height: 66px;
+    float: left;
+    padding: 10px;
+    display: block;
+    margin-right: 10px;
+    margin-bottom: 10px;
+}

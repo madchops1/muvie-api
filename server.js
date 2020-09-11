@@ -18,6 +18,7 @@ const AWS = require('aws-sdk');
 const Async = require('async');
 //const { ExpressPeerServer } = require('peer');
 //require('newrelic');
+const md5 = require('md5');
 
 const fetch = require('node-fetch');
 global.fetch = fetch;
@@ -137,6 +138,9 @@ dotenv.config();
 console.log('env', process.env);
 //console.log('Environment', process.env.ENVIRONMENT);
 
+var Mailchimp = require('mailchimp-api-v3')
+var mailchimp = new Mailchimp(process.env.MAILCHIMP_API_KEY);
+
 // Unsplash
 const unsplash = new Unsplash({
     accessKey: process.env.UNSPLASH_ACCESS_KEY,
@@ -252,6 +256,7 @@ async function dbConnect() {
 //const marketplaceSet = require('./api/marketplaceSet');
 class Set extends Model { }
 class SetRawFile extends Model { }
+class PackPurchase extends Model { }
 
 Set.init({
     // Model attributes are defined here
@@ -322,6 +327,11 @@ SetRawFile.init({
     file: {
         type: DataTypes.STRING
     },
+    active: {
+        type: DataTypes.BOOLEAN,
+        allowNull: false,
+        defaultValue: true
+    },
     createdAt: {
         type: DataTypes.DATE,
         allowNull: false,
@@ -338,15 +348,60 @@ SetRawFile.init({
     tableName: 'setrawfiles'
 });
 
+PackPurchase.init({
+    id: {
+        type: DataTypes.INTEGER,
+        autoIncrement: true,
+        primaryKey: true
+    },
+    SetId: {
+        type: DataTypes.INTEGER,
+        references: {
+            // This is a reference to another model
+            model: Set,
+            key: 'id'
+        }
+    },
+    userId: {
+        type: DataTypes.STRING
+    },
+    price: {
+        type: DataTypes.DECIMAL(10, 2)
+    },
+    stripeId: {
+        type: DataTypes.STRING
+    },
+    active: {
+        type: DataTypes.BOOLEAN,
+        allowNull: false,
+        defaultValue: true
+    },
+    createdAt: {
+        type: DataTypes.DATE,
+        allowNull: false,
+        defaultValue: sequelize.literal('NOW()')
+    },
+    updatedAt: {
+        type: DataTypes.DATE,
+        allowNull: false,
+        defaultValue: sequelize.literal('NOW()')
+    }
+}, {
+    sequelize,
+    modelName: 'PackPurchase',
+    tableName: 'packpurchases'
+});
+
 // Sync 
 syncModels();
 
 // Associations
 Set.hasMany(SetRawFile);
 SetRawFile.belongsTo(Set);
+PackPurchase.belongsTo(Set);
 
 async function syncModels() {
-    await sequelize.sync(); // { force: true } or { alter: true }
+    await sequelize.sync(); // NEVER FORCE only ALTER on prod{ force: true } or { alter: true }
     console.log("All models were synchronized successfully.");
 }
 
@@ -1046,6 +1101,10 @@ app.get('/api/livestream/amihost', async (req, res) => {
 
 });
 
+/**
+ * Search VJ packs 
+ *      - Used on the search page
+ */
 app.get("/api/search", async function (req, res) {
     res.header('Access-Control-Allow-Origin', '*');
     res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS');
@@ -1243,7 +1302,7 @@ app.post("/api/createSeat", async function (req, res) {
         stripe.customers.list({ limit: 1, email: email },
             function (err, customers) {
                 if (err) {
-                    alert('Issue verifying purchase with stripe.')
+                    //alert('Issue verifying purchase with stripe.')
                     handleError(res, err, 'nope');
                 }
 
@@ -1374,6 +1433,97 @@ app.post("/api/removeSeat", async function (req, res) {
     } catch (err) {
         handleError(res, err, 'nope');
     }
+});
+
+app.post("/api/getSubscriptions", async function (req, res) {
+    let email = req.body.email;
+    let subscriptions;
+    stripe.customers.list({ limit: 1, email: email },
+        (err, customers) => {
+            if (err) {
+                //alert('Issue verifying purchase with stripe.')
+                handleError(res, err, 'nope');
+            }
+            if (customers.data.length && customers.data[0].subscriptions.data.length) {
+                subscriptions = customers.data[0].subscriptions;
+            }
+            res.header('Access-Control-Allow-Origin', '*');
+            res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS');
+            res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization, Content-Length, X-Requested-With');
+            res.status(200).json(subscriptions);
+        });
+});
+
+app.post("/api/getNewsletter", async function (req, res) {
+    let email = req.body.email;
+    //let response;
+    //Promise style
+    mailchimp.get({
+        path: '/lists/ea72b92f29/members/' + md5(email.toLowerCase())
+    })
+        .then(function (result) {
+            console.log('ALPHA', result);
+            res.header('Access-Control-Allow-Origin', '*');
+            res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS');
+            res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization, Content-Length, X-Requested-With');
+            res.status(200).json(result);
+        })
+        .catch(function (err) {
+            console.log('ALPHA', err);
+            res.header('Access-Control-Allow-Origin', '*');
+            res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS');
+            res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization, Content-Length, X-Requested-With');
+            res.status(200).json(err);
+        });
+});
+
+
+/**
+ * Get user's created vj packs
+ *      - Used on the account page
+ */
+app.post("/api/getCatalog", async function (req, res) {
+    Set.findAll({
+        where: {
+            active: true,
+            artistId: req.body.email
+        },
+        include: [{
+            model: SetRawFile
+        }]
+    }).then((res2) => {
+        console.log('HOTEL', res2);
+        res.header('Access-Control-Allow-Origin', '*');
+        res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS');
+        res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization, Content-Length, X-Requested-With');
+        res.status(200).json(res2);
+    }, (err) => {
+        handleError(res, err, 'nope');
+    });
+});
+
+/**
+ * Get user's purchased vj packs
+ *      - Used on the account page
+ */
+app.post("/api/getlibrary", async function (req, res) {
+    PackPurchase.findAll({
+        where: {
+            active: true,
+            userId: req.body.email
+        },
+        include: [{
+            model: Set
+        }]
+    }).then((res2) => {
+        console.log('HOTEL', res2);
+        res.header('Access-Control-Allow-Origin', '*');
+        res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS');
+        res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization, Content-Length, X-Requested-With');
+        res.status(200).json(res2);
+    }, (err) => {
+        handleError(res, err, 'nope');
+    });
 });
 
 app.post("/api/submitVjPack", async function (req, res) {

@@ -34,6 +34,8 @@ import { UserGuideComponent } from './user-guide/user-guide.component';
 import { CalendarComponent } from './calendar/calendar.component';
 import { AccountComponent } from './account/account.component';
 import { MarketplaceComponent } from './marketplace/marketplace.component';
+import { CartComponent } from './cart/cart.component';
+import { TutorialsComponent } from './tutorials/tutorials.component';
 
 const routes: Routes = [
     { path: '', component: VisualzComponent },
@@ -43,7 +45,7 @@ const routes: Routes = [
     { path: 'success', component: SuccessComponent },
     { path: 'canceled', component: CanceledComponent },
     { path: 'download', component: DownloadComponent },
-    { path: 'how-it-works', component: HowComponent },
+    { path: 'start-here', component: HowComponent },
     { path: 'terms-conditions', component: TermsComponent },
     { path: 'privacy-policy', component: PrivacyComponent },
     { path: 'update', component: DownloadComponent },
@@ -54,6 +56,8 @@ const routes: Routes = [
     { path: 'remote-que/:mid', component: RemoteQueComponent },
     { path: 'laserz/:mid', component: LaserzComponent },
     { path: 'welcome/:v', component: WelcomeComponent },
+    { path: 'cart', component: CartComponent },
+    { path: 'tutorials', component: TutorialsComponent },
     {
         path: 'account',
         component: AccountComponent,

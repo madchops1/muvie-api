@@ -25,8 +25,6 @@ export class MarketplaceComponent implements OnInit {
 
     openAddDialog(): void {
 
-        console.log('openAddDialog');
-
         const dialogRef = this.dialog.open(MarketplaceDialogAddComponent, {
             width: '600px',
         });
@@ -46,7 +44,7 @@ export class MarketplaceComponent implements OnInit {
                 if (xhr.readyState === 4) {
                     if (xhr.status === 200) {
                         const response = xhr.responseText;
-                        console.log('CHARLIE', response);
+                        //console.log('CHARLIE', response);
                         resolve(response);
                     }
                     else {
@@ -61,10 +59,9 @@ export class MarketplaceComponent implements OnInit {
 
     search(): void {
         this.searchApiRequest().then((res) => {
-            console.log('res', res);
+            this.results = JSON.parse(res);
         }, (err) => {
             console.log('err', err);
         });
     }
-
 }
