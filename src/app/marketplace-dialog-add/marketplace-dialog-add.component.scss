@@ -1,0 +1,49 @@
+.dialog-wrapper {
+
+    font-size: 12px;
+    position: relative;
+
+    .mat-form-field {
+        background-color: rgba(255,255,255,0.05);
+        border-radius: 4px;
+        padding: 10px 10px 0;
+    
+        &.wide {
+            width: 400px;
+        }
+    }
+
+    .preview {
+
+        width: 300px;
+        height: 300px;
+        position: absolute;
+        top: 0px;
+        right: 0px;
+
+        .left {
+            background-color: #858585;
+            width: 100px;
+            height: 200px;
+
+            border-bottom: 100px solid red;
+            border-left: 50px solid transparent;
+            border-right: 50px solid transparent;
+            height: 0;
+            width: 100px;
+        }
+
+        .right {
+            background-color: #cccccc;
+            width: 200px;
+            height: 200px;
+        }
+
+        .shadow {
+            background-color: #000000;
+            box-shadow: 10px 10px 10px #000000;
+            width: 200px
+            height 100px;
+        }
+    }
+}

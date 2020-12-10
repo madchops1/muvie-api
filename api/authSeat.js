@@ -7,7 +7,6 @@
 const axios = require('axios');
 let async = require("async");
 
-
 let checkKey = function (key, res) {
     return new Promise(async function (resolve, reject) {
         console.log('checking key');
@@ -59,7 +58,6 @@ let checkKey = function (key, res) {
         }
     });
 }
-
 
 let AuthSeat = function (req, res) {
     return new Promise(async function (resolve, reject) {

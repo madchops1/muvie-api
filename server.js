@@ -3,14 +3,6 @@ const express = require('express');
 const helmet = require('helmet');
 //const formidableMiddleware = require('express-formidable');
 const bodyParser = require("body-parser");
-const concat = require('./api/concat');
-const signS3 = require('./api/sign-s3');
-const uploadFile = require('./api/uploadFile');
-const make = require('./api/make');
-const convertToMp4 = require('./api/convertToMp4');
-const extractFrame = require('./api/extractFrame');
-const gifToMp4 = require('./api/gifToMp4');
-//const authSeat = require('./api/authSeat');
 //const axios = require('axios');
 const request = require('request');
 const fs = require('fs');
@@ -18,14 +10,28 @@ const AWS = require('aws-sdk');
 const Async = require('async');
 //const { ExpressPeerServer } = require('peer');
 //require('newrelic');
+const md5 = require('md5');
 
 const fetch = require('node-fetch');
 global.fetch = fetch;
 
 const Unsplash = require('unsplash-js').default;
 const toJson = require('unsplash-js').toJson;
-
 const Pexels = require('node-pexels').Client;
+
+const concat = require('./api/concat');
+const signS3 = require('./api/sign-s3');
+const uploadFile = require('./api/uploadFile');
+const make = require('./api/make');
+const convertToMp4 = require('./api/convertToMp4');
+const extractFrame = require('./api/extractFrame');
+const gifToMp4 = require('./api/gifToMp4');
+
+const handleChargeSucceeded = require('./api/lib/stripe').handleChargeSucceeded;
+const getSubscriptions = require('./api/lib/stripe').getSubscriptions;
+const getTags = require('./api/tags').getTags;
+
+//const authSeat = require('./api/authSeat');
 
 const visualzLatest = '2.1.6';
 const kill = []; // array of versions eg. ['2.0.0']
@@ -137,6 +143,9 @@ dotenv.config();
 console.log('env', process.env);
 //console.log('Environment', process.env.ENVIRONMENT);
 
+var Mailchimp = require('mailchimp-api-v3')
+var mailchimp = new Mailchimp(process.env.MAILCHIMP_API_KEY);
+
 // Unsplash
 const unsplash = new Unsplash({
     accessKey: process.env.UNSPLASH_ACCESS_KEY,
@@ -151,17 +160,6 @@ const authToken = process.env.TWILIO_AUTH_TOKEN;
 const twilioClient = require('twilio')(accountSid, authToken);
 const MessagingResponse = require('twilio').twiml.MessagingResponse;
 let crowdScreenUrl = process.env.CROWD_SCREEN_URL; //'https://b1ee5978.ngrok.io'; // https://www.visualzstudio.com
-
-// Send a test msg real quick
-/*
-twilioClient.messages
-  .create({
-     body: 'This is the ship that made the Kessel Run in fourteen parsecs?',
-     from: '+12248777729',
-     to: '+16302175813'
-   })
-  .then(message => console.log(message.sid));
-*/
 
 // Stripe
 const stripe = require('stripe')(process.env.STRIPE_KEY);
@@ -223,12 +221,413 @@ var server = app.listen(process.env.PORT || 8080, function () {
     console.log("App now running on port", port);
 });
 
-// const peerServer = ExpressPeerServer(server, {
-//     debug: true,
-//     path: '/peer-server'
+/**
+ * 
+ * 
+ * Database.
+ * 
+ * 
+ */
+//const { Client } = require('pg');
+const { Sequelize, DataTypes, Model } = require('sequelize');
+
+const sequelize = new Sequelize(process.env.DB_URI, {
+    dialectOptions: {
+        ssl: {
+            require: true,
+            rejectUnauthorized: false,
+        },
+        keepAlive: true,
+    },
+    ssl: true,
+    logging: false
+});
+
+dbConnect();
+
+async function dbConnect() {
+    try {
+        await sequelize.authenticate();
+        console.log('Connection has been established successfully.');
+    } catch (error) {
+        console.error('Unable to connect to the database:', error);
+    }
+};
+
+// Models
+//const marketplaceSet = require('./api/marketplaceSet');
+class Set extends Model { }
+class SetRawFile extends Model { }
+class PackPurchase extends Model { }
+class Tag extends Model { }
+class SetTag extends Model { }
+class ArtistTypeTag extends Model { }
+class Artist extends Model { }
+class ArtistTag extends Model { }
+
+Artist.init({
+    id: {
+        type: DataTypes.INTEGER,
+        autoIncrement: true,
+        primaryKey: true
+    },
+    email: {
+        type: DataTypes.STRING
+    },
+    name: {
+        type: DataTypes.STRING
+    },
+    active: {
+        type: DataTypes.BOOLEAN,
+        allowNull: false,
+        defaultValue: true
+    },
+    authzero: {
+        type: DataTypes.BOOLEAN,
+        allowNull: false,
+        defaultValue: false
+    },
+    approved: {
+        type: DataTypes.BOOLEAN,
+        allowNull: false,
+        defaultValue: false
+    },
+    createdAt: {
+        type: DataTypes.DATE,
+        allowNull: false,
+        defaultValue: sequelize.literal('NOW()')
+    },
+    updatedAt: {
+        type: DataTypes.DATE,
+        allowNull: false,
+        defaultValue: sequelize.literal('NOW()')
+    }
+}, {
+    sequelize,
+    modelName: 'Artist',
+    tableName: 'artists'
+});
+
+Set.init({
+    // Model attributes are defined here
+    id: {
+        type: DataTypes.INTEGER,
+        autoIncrement: true,
+        primaryKey: true
+    },
+    ArtistId: {
+        type: DataTypes.INTEGER,
+        references: {
+            model: Artist,
+            key: 'id'
+        }
+    },
+    name: {
+        type: DataTypes.STRING
+    },
+    description: {
+        type: DataTypes.STRING
+    },
+    price: {
+        type: DataTypes.DECIMAL(10, 2)
+    },
+    coverImage: {
+        type: DataTypes.STRING
+    },
+    setFile: {
+        type: DataTypes.STRING
+    },
+    stripeId: {
+        type: DataTypes.STRING
+    },
+    active: {
+        type: DataTypes.BOOLEAN,
+        allowNull: false,
+        defaultValue: true
+    },
+    published: {
+        type: DataTypes.BOOLEAN,
+        allowNull: false,
+        defaultValue: true
+    },
+    approved: {
+        type: DataTypes.BOOLEAN,
+        allowNull: false,
+        defaultValue: false
+    },
+    createdAt: {
+        type: DataTypes.DATE,
+        allowNull: false,
+        defaultValue: sequelize.literal('NOW()')
+    },
+    updatedAt: {
+        type: DataTypes.DATE,
+        allowNull: false,
+        defaultValue: sequelize.literal('NOW()')
+    }
+}, {
+    // Other model options go here
+    sequelize, // We need to pass the connection instance
+    modelName: 'Set', // We need to choose the model name
+    tableName: 'sets'
+});
+
+SetRawFile.init({
+    id: {
+        type: DataTypes.INTEGER,
+        autoIncrement: true,
+        primaryKey: true
+    },
+    SetId: {
+        type: DataTypes.INTEGER,
+        references: {
+            // This is a reference to another model
+            model: Set,
+            key: 'id'
+        }
+    },
+    file: {
+        type: DataTypes.STRING
+    },
+    active: {
+        type: DataTypes.BOOLEAN,
+        allowNull: false,
+        defaultValue: true
+    },
+    createdAt: {
+        type: DataTypes.DATE,
+        allowNull: false,
+        defaultValue: sequelize.literal('NOW()')
+    },
+    updatedAt: {
+        type: DataTypes.DATE,
+        allowNull: false,
+        defaultValue: sequelize.literal('NOW()')
+    }
+}, {
+    sequelize,
+    modelName: 'SetRawFile',
+    tableName: 'setrawfiles'
+});
+
+PackPurchase.init({
+    id: {
+        type: DataTypes.INTEGER,
+        autoIncrement: true,
+        primaryKey: true
+    },
+    SetId: {
+        type: DataTypes.INTEGER,
+        references: {
+            // This is a reference to another model
+            model: Set,
+            key: 'id'
+        }
+    },
+    email: {
+        type: DataTypes.STRING
+    },
+    // ArtistId: {
+    //     type: DataTypes.INTEGER,
+    //     references: {
+    //         // This is a reference to another model
+    //         model: Artist,
+    //         key: 'id'
+    //     }
+    // },
+    price: {
+        type: DataTypes.DECIMAL(10, 2)
+    },
+    stripeId: {
+        type: DataTypes.STRING
+    },
+    active: {
+        type: DataTypes.BOOLEAN,
+        allowNull: false,
+        defaultValue: true
+    },
+    createdAt: {
+        type: DataTypes.DATE,
+        allowNull: false,
+        defaultValue: sequelize.literal('NOW()')
+    },
+    updatedAt: {
+        type: DataTypes.DATE,
+        allowNull: false,
+        defaultValue: sequelize.literal('NOW()')
+    }
+}, {
+    sequelize,
+    modelName: 'PackPurchase',
+    tableName: 'packpurchases'
+});
+
+Tag.init({
+    id: {
+        type: DataTypes.INTEGER,
+        autoIncrement: true,
+        primaryKey: true
+    },
+    name: {
+        type: DataTypes.STRING
+    },
+    active: {
+        type: DataTypes.BOOLEAN,
+        allowNull: false,
+        defaultValue: true
+    },
+    createdAt: {
+        type: DataTypes.DATE,
+        allowNull: false,
+        defaultValue: sequelize.literal('NOW()')
+    },
+    updatedAt: {
+        type: DataTypes.DATE,
+        allowNull: false,
+        defaultValue: sequelize.literal('NOW()')
+    }
+}, {
+    sequelize,
+    modelName: 'Tag',
+    tableName: 'tags'
+});
+
+ArtistTypeTag.init({
+    id: {
+        type: DataTypes.INTEGER,
+        autoIncrement: true,
+        primaryKey: true
+    },
+    name: {
+        type: DataTypes.STRING
+    },
+    active: {
+        type: DataTypes.BOOLEAN,
+        allowNull: false,
+        defaultValue: true
+    },
+    createdAt: {
+        type: DataTypes.DATE,
+        allowNull: false,
+        defaultValue: sequelize.literal('NOW()')
+    },
+    updatedAt: {
+        type: DataTypes.DATE,
+        allowNull: false,
+        defaultValue: sequelize.literal('NOW()')
+    }
+}, {
+    sequelize,
+    modelName: 'ArtistTypeTag',
+    tableName: 'artisttypetags'
+});
+
+SetTag.init({
+    SetId: {
+        type: DataTypes.INTEGER,
+        references: {
+            model: Set,
+            key: 'id'
+        }
+    },
+    TagId: {
+        type: DataTypes.INTEGER,
+        references: {
+            model: Tag,
+            key: 'id'
+        }
+    },
+    createdAt: {
+        type: DataTypes.DATE,
+        allowNull: false,
+        defaultValue: sequelize.literal('NOW()')
+    },
+    updatedAt: {
+        type: DataTypes.DATE,
+        allowNull: false,
+        defaultValue: sequelize.literal('NOW()')
+    }
+}, {
+    sequelize,
+    modelName: 'SetTag',
+    tableName: 'settags'
+});
+
+ArtistTag.init({
+    ArtistTypeTagId: {
+        type: DataTypes.INTEGER,
+        references: {
+            model: ArtistTypeTag,
+            key: 'id'
+        }
+    },
+    ArtistId: {
+        type: DataTypes.INTEGER,
+        references: {
+            model: Artist,
+            key: 'id'
+        }
+    },
+    createdAt: {
+        type: DataTypes.DATE,
+        allowNull: false,
+        defaultValue: sequelize.literal('NOW()')
+    },
+    updatedAt: {
+        type: DataTypes.DATE,
+        allowNull: false,
+        defaultValue: sequelize.literal('NOW()')
+    }
+}, {
+    sequelize,
+    modelName: 'ArtistTag',
+    tableName: 'artisttags'
+});
+
+
+// Sync 
+//syncModels({ force: false }); // dev - creates the tables, dropping them first
+//syncModels({ alter: true }); // dev - make necessary schema changes match the model
+syncModels(); // production
+
+// Model Associations
+Set.hasMany(SetRawFile);
+SetRawFile.belongsTo(Set);
+
+PackPurchase.belongsTo(Set); // User's get a pack purchase for each pack they own
+//PackPurchase.belongsTo(Artist);
+Set.hasMany(PackPurchase);
+
+Set.belongsToMany(Tag, { through: SetTag });
+Tag.belongsToMany(Set, { through: SetTag });
+
+Artist.hasMany(Set);
+Set.belongsTo(Artist);
+
+ArtistTypeTag.belongsToMany(Artist, { through: ArtistTag });
+Artist.belongsToMany(ArtistTypeTag, { through: ArtistTag });
+
+async function syncModels() {
+    await sequelize.sync({ alter: true }); // NEVER FORCE only ALTER on prod{ force: true } or { alter: true }
+    console.log("All models were synchronized successfully.");
+}
+
+// const client = new Client({
+//     connectionString: process.env.DATABASE_URL,
+//     ssl: {
+//         rejectUnauthorized: false
+//     }
 // });
 
-// app.use('/peerjs', peerServer);
+// client.connect();
+
+// client.query('SELECT table_schema,table_name FROM information_schema.tables;', (err, res) => {
+//     if (err) throw err;
+//     for (let row of res.rows) {
+//         console.log(JSON.stringify(row));
+//     }
+//     client.end();
+// });
 
 // guest uids are in their local storage
 function newGuest() {
@@ -265,7 +664,6 @@ let remoteQueKeyMap = {};
 let mobileVideoKeyMap = {};
 let modulePeerMap = {};
 let appPeerMap = {};
-let laserzKeyMap = {};
 let phoneListHolder = [];
 let liveStreamRooms = [];
 let crowdScreenKey = '';
@@ -636,47 +1034,25 @@ io.on('connection', (socket) => {
         io.in(String(mid)).emit('makeV2Complete', makeVideo);
     });
 
-    //
-    // Livestream Socket Stuff
-    //
-    // socket.on("hostCheck", async data => {
-    //     console.log('server received host check');
-    //     socket.broadcast.to(String(mid)).emit('getCrowdScreenImage', data);
-    // });
-
-    // // Twilio webhook
-    // app.post('/api/sms/reply', (req, res) => {
-    //     console.log('received an sms at twilio number', req.body.Body, req);
-
-    //     const twiml = new MessagingResponse();
-    //     let key = req.body.Body;
-
-    //     if (crowdScreenKeyMap[key]) {
-
-    //         // send the text to the user to connect
-    //         twiml.message('Click the link to connect. ' + crowdScreenUrl + '/crowdscreen/' + crowdScreenKeyMap[key]);
-
-    //         // send the number to the app
-
-
-    //     } else if (remoteQueKeyMap[key]) {
-    //         twiml.message('Click the link to connect. ' + crowdScreenUrl + '/remote-que/' + remoteQueKeyMap[key]);
-    //     } else if (laserzKeyMap[key]) {
-    //         twiml.message('Click the link to connect. ' + crowdScreenUrl + '/laserz/' + laserzKeyMap[key]);
-    //     } else {
-    //         twiml.message('Connection Error :(');
-    //     }
-
-    //     res.writeHead(200, { 'Content-Type': 'text/xml' });
-    //     res.end(twiml.toString());
-    // });
 
 });
 
 // Generic error handler used by all endpoints.
 function handleError(res, reason, message, code) {
     console.log("ERROR: " + reason);
+    res.header('Access-Control-Allow-Origin', '*');
+    res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS');
+    res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization, Content-Length, X-Requested-With');
     res.status(code || 500).json({ "error": message });
+}
+
+// Generic success handler used by all endpoints.
+function handleSuccess(res, obj) {
+    //console.log("ERROR: " + reason);
+    res.header('Access-Control-Allow-Origin', '*');
+    res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS');
+    res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization, Content-Length, X-Requested-With');
+    res.status(200).json(obj);
 }
 
 /*
@@ -724,7 +1100,6 @@ app.get('/api/kill', function (req, res) {
         "killMsg": killMsg
     });
 });
-
 
 // Get the modulepeermap command
 app.get('/api/modulepeermap', function (req, res) {
@@ -944,6 +1319,105 @@ app.get('/api/livestream/amihost', async (req, res) => {
 
 });
 
+/**
+ * Search VJ packs 
+ *      - Used on the marketplace page
+ */
+app.get("/api/sets", async function (req, res) {
+    res.header('Access-Control-Allow-Origin', '*');
+    res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS');
+    res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization, Content-Length, X-Requested-With');
+    console.log('received a get request to search', req.query);
+
+    if (req.query.tags) {
+
+    }
+
+    Set.findAll({
+        where: {
+            active: true
+        },
+        include: [
+            { model: SetRawFile },
+            { model: Artist },
+            {
+                model: Tag,
+                //where: {
+                //    name: 'Glitch'
+                //}
+            }
+        ]
+    }).then((res2) => {
+        res.write(JSON.stringify(res2));
+        res.end();
+    }, (err) => {
+        handleError(res, err, 'nope');
+    });
+});
+
+/**
+ * Get Set Tags
+ *      - Used on the marketplace page
+ */
+app.get("/api/sets/tags", async function (req, res) {
+    res.header('Access-Control-Allow-Origin', '*');
+    res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS');
+    res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization, Content-Length, X-Requested-With');
+    console.log('received a get request to search', req.query);
+    Tag.findAll({
+        where: {
+            active: true
+        }
+    }).then((res2) => {
+        res.write(JSON.stringify(res2));
+        res.end();
+    }, (err) => {
+        handleError(res, err, 'nope');
+    });
+});
+
+/**
+ * Get Artists
+ *      - Used on the marketplace page
+ */
+app.get("/api/artists", async function (req, res) {
+    res.header('Access-Control-Allow-Origin', '*');
+    res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS');
+    res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization, Content-Length, X-Requested-With');
+    console.log('received a get request to search', req.query);
+    Artist.findAll({
+        where: {
+            active: true
+        }
+    }).then((res2) => {
+        res.write(JSON.stringify(res2));
+        res.end();
+    }, (err) => {
+        handleError(res, err, 'nope');
+    });
+});
+
+/**
+ * Get Set Tags
+ *      - Used on the marketplace page
+ */
+app.get("/api/artists/tags", async function (req, res) {
+    res.header('Access-Control-Allow-Origin', '*');
+    res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS');
+    res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization, Content-Length, X-Requested-With');
+    console.log('received a get request to search', req.query);
+    ArtistTypeTag.findAll({
+        where: {
+            active: true
+        }
+    }).then((res2) => {
+        res.write(JSON.stringify(res2));
+        res.end();
+    }, (err) => {
+        handleError(res, err, 'nope');
+    });
+});
+
 // Website Entrypoint
 app.get("*", (req, res) => {
     //console.log('ALPHA');
@@ -1100,6 +1574,56 @@ app.post('/api/sms/reply', (req, res) => {
     res.end(twiml.toString());
 });
 
+// Stripe webhook
+app.post('/api/stripe/webhook', bodyParser.raw({ type: 'application/json' }), (request, response) => {
+    let event;
+
+    console.log('CHARLIE', request.body);
+
+    try {
+        event = request.body;
+        //event = JSON.parse(request.body);
+        //event = JSON.parse(request.body.object);
+    } catch (err) {
+        response.status(400).send(`Webhook Error: ${err.message}`);
+    }
+
+    console.log('ALPHA', event);
+    //console.log('BETA', event.data.object);
+
+    // Handle the event
+    switch (event.type) {
+        case 'charge.succeeded':
+            handleChargeSucceeded(event.data.object);
+            break;
+        default:
+            console.log(`Unhandled event type ${event.type}`);
+    }
+
+    // Return a response to acknowledge receipt of the event
+    response.json({ received: true });
+});
+
+/**
+ * Stripe Customer Portal Session
+ * - takes customer 
+ */
+app.post("/api/stripe/customerportal", async (req, res) => {
+
+    console.log('DELTA', req.body);
+
+    let session = await stripe.billingPortal.sessions.create({
+        customer: req.body.customer,
+        return_url: process.env.CROWD_SCREEN_URL + '/account'
+    });
+
+    console.log('SESSION', session);
+    res.header('Access-Control-Allow-Origin', '*');
+    res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS');
+    res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization, Content-Length, X-Requested-With');
+    res.status(200).json({ url: session });
+});
+
 // Create Seat
 // creates a seat by uploading a file to s3
 app.post("/api/createSeat", async function (req, res) {
@@ -1120,7 +1644,7 @@ app.post("/api/createSeat", async function (req, res) {
         stripe.customers.list({ limit: 1, email: email },
             function (err, customers) {
                 if (err) {
-                    alert('Issue verifying purchase with stripe.')
+                    //alert('Issue verifying purchase with stripe.')
                     handleError(res, err, 'nope');
                 }
 
@@ -1250,5 +1774,187 @@ app.post("/api/removeSeat", async function (req, res) {
         });
     } catch (err) {
         handleError(res, err, 'nope');
+    }
+});
+
+app.post("/api/getSubscriptions", async function (req, res) {
+    getSubscriptions(req, res).then((data) => {
+        handleSuccess(res, data);
+    }, (err) => {
+        handleError(res, err, 'getSubscriptions');
+    });
+});
+
+app.post("/api/getNewsletter", async function (req, res) {
+    let email = req.body.email;
+    //let response;
+    //Promise style
+    mailchimp.get({
+        path: '/lists/ea72b92f29/members/' + md5(email.toLowerCase())
+    })
+        .then(function (result) {
+            console.log('ALPHA', result);
+            res.header('Access-Control-Allow-Origin', '*');
+            res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS');
+            res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization, Content-Length, X-Requested-With');
+            res.status(200).json(result);
+        })
+        .catch(function (err) {
+            console.log('ALPHA', err);
+            res.header('Access-Control-Allow-Origin', '*');
+            res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS');
+            res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization, Content-Length, X-Requested-With');
+            res.status(200).json(err);
+        });
+});
+
+/**
+ * Get tags
+ */
+app.post("/api/getTags", async function (req, res) {
+    getTags(req, res).then((data) => {
+        handleSuccess(res, data);
+    }, (err) => {
+        handleError(res, err, 'getTags');
+    })
+});
+
+/**
+ * Get user's created vj packs
+ *      - Used on the account page
+ */
+app.post("/api/getCatalog", async function (req, res) {
+
+    //console.log('BODY', req.body);
+
+    Set.findAll({
+        where: {
+            active: true,
+        },
+        include: [{
+            model: Artist,
+            model: SetRawFile
+        }]
+    }).then((res2) => {
+        //console.log('HOTEL', res2);
+        res.header('Access-Control-Allow-Origin', '*');
+        res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS');
+        res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization, Content-Length, X-Requested-With');
+        res.status(200).json(res2);
+    }, (err) => {
+        handleError(res, err, 'nope');
+    });
+});
+
+/**
+ * Delete a user's catalog item
+ */
+app.post("/api/deleteCatalog", async function (req, res) {
+
+    Set.update(
+        { active: false },
+        { returning: true, where: { id: req.body.id } }
+    )
+        .then(([rowsUpdate, [updatedCatalog]]) => {
+            res.header('Access-Control-Allow-Origin', '*');
+            res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS');
+            res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization, Content-Length, X-Requested-With');
+            res.status(200).json(updatedCatalog);
+        })
+        .catch((err) => {
+            handleError(res, err, 'nope');
+        });
+
+});
+
+/**
+ * Get user's purchased vj packs
+ *      - Used on the account page
+ */
+app.post("/api/getlibrary", async function (req, res) {
+    PackPurchase.findAll({
+        where: {
+            active: true,
+            email: req.body.email
+        },
+        include: [{
+            model: Set
+        }]
+    }).then((res2) => {
+        //console.log('HOTEL', res2);
+        res.header('Access-Control-Allow-Origin', '*');
+        res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS');
+        res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization, Content-Length, X-Requested-With');
+        res.status(200).json(res2);
+    }, (err) => {
+        handleError(res, err, 'nope');
+    });
+});
+
+/**
+ * Submit a vj pack as a user
+ *      - Used on the marketplace page
+ */
+app.post("/api/submitVjPack", async function (req, res) {
+    console.log('ALPHA', req.body.pack);
+    let pack = JSON.parse(req.body.pack);
+    //console.log('GOLF', pack);
+    if (!pack.artistId) {
+        handleError(res, 'No Artist Id', 'nope');
+    } else {
+
+        // Insert Pack
+        const insertedPack = await Set.create({
+            artistId: pack.artistId,
+            name: pack.name,
+            description: pack.description,
+            price: pack.price,
+            coverImage: pack.mp4File.url,
+            setFile: pack.setFile.url
+        }).then(async (res2) => {
+            console.log('CHUCK', res2);
+            // Insert Raw Files
+            for (let i = 0; i < pack.rawFiles.length; i++) {
+                const file = pack.rawFiles[i];
+                const insert = await SetRawFile.create({
+                    SetId: res2.id,
+                    file: file.url
+                }).then((res3) => {
+                    console.log(res3);
+                });
+            }
+
+            // Response
+            res.header('Access-Control-Allow-Origin', '*');
+            res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS');
+            res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization, Content-Length, X-Requested-With');
+            res.status(200).json();
+        }, (err) => {
+            handleError(res, err, 'nope');
+        });
+    }
+});
+
+app.post("/api/profilecheck", async function (req, res) {
+    console.log('TEST ALPHA', req.body);
+
+    let email = req.body.email;
+    if (!email) {
+        handleError(res, 'No Email', 'nope');
+    } else {
+
+        // Check if user exists
+        const user = await Artist.findOne({
+            where: {
+                email: email,
+                active: true
+            }
+        });
+
+        console.log('TEST BETA', user);
+
+        // Update Auth0 status just in case
+
+        handleSuccess(res, {});
     }
 });

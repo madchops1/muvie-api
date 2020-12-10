@@ -1,0 +1,50 @@
+<div class="content-wrapper dark">
+
+    <h1 class="center">SUCCESS</h1>
+    <h2>Thank You For Your Purchase</h2>
+
+    <div class="content-inner-wrapper">
+
+        <div *ngIf="cartCopy.products.length">
+
+            <table class="two-third">
+                <tr>
+                    <td>Preview</td>
+                    <td>Pack Name</td>
+                    <td>Artist</td>
+                    <td>Description</td>
+                    <td>&nbsp;</td>
+                </tr>
+                <tr *ngFor="let pack of cartCopy">
+                    <td>
+                        <video class="pack-video" width="150" controls>
+                            <source src="{{pack.coverImage}}" type="video/mp4">
+                        </video>
+                    </td>
+                    <td>{{ pack.name }}</td>
+                    <td>{{ pack.artistId.toString().split('.')[0] }}</td>
+                    <td>{{ pack.description }}</td>
+                    <td>
+                        <a href="{{pack.setFile}}" aria-label="Download" (click)="downloadPack(pack)">
+                            <mat-icon>close</mat-icon> Download
+                        </a>
+                    </td>
+                </tr>
+            </table>
+
+            <div *ngIf="!auth.loggedIn" class="third">
+                <p>
+                    Download your files on the left. You will also receive your receipt and files in an email.
+                </p>
+            </div>
+
+            <div *ngIf="auth.loggedIn" class="third">
+                <p>
+                    Download your files on the left. You will also receive your receipt and files in an email, in the
+                    future you can always re-download your files from your library on your
+                    account page.
+                </p>
+            </div>
+        </div>
+    </div>
+</div>

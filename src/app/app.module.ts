@@ -2,8 +2,8 @@ import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { MatMenuModule, MatSelectModule, MatFormFieldModule, MatInputModule, MatSlideToggleModule, MatIconModule, MatButtonModule, MatTooltipModule, MatToolbarModule, MatButtonToggleModule, MatSidenavModule, MatRadioModule, MatCheckboxModule, MatSliderModule, MatCardModule, MatGridListModule, MatProgressSpinnerModule, MatToolbar, MatSelect, MatDialogModule } from '@angular/material';
-import { FormsModule } from '@angular/forms';
+import { MatChipsModule, MatAutocompleteModule, MatSnackBarModule, MatBadgeModule, MatMenuModule, MatSelectModule, MatFormFieldModule, MatInputModule, MatSlideToggleModule, MatIconModule, MatButtonModule, MatTooltipModule, MatToolbarModule, MatButtonToggleModule, MatSidenavModule, MatRadioModule, MatCheckboxModule, MatSliderModule, MatCardModule, MatGridListModule, MatProgressSpinnerModule, MatToolbar, MatSelect, MatDialogModule } from '@angular/material';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 import { AppRoutingModule } from './app-routing.module';
 import { DeviceDetectorModule } from 'ngx-device-detector';
@@ -53,6 +53,12 @@ import { CalendarComponent } from './calendar/calendar.component';
 import { AccountComponent } from './account/account.component';
 import { MarketplaceComponent } from './marketplace/marketplace.component';
 import { MarketplaceDialogAddComponent } from './marketplace-dialog-add/marketplace-dialog-add.component';
+import { TutorialsComponent } from './tutorials/tutorials.component';
+import { CartComponent } from './cart/cart.component';
+import { ExamplesComponent } from './examples/examples.component';
+import { MarketPlaceSuccessComponent } from './market-place-success/market-place-success.component';
+import { UiComponent } from './ui/ui.component';
+import { VizuwearComponent } from './vizuwear/vizuwear.component';
 
 const config: SocketIoConfig = { url: environment.ioUrl, options: { autoConnect: false } };
 
@@ -95,12 +101,21 @@ const config: SocketIoConfig = { url: environment.ioUrl, options: { autoConnect:
         CalendarComponent,
         AccountComponent,
         MarketplaceComponent,
-        MarketplaceDialogAddComponent
+        MarketplaceDialogAddComponent,
+        TutorialsComponent,
+        CartComponent,
+        ExamplesComponent,
+        MarketPlaceSuccessComponent,
+        UiComponent,
+        VizuwearComponent
     ],
     imports: [
         BrowserModule,
         AppRoutingModule,
         BrowserAnimationsModule,
+        MatChipsModule,
+        MatAutocompleteModule,
+        MatBadgeModule,
         MatFormFieldModule,
         MatInputModule,
         MatDialogModule,
@@ -113,6 +128,7 @@ const config: SocketIoConfig = { url: environment.ioUrl, options: { autoConnect:
         MatCardModule,
         MatGridListModule,
         MatProgressSpinnerModule,
+        MatSnackBarModule,
         MatRadioModule,
         MatSidenavModule,
         MatIconModule,
@@ -126,7 +142,11 @@ const config: SocketIoConfig = { url: environment.ioUrl, options: { autoConnect:
         DragDropModule,
         SocketIoModule.forRoot(config),
         FormsModule,
+        ReactiveFormsModule,
         DeviceDetectorModule.forRoot()
+    ],
+    entryComponents: [
+        MarketplaceDialogAddComponent,
     ],
     providers: [
     ],
