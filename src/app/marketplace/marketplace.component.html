@@ -1,14 +1,100 @@
 <mat-drawer-container class="marketplace-container" [hasBackdrop]="hasBackdrop.value">
-    <mat-drawer #drawer [mode]="mode.value" class="drawer">I'm a drawer</mat-drawer>
+    <mat-drawer #drawer [mode]="mode.value" class="drawer">
+        <form class="search-form">
+
+            <!-- Set Tags -->
+            <mat-form-field class="example-full-width">
+                <mat-chip-list #chipList1>
+                    <mat-chip *ngFor="let tag of selectedTags" [selectable]="selectable" [removable]="removable"
+                        (removed)="remove('tag',tag)">
+                        {{tag.name}}
+                        <mat-icon matChipRemove *ngIf="removable">cancel</mat-icon>
+                    </mat-chip>
+                    <input type="text" placeholder="Vibes..." aria-label="Vibe" matInput #input1
+                        [formControl]="myControl1" [matAutocomplete]="auto1" [matChipInputFor]="chipList1"
+                        [matChipInputSeparatorKeyCodes]="separatorKeysCodes" [matChipInputAddOnBlur]="addOnBlur"
+                        (matChipInputTokenEnd)="add('tag',$event)">
+                </mat-chip-list>
+                <mat-autocomplete #auto1="matAutocomplete" (optionSelected)="selected('tag', $event)">
+                    <mat-option *ngFor="let tag of filteredTags | async" [value]="tag.id">
+                        {{tag.name}}
+                    </mat-option>
+                </mat-autocomplete>
+            </mat-form-field>
+
+            <!-- Sets -->
+            <mat-form-field class="example-full-width">
+                <mat-chip-list #chipList2>
+                    <mat-chip *ngFor="let set of selectedSets" [selectable]="selectable" [removable]="removable"
+                        (removed)="remove('set',set)">
+                        {{set.name}}
+                        <mat-icon matChipRemove *ngIf="removable">cancel</mat-icon>
+                    </mat-chip>
+                    <input type="text" placeholder="Sets..." aria-label="Set" matInput #input2
+                        [formControl]="myControl2" [matAutocomplete]="auto2" [matChipInputFor]="chipList2"
+                        [matChipInputSeparatorKeyCodes]="separatorKeysCodes" [matChipInputAddOnBlur]="addOnBlur"
+                        (matChipInputTokenEnd)="add('set',$event)">
+                </mat-chip-list>
+                <mat-autocomplete #auto2="matAutocomplete" (optionSelected)="selected('set', $event)">
+                    <mat-option *ngFor="let set of filteredSets | async" [value]="set.id">
+                        {{set.name}}
+                    </mat-option>
+                </mat-autocomplete>
+            </mat-form-field>
+
+            <!-- Artist Tags -->
+            <mat-form-field class="example-full-width">
+                <mat-chip-list #chipList3>
+                    <mat-chip *ngFor="let artistTag of selectedArtistTags" [selectable]="selectable"
+                        [removable]="removable" (removed)="remove('artistTag',artistTag)">
+                        {{artistTag.name}}
+                        <mat-icon matChipRemove *ngIf="removable">cancel</mat-icon>
+                    </mat-chip>
+                    <input type="text" placeholder="Genres..." aria-label="Genre" matInput #input3
+                        [formControl]="myControl3" [matAutocomplete]="auto3" [matChipInputFor]="chipList3"
+                        [matChipInputSeparatorKeyCodes]="separatorKeysCodes" [matChipInputAddOnBlur]="addOnBlur"
+                        (matChipInputTokenEnd)="add('artistTag',$event)">
+                </mat-chip-list>
+                <mat-autocomplete #auto3="matAutocomplete" (optionSelected)="selected('artistTag', $event)">
+                    <mat-option *ngFor="let artistTag of filteredArtistTags | async" [value]="artistTag.id">
+                        {{artistTag.name}}
+                    </mat-option>
+                </mat-autocomplete>
+            </mat-form-field>
+
+            <!-- Artists Tags -->
+            <mat-form-field class="example-full-width">
+                <mat-chip-list #chipList4>
+                    <mat-chip *ngFor="let artist of selectedArtists" [selectable]="selectable" [removable]="removable"
+                        (removed)="remove('artist',artist)">
+                        {{artist.name}}
+                        <mat-icon matChipRemove *ngIf="removable">cancel</mat-icon>
+                    </mat-chip>
+                    <input type="text" placeholder="Artists..." aria-label="Artist" matInput #input4
+                        [formControl]="myControl4" [matAutocomplete]="auto4" [matChipInputFor]="chipList4"
+                        [matChipInputSeparatorKeyCodes]="separatorKeysCodes" [matChipInputAddOnBlur]="addOnBlur"
+                        (matChipInputTokenEnd)="add('artist',$event)">
+                </mat-chip-list>
+                <mat-autocomplete #auto4="matAutocomplete" (optionSelected)="selected('artist', $event)">
+                    <mat-option *ngFor="let artist of filteredArtists | async" [value]="artist.id">
+                        {{artist.name}}
+                    </mat-option>
+                </mat-autocomplete>
+            </mat-form-field>
+        </form>
+
+
+    </mat-drawer>
     <mat-drawer-content class="main-content">
 
-        <button mat-raised-button (click)="drawer.toggle()" class="advanced">Filter</button>
+        <button mat-raised-button (click)="drawer.toggle()" class="advanced">Filters</button>
 
-        <h1 class="center">MARKETPLACE</h1>
+        <h1 class="center">VJ PACK MARKETPLACE</h1>
 
-        <p class="third">
-            Welcome to the VISUALZ MARKETPLACE. Find the best audio-reactive VJ packs from from the
-            industry leading visual artists. Ready to use right now in your live-stream, projections, or LED walls.
+        <p class="half">
+            Welcome to the VJ PACK MARKETPLACE. Find the best audio-reactive VJ packs from from
+            industry leading visual artists. Ready to use right now in your live-stream, projections, or LED walls. All
+            packs include the original graphics files and an audio-reactive .visualz file.
         </p>
 
         <button mat-fab color="primary" class="add" (click)="openAddDialog()"
@@ -16,20 +102,37 @@
             <mat-icon>add</mat-icon>
         </button>
 
+        <!-- 
         <form name="searchform">
-            <input type="text" value="" class="search" (change)="search()" [(ngModel)]="query" name="query"
+            <input type="text" value="" class="search" (change)="getSets()" [(ngModel)]="query" name="query"
                 placeholder="Search..." />
-        </form>
+        </form> 
+        -->
 
         <div class="flex-container">
             <!-- <div *ngFor="let key of objectKeys(track.modules[editingModule].settings)"> -->
-            <div *ngFor="let pack of results" class="marketplace-grid">
-                <div class="card">
-                    {{pack.name}}
-                </div>
-                <video class="pack-video" controls>
+            <div *ngFor="let pack of results; let i = index;" class="marketplace-grid" ngClick="playVideo(i)">
+                <h2 class="title">{{pack.name}}</h2>
+                <video class="pack-video" controls #videoPlayer>
                     <source src="{{pack.coverImage}}" type="video/mp4">
                 </video>
+                <div class="pink-card">
+                    <h3>CONTENTS</h3>
+                    <ul>
+                        <li>.visualz Audio-Reactive File</li>
+                        <li><strong>{{pack.SetRawFiles.length}}</strong> Original Files</li>
+                    </ul>
+                </div>
+                <div class="card">
+                    <button mat-raised-button color="primary" class="pink" (click)="addProduct(pack)"
+                        aria-label="Add To Cart">
+                        Add To Cart
+                        <mat-icon>add_shopping_cart</mat-icon>
+                    </button>
+                    <h3>${{pack.price}}</h3>
+                    <h4>[artist_name]</h4>
+                    <p>{{pack.description}}</p>
+                </div>
             </div>
         </div>
 

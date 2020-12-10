@@ -97,9 +97,7 @@ let ExtractFrame = (req) => {
     return new Promise(function (resolve, reject) {
 
         console.log('request', req.body);
-        //return false;
         let filePath;
-        //let fileName;
 
         try {
 

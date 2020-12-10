@@ -1,3 +1,5 @@
+$breakpoint-mobile: 768px;
+
 .marketplace-container {
     font-size: 16px;
     min-height: 100vh;
@@ -5,6 +7,7 @@
 
 .drawer {
     padding: 40px 20px;
+    width: 20vw;
 }
 
 .main-content {
@@ -16,6 +19,7 @@
     position: fixed;
     right: 20px;
     bottom: 20px;
+    z-index: 100;
 }
 
 .mat-drawer-container {
@@ -24,7 +28,7 @@
 }
 
 .search {
-    width: 50vw;
+    width: 75vw;
     height: 80px;
     font-size: 50px;
     line-height: 50px;
@@ -34,10 +38,16 @@
     
 }
 
+.search-form {
+    width: 1px;
+    //position: fixed;
+}
+
 .advanced {
-    position: absolute;
-    top: 10px;
-    left: 10px;
+    //position: fixed;
+    //top: 130px;
+    //right: 10px;
+
 }
 
 .third {
@@ -48,7 +58,17 @@
     font-size: 12px;
 }
 
+.half {
+    width: 66vw;
+    line-height: 25px;
+    display: block;
+    margin: 20px auto 40px;
+    font-size: 12px;  
 
+    @media (max-width: $breakpoint-mobile) {
+        display: none;
+    }
+}
 
 .flex-container {
     display: flex;
@@ -60,24 +80,110 @@
 .marketplace-grid {
     margin: 20px;
     width: 33vw;
-    background: rgba(0,0,0,0.5);
+    background: #000;
     color: #fff;
     cursor: pointer;
     position: relative;
-    padding: 20px;
+    padding: 0px;
     text-decoration: none;
     border-radius: 6px;
+    overflow: hidden;
+
+    .pink-card {
+        display: none;
+        position: absolute;
+        background-color: #e91e63;
+        padding: 10px 10px 0 10px;
+        color: #fff;
+        bottom: 0px;
+        left: 0px;
+        z-index: 1;
+        opacity: 0.9;
+        border-radius:0 6px 0 0;
+
+        h3 {
+            font-size: 14px;
+            margin: 0px 0 10px 0;
+            line-height: 14px;
+            height: 14px;
+            text-align: left;
+        }
+
+        ul {
+            margin: 0px;
+            padding: 0px;
+            list-style: none;
+
+            li {
+                margin: 0px 0 10px 0;
+                padding: 0px;
+                font-size: 12px;
+                list-style: none;
+            }
+        }
+    }
+
+    &:hover {
+        
+        .pink-card {
+            display: block;
+        }
+    }
+c
+    h2.title {
+        padding: 20px; 
+        border-radius: 4px;
+        background: #ffffff;
+        color: #000;
+        margin: 0px;
+    }
 
     .card {
-        position: absolute;
-        top: 0px;
-        left: 0px;
-        background-color: rgba(0,0,0,0.8);
-        padding: 20px;
-        width: calc(100% - 40px);
+        position: relative;
+        background-color: #000;
+        padding: 10px;
+        overflow: hidden;
+
+        h2 {
+            margin: 0px;
+            padding: 0px;
+            font-size: 14px;
+            text-align: left
+        }
+
+        h3 {
+            margin: 0px;
+            padding: 0px;
+            font-size: 18px;
+        }
+
+        h4 {
+            margin: 0px 0 5px 0;
+            padding: 0px;
+            font-size: 14px;
+            text-align: left;
+        }
+
+        p {
+            font-size: 12px;
+            margin: 0px;
+            padding: 0px;
+            display: block;
+        }
+
+        button {
+            float: right;
+            margin-left: 10px;
+            margin-right: 0px;
+        }
     }
 
     video {
         width: 100%;
+        outline: none;
     }
+}
+
+.pack-video {
+    background-color: #000;
 }

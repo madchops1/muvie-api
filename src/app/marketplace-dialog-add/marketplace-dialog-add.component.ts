@@ -1,7 +1,10 @@
 import { Component, OnInit, Inject } from '@angular/core';
 import { MatDialog, MatDialogConfig, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { AuthService } from '../auth/auth.service';
+import { AuthService } from '../services/auth.service';
+import { ProfileService } from '../services/profile.service';
 import { MixpanelService } from '../services/mixpanel.service';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { environment } from '../../environments/environment';
 
 let async = require("async");
 
@@ -24,16 +27,17 @@ export class MarketplaceDialogAddComponent implements OnInit {
         rawFiles: [],
         setFile: { signedRequest: '', url: '' },
         mp4File: { signedRequest: '', url: '' },
-        artistId: ''
+        artistId: false
     };
     button: any = 'Submit';
-    success: any = false;
-    //auth.userProfile$.source: any;
 
     constructor(
+        @Inject(MAT_DIALOG_DATA) public data: any,
         public dialogRef: MatDialogRef<MarketplaceDialogAddComponent>,
         private auth: AuthService,
-        private mixpanelService: MixpanelService) {
+        private profile: ProfileService,
+        private mixpanelService: MixpanelService,
+        public _snackBar: MatSnackBar) {
     }
 
     onNoClick(): void {
@@ -41,9 +45,14 @@ export class MarketplaceDialogAddComponent implements OnInit {
     }
 
     ngOnInit() {
-        this.auth.userProfile$.subscribe((profile) => {
-            this.pack.artistId = profile.email;
-        });
+
+        console.log('ALPHA', this.data);
+
+        if (this.auth.loggedIn) {
+            this.auth.userProfile$.subscribe((pro) => {
+                this.pack.artistId = this.profile.profile.email;
+            });
+        }
     }
 
     uploadRawFiles(event) {
@@ -106,7 +115,7 @@ export class MarketplaceDialogAddComponent implements OnInit {
     getSignedRequest(file): any {
         return new Promise((resolve, reject) => {
             const xhr = new XMLHttpRequest();
-            xhr.open('GET', `api/sign-s3?file-name=${file.name}&file-type=${file.type}`);
+            xhr.open('GET', environment.ioUrl + `api/sign-s3?file-name=${file.name}&file-type=${file.type}`);
             xhr.onreadystatechange = () => {
                 if (xhr.readyState === 4) {
                     if (xhr.status === 200) {
@@ -171,7 +180,7 @@ export class MarketplaceDialogAddComponent implements OnInit {
         return new Promise((resolve, reject) => {
             const xhr = new XMLHttpRequest();
             let params = 'pack=' + JSON.stringify(this.pack);
-            xhr.open('POST', 'api/submitVjPack', true);
+            xhr.open('POST', environment.ioUrl + 'api/submitVjPack', true);
             xhr.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
             xhr.onreadystatechange = () => {
                 if (xhr.readyState === 4) {
@@ -209,14 +218,15 @@ export class MarketplaceDialogAddComponent implements OnInit {
                 console.log('DELTA', res);
                 this.message = "Your VJ pack has been submitted for approval.";
                 this.mixpanelService.track('VJ Pack Submission');
-                this.success = true;
-
-                setTimeout(() => {
-                    this.success = false;
-                    this.dialogRef.close();
-                    this.button = "Submit";
-                    this.message = "";
-                }, 3000);
+                this.dialogRef.close();
+                this.button = "Submit";
+                this.message = "";
+                this._snackBar.open('VJ Pack Added', 'OK', {
+                    duration: 2000,
+                    horizontalPosition: 'right',
+                    verticalPosition: 'top',
+                    panelClass: ['green-snackbar']
+                });
 
             }, (err) => {
                 this.message = "Error submitting.";

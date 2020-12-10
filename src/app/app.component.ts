@@ -1,6 +1,8 @@
 import { Component } from '@angular/core';
 import { ActivatedRoute, Router, NavigationEnd } from '@angular/router';
-import { AuthService } from './auth/auth.service';
+import { AuthService } from './services/auth.service';
+import { ProfileService } from './services/profile.service';
+import { CartService } from './services/cart.service';
 
 @Component({
     selector: 'app-root',
@@ -15,14 +17,12 @@ export class AppComponent {
     menu: any = false;
 
     // detect the route
-    constructor(private route: ActivatedRoute, private router: Router, private auth: AuthService) {
-
-        console.log('auth', auth);
-
-        //if (auth.loggedIn) {
-        //    this.userProfile = auth.userProfile$;
-        //    console.log('userProfile', this.userProfile);
-        //}
+    constructor(
+        private route: ActivatedRoute,
+        private router: Router,
+        private auth: AuthService,
+        private profile: ProfileService,
+        private cart: CartService) {
 
         // Removes the header, etc.....
         router.events.subscribe((val) => {
@@ -41,10 +41,22 @@ export class AppComponent {
                     this.currentRoute.includes('remote-que') ||
                     this.currentRoute.includes('remote-screen') ||
                     this.currentRoute.includes('live/')
-                ) {
+                )
+                // This is a mode for pages that are used by the VISUALZ application
+                {
                     this.interactive = true;
-                } else {
+                }
+                // This is a mode for normal website pages
+                else {
                     this.interactive = false;
+
+                    // Check if the user is 
+                    console.log('auth', auth);
+
+                    if (auth.loggedIn) {
+                        this.profile.setProfile();
+                    }
+
                 }
             }
         });

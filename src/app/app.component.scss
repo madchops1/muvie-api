@@ -17,6 +17,10 @@ $breakpoint-mobile: 768px;
 
     button {
         color: #fff;
+
+        a { 
+            text-decoration: none;
+        }
     }
 }
 
@@ -35,6 +39,9 @@ $breakpoint-mobile: 768px;
         padding-top: 30px;
         padding-bottom: 30px;
 
+        a { 
+            text-decoration: none;
+        }
     }
 }
 
@@ -46,4 +53,9 @@ $breakpoint-mobile: 768px;
 
 .mat-dialog-container {
     font-size: 14px;
+}
+
+.button-link {
+    text-decoration: none;
+    color: #fff;
 }

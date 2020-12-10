@@ -1,3 +1,101 @@
-<p>
-  cart works!
-</p>
+<div class="content-wrapper dark">
+
+    <h1 class="center">SHOPPING CART</h1>
+
+    <div class="content-inner-wrapper">
+
+        <div *ngIf="cart.products.length">
+
+            <table class="two-third">
+                <tr>
+                    <td>Preview</td>
+                    <td>Pack Name</td>
+                    <td>Artist</td>
+                    <td>Description</td>
+                    <td>&nbsp;</td>
+                    <td class="right">Price</td>
+                </tr>
+                <tr *ngFor="let pack of cart.products">
+                    <td>
+                        <video class="pack-video" width="150" controls>
+                            <source src="{{pack.coverImage}}" type="video/mp4">
+                        </video>
+                    </td>
+                    <td>{{ pack.name }}</td>
+                    <td>{{ pack.Artist.name }}</td>
+                    <td>{{ pack.description }}</td>
+                    <td>
+                        <button mat-icon-button aria-label="Remove" (click)="cart.removeProduct(pack)">
+                            <mat-icon>close</mat-icon>
+                        </button>
+                    </td>
+                    <td class="right">{{ pack.price }}</td>
+                </tr>
+                <tr>
+                    <td colspan="5" class="right big">Sub Total</td>
+                    <td class="right big">{{ cart.subTotal }}</td>
+                </tr>
+                <tr>
+                    <td colspan="5" class="right big">Tax</td>
+                    <td class="right big">{{ cart.tax }}</td>
+                </tr>
+                <tr>
+                    <td colspan="5" class="right big">Total</td>
+                    <td class="right big">{{ cart.total }}</td>
+                </tr>
+            </table>
+
+            <div *ngIf="!auth.loggedIn" class="third">
+                <h2 class="right">Checkout As Guest</h2>
+                <p>
+                    If you checkout as guest you will receive your order as an attachment to the email address you
+                    provide
+                    at checkout.
+                </p>
+                <button mat-raised-button class="btn btn-primary btn-margin" (click)="guestCheckout()"
+                    aria-label="GUEST CHECKOUT">
+                    GUEST CHECKOUT
+                </button>
+                <br>
+                or
+                <br>
+                <button mat-raised-button color="primary" class="btn btn-primary btn-margin" (click)="auth.login()">
+                    LOGIN / REGISTER
+                </button>
+            </div>
+
+            <div *ngIf="auth.loggedIn" class="third">
+                <h2 class="right">Checkout</h2>
+                <p>
+                    You will receive your order as an attachment to your email address. You can also download your files
+                    from your account page forever.
+                </p>
+                <button mat-raised-button class="btn btn-primary btn-margin" (click)="checkout()" aria-label="CHECKOUT">
+                    SECURE CHECKOUT
+                </button>
+            </div>
+
+            <!-- <img class="secure" src="../../assets/images/secure.png" /> -->
+
+            <div class="sec third">
+                <a href="https://stripe.com/" target="_blank">
+                    <img src="../assets/images/security.png" />
+                </a>
+            </div>
+
+        </div>
+
+        <div class="center" *ngIf="!cart.products.length">
+            <p>
+                You have no VJ packs in your cart.
+            </p>
+            <a routerLink="/marketplace" class="btn btn-primary btn-margin pink" aria-label="BROWSE THE MARKETPLACE">
+                BROWSE THE MARKETPLACE
+            </a>
+        </div>
+
+
+    </div>
+
+
+</div>

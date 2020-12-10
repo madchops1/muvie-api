@@ -6,20 +6,23 @@
     <button mat-button routerLink="/">HOME</button>
     <button mat-button routerLink="/about">ABOUT</button>
     <button mat-button routerLink="/download">GET IT NOW</button>
-    <button mat-button routerLink="/examples">EXAMPLES</button>
+    <!-- <button mat-button routerLink="/examples">EXAMPLES</button> -->
     <button mat-button [matMenuTriggerFor]="menu1">LEARN</button>
     <mat-menu #menu1="matMenu">
         <button mat-menu-item routerLink="/start-here">START HERE</button>
         <button mat-menu-item routerLink="/user-guide">USER GUIDE</button>
-        <button mat-menu-item routerLink="/tutorials">TUTORIALS</button>
+        <button mat-menu-item><a class="button-link"
+                href="https://www.youtube.com/channel/UC1v_B6CFVv1ZiCveAdkIGeQ">YOUTUBE
+                CHANNEL</a></button>
         <button mat-menu-item routerLink="/resources">RESOURCES</button>
         <button mat-menu-item routerLink="/support">COMMUNITY</button>
     </mat-menu>
-    <button mat-button routerLink="/marketplace">MARKETPLACE</button>
+    <!-- <button mat-button><a href="https://vjpacks.visualzstudio.com">VJ PACKS</a></button> -->
+    <button mat-button><a href="https://wear.visualzstudio.com">WEAR</a></button>
 </div>
 
 <div *ngIf="!interactive" class="msg">
-    VISUALZ v2 is here! <a routerLink="/download">Get It Now</a>
+    **NEW** VISUALZ WEAR - <a href="https://wear.visualzstudio.com">AUDIO REACTIVE LED WEARABLES</a>
 </div>
 <header *ngIf="!interactive">
     <a routerLink="/" class="logo">VISUALZ</a>
@@ -28,16 +31,19 @@
         <button mat-button routerLink="/">HOME</button>
         <button mat-button routerLink="/about">ABOUT</button>
         <button mat-button routerLink="/download">GET IT NOW</button>
-        <button mat-button routerLink="/examples">EXAMPLES</button>
+        <!-- <button mat-button routerLink="/examples">EXAMPLES</button> -->
         <button mat-button [matMenuTriggerFor]="menu">LEARN</button>
         <mat-menu #menu="matMenu">
             <button mat-menu-item routerLink="/start-here">START HERE</button>
             <button mat-menu-item routerLink="/user-guide">USER GUIDE</button>
-            <button mat-menu-item routerLink="/tutorials">TUTORIALS</button>
+            <button mat-menu-item><a class="button-link"
+                    href="https://www.youtube.com/channel/UC1v_B6CFVv1ZiCveAdkIGeQ">YOUTUBE
+                    CHANNEL</a></button>
             <button mat-menu-item routerLink="/resources">RESOURCES</button>
             <button mat-menu-item routerLink="/support">COMMUNITY</button>
         </mat-menu>
-        <button mat-button routerLink="/marketplace">MARKETPLACE</button>
+        <!-- <button mat-button><a href="https://vjpacks.visualzstudio.com">VJ PACKS</a></button> -->
+        <button mat-button><a href="https://wear.visualzstudio.com">WEAR</a></button>
 
         <button mat-raised-button class="btn btn-primary btn-margin" *ngIf="!auth.loggedIn" (click)="auth.login()">
             LOG IN
@@ -49,10 +55,11 @@
             <button mat-menu-item routerLink="/account">ACCOUNT</button>
             <button mat-menu-item (click)="auth.logout()">LOGOUT</button>
         </mat-menu>
-
-        <button mat-mini-fab routerLink="/cart" aria-label="Shopping Cart">
+        <!-- 
+        <button mat-mini-fab routerLink="/cart" aria-label="Shopping Cart" matBadge="{{cart.products.length}}"
+            matBadgePosition="before" matBadgeColor="accent">
             <mat-icon>shopping_cart</mat-icon>
-        </button>
+        </button> -->
     </div>
 
     <div class="clearfix"></div>
@@ -60,7 +67,7 @@
 
 <router-outlet></router-outlet>
 
-<footer *ngIf="!interactive">
+<footer *ngIf=" !interactive">
 
     <div class="sec">
         <a href="https://auth0.com/" target="_blank">
@@ -88,28 +95,29 @@
         <a routerLink="/">HOME</a> &nbsp;&nbsp;|&nbsp;&nbsp;
         <a routerLink="/about">ABOUT</a> &nbsp;&nbsp;|&nbsp;&nbsp;
         <a routerLink="/download">GET IT NOW</a> &nbsp;&nbsp;|&nbsp;&nbsp;
-        <a routerLink="/examples">EXAMPLES</a> &nbsp;&nbsp;|&nbsp;&nbsp;
+        <!-- <a routerLink="/examples">EXAMPLES</a> &nbsp;&nbsp;|&nbsp;&nbsp; -->
         <a routerLink="/start-here">LEARN</a> &nbsp;&nbsp;|&nbsp;&nbsp;
-        <a routerLink="/marketplace">MARKETPLACE</a>&nbsp;&nbsp;|&nbsp;&nbsp;
-        <a href="mailto:visualzapp.contact@gmail.com">CONTACT</a>
+        <!-- <a href="https://vjpacks.visualzstudio.com">VJ PACKS</a>&nbsp;&nbsp;|&nbsp;&nbsp; -->
+        <a href="https://wear.visualzstudio.com">WEAR</a>&nbsp;&nbsp;|&nbsp;&nbsp;
+        <a href="mailto:contact@visualzstudio.com">CONTACT</a>
         <br>
 
-        <a routerLink="/insestors">INVESTORS</a> &nbsp;&nbsp;|&nbsp;&nbsp;
+        <!-- <a routerLink="/investors">INVESTORS</a> &nbsp;&nbsp;|&nbsp;&nbsp;
         <a routerLink="/brand-partnerships">BRAND PARTNERSHIPS</a> &nbsp;&nbsp;|&nbsp;&nbsp;
         <a routerLink="/press-kit">PRESS KIT</a>
-        <br>
-
-        <a href="https://www.instagram.com/visualzapp/" target="_blank">INSTAGRAM</a> &nbsp;&nbsp;|&nbsp;&nbsp;
-        <a href="https://www.youtube.com/channel/UC1v_B6CFVv1ZiCveAdkIGeQ" target="_blank">YOUTUBE</a>
-        &nbsp;&nbsp;|&nbsp;&nbsp;
-        <a href="https://twitter.com/VISUALZ12" target="_blank">TWITTER</a>
-        <br>
+        <br> -->
 
         <a routerLink="/terms-conditions">TERMS &amp; CONDITIONS</a> &nbsp;&nbsp;|&nbsp;&nbsp;
         <a routerLink="/privacy-policy">PRIVACY POLICY</a>
         <br>
 
-        v2.1.6
+        <a href="https://www.instagram.com/visualzapp" target="_blank">INSTAGRAM</a> &nbsp;&nbsp;|&nbsp;&nbsp;
+        <a href="https://www.youtube.com/channel/UC1v_B6CFVv1ZiCveAdkIGeQ" target="_blank">YOUTUBE</a>
+        &nbsp;&nbsp;|&nbsp;&nbsp;
+        <a href="https://twitter.com/visualzapp" target="_blank">TWITTER</a>
+        <br>
+
+        v2.1.6 By <a href="https://karl.pb.studio" target="_blank">Karl John Steltenpohl</a>
     </div>
 
     <div class="gradient">

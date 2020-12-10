@@ -28,16 +28,21 @@
                 <div *ngFor="let subscription of subscriptions">
                     {{ subscription.plan.nickname }} | Start Date: {{ subscription.start*1000 | date }} | Interval:
                     {{ subscription.plan.interval }} <br>
+                    <button mat-raised-button class="btn btn-primary btn-margin"
+                        (click)="openCustomerPortal(subscription.customer)" aria-label="MANAGE SUBSCRIPTION">
+                        MANAGE SUBSCRIPTION
+                    </button>
                 </div>
+
             </div>
             <div *ngIf="!subscriptions">
-                You are using for free! <a href="https://www.buymeacoffee.com/visualz" target="_blank">Please support or
-                    developers.</a>
+                You are using for free! <a class="pink" href="https://www.buymeacoffee.com/visualz"
+                    target="_blank">Please support our developers.</a>
             </div>
         </div>
         <div class="clearfix"></div>
     </div>
-
+    <!-- 
     <div class="content-inner-wrapper" *ngIf="auth.userProfile$ | async as profile">
         <div class="download-area">
             <h2>Your VJ Pack Catalog</h2>
@@ -46,6 +51,7 @@
             <div *ngIf="catalog.length">
                 <div *ngFor="let pack of catalog" class="pack">
                     {{ pack.name }}
+                    <button mat-button (click)='openEditPackDialot(pack.id)'>Edit</button>
                 </div>
             </div>
             <div *ngIf="!catalog.length">
@@ -70,7 +76,7 @@
             </div>
         </div>
         <div class="clearfix"></div>
-    </div>
+    </div> -->
 
     <div class="content-inner-wrapper" *ngIf="auth.userProfile$ | async as profile">
         <div class="download-area">

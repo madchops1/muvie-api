@@ -23,6 +23,16 @@ gridster {
     box-shadow: inset 0px 0px 5px -1px #000000 !important;
 }
 
+.dark-snackbar {
+    background-color: #333333;
+    color: #e91e63;
+}
+
+.green-snackbar {
+    background-color: #abe026;
+    color: #000;
+}
+
 .msg {
     display: block;
     text-align: center;
@@ -480,7 +490,11 @@ footer{
         position: absolute;
         bottom: 10px;
         left: 10px;
-        z-index: 2;
+        z-index: 3;
+
+        @media (max-width: $breakpoint-mobile) {
+            display: none;
+        }
 
         a {
             display: block;
@@ -501,7 +515,11 @@ footer{
         bottom: 10px;
         right: 10px;
         text-align: right;
-        z-index: 2;
+        z-index: 3;
+
+        @media (max-width: $breakpoint-mobile) {
+            display: none;
+        }
 
         a { color: #fff; }
     }
@@ -582,6 +600,7 @@ header {
             //font-size: 14px;
             //margin: 10px 0px 0px 0px;
             //padding: 20px;
+            text-decoration: none;
         }
 
         .mat-raised-button {
@@ -601,6 +620,9 @@ header {
                 width: 30px;
                 height: 30px;
                 border-radius: 15px;
+            }
+            a {
+                text-decoration: none;
             }
         }
     }
