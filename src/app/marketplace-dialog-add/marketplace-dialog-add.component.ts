@@ -30,11 +30,12 @@ export class MarketplaceDialogAddComponent implements OnInit {
         artistId: false
     };
     button: any = 'Submit';
+    success;
 
     constructor(
         @Inject(MAT_DIALOG_DATA) public data: any,
         public dialogRef: MatDialogRef<MarketplaceDialogAddComponent>,
-        private auth: AuthService,
+        public auth: AuthService,
         private profile: ProfileService,
         private mixpanelService: MixpanelService,
         public _snackBar: MatSnackBar) {
