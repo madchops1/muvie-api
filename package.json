@@ -86,7 +86,7 @@
         "rxjs": "~6.3.3",
         "rxjs-compat": "^6.5.3",
         "sequelize": "^6.3.5",
-        "socket.io": "^2.2.0",
+        "socket.io": "^2.4.0",
         "stats-js": "^1.0.1",
         "stripe": "^8.45.0",
         "three": "^0.71.0",
