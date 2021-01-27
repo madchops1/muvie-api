@@ -91,6 +91,13 @@
         </div>
     </div>
 
+    <div class="slider">
+        <mat-slide-toggle class="example-margin" (change)="onChange($event)" [checked]="yearly" [disabled]="false">
+            Yearly
+        </mat-slide-toggle>
+    </div>
+    <div class="clearfix"></div>
+
     <div class="content-wrapper dark clearfix">
         <div class="price_card">
             <div class="header">
@@ -100,15 +107,8 @@
             </div>
             <ul class="features">
 
-                <li>NEW: Global turn &amp; stun servers.</li>
-                <li>NEW: Dedicated peer-to-peer negotiation.</li>
-                <li>
-                    These new features mean near 100% reliability for
-                    streaming to the browser, fanCam, mobile video, and more.
-                </li>
-
-                <li>NEW: Music video recorder (watermarked).</li>
-                <li>NEW: Record &amp; reuse feature.</li>
+                <li>Music video recorder (watermarked).</li>
+                <li>Record &amp; reuse feature.</li>
                 <li>Compose sets &amp; tracks of visual media.</li>
                 <li>Manual &amp; automated audio reactive scene transitioning.</li>
                 <li>Audio analysis and beat detection.</li>
@@ -126,14 +126,12 @@
                 <li>3d audio reactive visualizations.</li>
                 <li>Multiple screens.</li>
                 <li>Automatic Updates</li>
-
                 <li><s>Max output resolution 1280x1280.</s></li>
                 <li>Output resolution specification.</li>
 
-
             </ul>
         </div>
-        <!-- 
+
         <div class="price_card">
             <div class="header">
                 <span class="name">EDUCATIONAL</span>
@@ -148,7 +146,6 @@
                 <li>Output resolution specification.</li>
             </ul>
 
-            PROD EDUCATIONAL LICENSE
             <div [hidden]="testMode === true">
                 <button color="primary" class="pink" id="checkout-button-plan_H5V1qwEOIY0IXK" role="link"
                     mat-raised-button>
@@ -156,27 +153,31 @@
                 </button>
             </div>
 
-            TEST EDUCATIONAL LICENCSE 
+            <!-- TEST EDUCATIONAL LICENCSE
             <div [hidden]="testMode === false">
                 <button color="primary" class="pink" id="checkout-button-plan_H5UfUDScLylpyD" role="link"
                     mat-raised-button>
                     TEST Buy Educational License
                 </button>
-            </div>
-        </div> -->
+            </div> -->
+        </div>
 
         <div class="price_card">
             <div class="header">
                 <span class="name">COMMERCIAL</span>
                 <span class="desc">Fully featured and for use in paying projects, and at venues.</span>
-                <span class="price"><s style="color:#333;">$40</s> $10 yearly</span>
+                <span class="price"><s style="color:#333;">$40</s> $48 yearly</span>
             </div>
             <ul class="features">
-                <li><strong>Special introductory price<br>$10 yearly</strong></li>
+                <li><strong>New Low Price<br>$48 yearly</strong></li>
                 <li>All the non-commercial features plus:</li>
-
-                <li>NEW: Music video recorder (NO watermark).</li>
-
+                <li>Global turn &amp; stun servers.</li>
+                <li>Dedicated peer-to-peer negotiation.</li>
+                <li>
+                    These new features mean near 100% reliability for
+                    streaming to the browser, fanCam, mobile video, and more.
+                </li>
+                <li>Music video recorder (NO watermark).</li>
                 <li>Audience contact collection.</li>
                 <li>Fan Selfies (FanCam).</li>
                 <li>Mobile device controller.</li>
