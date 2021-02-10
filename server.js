@@ -1631,37 +1631,31 @@ app.post("/api/createSeat", async function (req, res) {
     let email = req.body.email.toLowerCase();
     let plan = 0;
 
-    console.log('key');
+    console.log('key', key);
+    console.log('email', email);
 
     if (!key) {
         alert('No machine id. Please restart the app and try again');
         handleError(res, 'err', 'no key');
     }
     try {
-        //console.log('request', req);
 
+        //console.log('request', req);
         // check stripe for payment
-        stripe.customers.list({ limit: 1, email: email },
+        stripe.customers.list({ limit: 100, email: email },
             function (err, customers) {
                 if (err) {
                     //alert('Issue verifying purchase with stripe.')
                     handleError(res, err, 'nope');
                 }
 
-                //if (customers.data.length == 0) {
-                //    throw err;
-                //}
+                //console.log('CUSTOMERS', customers.data.length, customers.data);
 
-                //console.log('CUSTOMERS', customers.data[0]);
-
-                if (customers.data.length && customers.data[0].subscriptions.data.length) {
-                    for (i = 0; i < customers.data[0].subscriptions.data.length; i++) {
-
-                        //plan
-                        console.log(customers.data[0].subscriptions.data[i]);
-                        if (customers.data[0].subscriptions.data[i].status == 'active') {
-
-                            let nickName = customers.data[0].subscriptions.data[i].plan.nickname;
+                for(i=0; i<customers.data.length; i++) {
+                    for(j=0; j<customers.data[i].subscriptions.data.length; j++) {
+                        if (customers.data[i].subscriptions.data[j].status == 'active') {
+                    
+                            let nickName = customers.data[i].subscriptions.data[j].plan.nickname;
                             //console.log('plan', nickName);
 
                             if (nickName.indexOf('Visualz') !== -1 && nickName.indexOf('Educational') !== -1) {
@@ -1674,8 +1668,11 @@ app.post("/api/createSeat", async function (req, res) {
                                 plan = 2;
                             }
                         }
-
                     }
+                }
+                
+                // A customer with a subscription was located
+                if(plan > 0) {
 
                     // create the key
                     const params = {
@@ -1706,6 +1703,7 @@ app.post("/api/createSeat", async function (req, res) {
                         //res.write(JSON.stringify(params));
                         //res.end();
                     });
+
                 } else {
 
                     handleError(res, err, 'nope');
