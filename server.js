@@ -949,6 +949,10 @@ io.on('connection', (socket) => {
         console.log('server received sendPeerId', data);
         appPeerMap[data.mid] = data;
         // TODO... maybe trigger the refresh here
+    });
+
+    socket.on('sendRemoteScreenRefresh', async data => {
+        console.log('server received sendErmoteScreenRefresh');
         socket.broadcast.to(String(mid)).emit('sendRemoteScreenRefresh', data);
     });
 
@@ -1522,6 +1526,18 @@ app.post("/api/gifToMp4", async function (req, res) {
     }
 });
 
+// Upload base-64 crownd/fan screen base64
+app.post("/api/upload-base-64", async function (req, res) {
+    console.log('upload base64 from visualz');
+    try {
+        let file = await uploadFile.uploadBase64(req);
+        res.write(JSON.stringify(file));
+        res.end();
+    } catch (err) {
+        handleError(res, err, 'nope');
+    }
+});
+
 app.post("/api/extractFrame", async function (req, res) {
     try {
         console.log('calling api extractFrame');
@@ -1622,6 +1638,64 @@ app.post("/api/stripe/customerportal", async (req, res) => {
     res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS');
     res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization, Content-Length, X-Requested-With');
     res.status(200).json({ url: session });
+});
+
+// Start Free Trial
+app.post("/api/startFreeTrial", async function(req, res) {
+    let key = req.body.mid;
+    let timestamp = Date.now();
+
+    if (!key) {
+        alert('No machine id. Please restart the app and try again');
+        handleError(res, 'err', 'no key');
+    }
+
+    try {
+
+        // Check for a freestore
+        request('https://' + process.env.FREESTORE + '.s3.us-east-2.amazonaws.com/' + key + '.json', function (error, response, body) {
+            if (!error && response.statusCode == 200) {
+                console.log('success', body);
+
+                // Return the freestore timestamp
+                res.header('Access-Control-Allow-Origin', '*');
+                res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS');
+                res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization, Content-Length, X-Requested-With');
+                res.status(200).json(JSON.parse(body));
+            } else {
+
+                // Create the freestore timestamp
+                // Create the key
+                const params = {
+                    Bucket: process.env.FREESTORE, // pass your bucket name
+                    Key: key + '.json', // file will be saved as testBucket/contacts.csv
+                    Body: JSON.stringify({ freeTrial: timestamp }, null, 2)
+                };
+
+                // Upload it...
+                s3.upload(params, function (s3Err, data) {
+                    if (s3Err) throw s3Err
+                    console.log(`File uploaded successfully at ${data.Location}`)
+
+                    // Check it...
+                    request('https://' + process.env.FREESTORE + '.s3.us-east-2.amazonaws.com/' + key + '.json', function (error, response, body) {
+                        if (!error && response.statusCode == 200) {
+                            console.log('success', body);
+                            res.header('Access-Control-Allow-Origin', '*');
+                            res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS');
+                            res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization, Content-Length, X-Requested-With');
+                            res.status(200).json(JSON.parse(body));
+                        } else {
+                            handleError(res, err, 'nope');
+                        }
+                    });
+                });
+            }
+        });
+
+    } catch (err) {
+        handleError(res, err, 'nope');
+    }
 });
 
 // Create Seat
@@ -1731,23 +1805,93 @@ app.post("/api/authSeat/email", async function (req, res) {
 
 app.post("/api/authSeat", async function (req, res) {
     console.log(req.body);
+    let plan = 0;
+
     try {
         let key = req.body.mid; //'27540e6c-3929-4733-bc0b-314f657dec0b';
-        await request('https://' + process.env.KEYSTORE + '.s3.us-east-2.amazonaws.com/' + key + '.json', function (error, response, body) {
+
+        // Check for a keystore
+        await request('https://' + process.env.KEYSTORE + '.s3.us-east-2.amazonaws.com/' + key + '.json', async function (error, response, body) {
             if (!error && response.statusCode == 200) {
-                //console.log('success', body);
-                res.header('Access-Control-Allow-Origin', '*');
-                res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS');
-                res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization, Content-Length, X-Requested-With');
-                res.status(200).json(JSON.parse(body));
-                //console.log(body) // Show the HTML for the Google homepage. 
+                
+                console.log('BODY', JSON.parse(body));
+                let json = JSON.parse(body);
+
+                try {
+
+                    //console.log('request', req);
+                    // check stripe for payment
+                    stripe.customers.list({ limit: 100, email: json.email },
+                        function (err, customers) {
+                            if (err) {
+                                //alert('Issue verifying purchase with stripe.')
+                                handleError(res, err, 'nope');
+                            }
+            
+                            //console.log('CUSTOMERS', customers.data.length, customers.data);
+            
+                            for(i=0; i<customers.data.length; i++) {
+                                for(j=0; j<customers.data[i].subscriptions.data.length; j++) {
+                                    if (customers.data[i].subscriptions.data[j].status == 'active') {
+                                
+                                        let nickName = customers.data[i].subscriptions.data[j].plan.nickname;
+                                        //console.log('plan', nickName);
+            
+                                        if (nickName.indexOf('Visualz') !== -1 && nickName.indexOf('Educational') !== -1) {
+                                            if (plan <= 1) {
+                                                plan = 1;
+                                            }
+                                        }
+            
+                                        if (nickName.indexOf('Visualz') !== -1 && nickName.indexOf('Commercial') !== -1) {
+                                            plan = 2;
+                                        }
+                                    }
+                                }
+                            }
+                            
+                            // A customer with a subscription was located
+                            if(plan > 0) {
+                                res.header('Access-Control-Allow-Origin', '*');
+                                res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS');
+                                res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization, Content-Length, X-Requested-With');
+                                res.status(200).json(JSON.parse(body));
+                            } else {
+                                res.header('Access-Control-Allow-Origin', '*');
+                                res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS');
+                                res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization, Content-Length, X-Requested-With');
+                                res.status(200).json({ plan: 0, email: '' });
+                            }
+                        });
+                } catch (err) {
+                    handleError(res, err, 'nope');
+                }
+
             } else {
-                res.header('Access-Control-Allow-Origin', '*');
-                res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS');
-                res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization, Content-Length, X-Requested-With');
-                res.status(200).json({ plan: 0, email: '' });
+
+                // Check for a freestore
+                await request('https://' + process.env.FREESTORE + '.s3.us-east-2.amazonaws.com/' + key + '.json', function (error, response, body) {
+                    if (!error && response.statusCode == 200) {
+                        res.header('Access-Control-Allow-Origin', '*');
+                        res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS');
+                        res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization, Content-Length, X-Requested-With');
+                        res.status(200).json(JSON.parse(body));
+                    } else {
+                        res.header('Access-Control-Allow-Origin', '*');
+                        res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS');
+                        res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization, Content-Length, X-Requested-With');
+                        res.status(200).json({ plan: 0, email: '' });
+                    }
+                });
+
+                // res.header('Access-Control-Allow-Origin', '*');
+                // res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS');
+                // res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization, Content-Length, X-Requested-With');
+                // res.status(200).json({ plan: 0, email: '' });
             }
         });
+
+
 
     } catch (err) {
         handleError(res, err, 'nope');

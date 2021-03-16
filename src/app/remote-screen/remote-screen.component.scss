@@ -41,3 +41,21 @@
         }
     }
 }
+
+.start-button {
+    position: fixed;
+    z-index: 5;
+    width: 100vw;
+    height: 100vh;
+    background-color: #ff4081;
+    color: #333;
+    font-size: 40px;
+    border: 0px;
+    outline: 0px;
+
+    &.wait {
+        z-index: 6;
+        background-color: #333;
+        color: #fff;
+    }
+}

@@ -24,6 +24,7 @@ export class RemoteScreenComponent implements OnInit {
     plan: any = 0;
     qr: any = '';
     stream2: any = false;
+    started: any = false;
     private _remoteScreenRefresh: Subscription;
 
     constructor(private projectService: ProjectService, private utilityService: UtilityService, private route: ActivatedRoute, private router: Router, private socketService: SocketService) {
@@ -57,7 +58,17 @@ export class RemoteScreenComponent implements OnInit {
             window.location.reload();
         });
     }
+    start(): any {
+        //let vid: HTMLCanvasElement; // canvas for main three.js preview
+        //let vid;
+        //vid.play;
+        //vid = document.getElementById('vid');
+        //vid.play();
+        this.video = document.getElementById('externalVideo');
+        this.started = true;
+        this.video.play();
 
+    }
     connectPeer() {
         this.projectService.getIce(this.environmentalVariables).then((res: any) => {
             this.peer = new Peer({
@@ -88,26 +99,27 @@ export class RemoteScreenComponent implements OnInit {
                 console.log('got userMedia, answering call');
                 call.answer(); // answer the call, send the microphone audio
                 call.on('stream', function (stream2) {
+                    console.log('STREAM', stream2);
                     this.stream2 = stream2;
                     this.video = document.getElementById('externalVideo');
                     this.video.srcObject = stream2;
-                    this.video.play();
+                    if(this.started) {
+                        this.video.play();
+                    }
                 });
                 //});
                 //}
             });
 
             this.peer.on('close', () => {
+                console.log('PEER CLOSE');
                 this.peer = null;
                 this.connectPeer();
             });
 
             this.peer.on('disconnected', () => {
-                if (this.peer) {
-                    this.peer.reconnect();
-                } else {
-                    this.connectPeer();
-                }
+                console.log('PEER DISCONNECTED');
+                this.connectPeer();
             });
 
             this.peer.on('error', (err) => {
