@@ -33,7 +33,7 @@ const getTags = require('./api/tags').getTags;
 
 //const authSeat = require('./api/authSeat');
 
-const visualzLatest = '2.1.6';
+const visualzLatest = '2.1.7';
 const kill = []; // array of versions eg. ['2.0.0']
 const killMsg = 'This version is dead.';
 

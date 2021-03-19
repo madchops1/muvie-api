@@ -15,7 +15,7 @@ export class DownloadComponent implements OnInit {
     stripeScriptTest: any = '';
     testMode: Boolean = false;
     yearly: Boolean = false;
-    version: '2.1.6';
+    version: '2.1.7';
 
     constructor(private sanitizer: DomSanitizer, private mixpanelService: MixpanelService) { }
 
@@ -50,13 +50,13 @@ export class DownloadComponent implements OnInit {
                 //     });
                 // });
 
-                /* normal price: checkout-button-plan_H5V8KwiRi8BxEK */
-                var checkoutButtonCommercialProd = document.getElementById('checkout-button-plan_HCHnNpbdcUHUCL');
+                /* normal price: checkout-button-price_1IUyyVKBQoT2WTQqKkm8wq1S */
+                var checkoutButtonCommercialProd = document.getElementById('checkout-button-price_1IUyyVKBQoT2WTQqKkm8wq1S');
                 checkoutButtonCommercialProd.addEventListener('click', function () {
                     // When the customer clicks on the button, redirect
                     // them to Checkout.
                     stripe.redirectToCheckout({
-                    items: [{plan: 'plan_HCHnNpbdcUHUCL', quantity: 1}],
+                    items: [{plan: 'price_1IUyyVKBQoT2WTQqKkm8wq1S', quantity: 1}],
 
                     // Do not rely on the redirect to the successUrl for fulfilling
                     // purchases, customers may not always reach the success_url after
