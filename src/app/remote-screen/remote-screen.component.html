@@ -1,4 +1,7 @@
-<video id="externalVideo" class="external-video" autoplay muted controls></video>
+<button class="start-button" *ngIf="!started" (click)="start()">
+    START
+</button>
+<video id="externalVideo" class="external-video" muted autoplay controls></video>
 <img class="watermark" *ngIf="plan != 2" src="../../assets/images/watermark.png" />
 <div class="qr-wrapper">
     <img class="qr" src="{{this.qr}}" />

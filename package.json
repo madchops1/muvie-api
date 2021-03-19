@@ -1,6 +1,6 @@
 {
     "name": "muvie",
-    "version": "2.1.6",
+    "version": "2.1.7",
     "scripts": {
         "ng": "ng",
         "start": "node server.js",
@@ -59,6 +59,7 @@
         "helmet": "^3.21.2",
         "heroku-ssl-redirect": "0.0.4",
         "image-capture": "^0.4.0",
+        "image-to-base64": "^2.1.1",
         "install": "^0.13.0",
         "mailchimp-api-v3": "^1.14.0",
         "mandrill-api": "^1.0.45",

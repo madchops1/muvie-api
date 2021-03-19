@@ -9,6 +9,7 @@ aws.config.region = 'us-east-2';
 let videoStitch = require('video-stitch');
 let async = require("async");
 const extractFrame = require('ffmpeg-extract-frame');
+const imageToBase64 = require('image-to-base64');
 
 
 let getFrame = (req) => {
@@ -26,7 +27,7 @@ let getFrame = (req) => {
                 input: encodeURI(filePath),
                 output: 'src/assets/' + outputFile,
                 offset: 500, // seek offset in milliseconds
-                quality: 1
+                quality: 31
             });
             console.log('BETA', outputFile);
             resolve(outputFile);
@@ -96,7 +97,7 @@ let sendMp4ToS3 = (file, dest) => {
 let ExtractFrame = (req) => {
     return new Promise(function (resolve, reject) {
 
-        console.log('request', req.body);
+        console.log('ALPHA', req.body);
         let filePath;
 
         try {
@@ -111,20 +112,42 @@ let ExtractFrame = (req) => {
                 },
                 // Copy the frame image to s3
                 function (callback) {
-                    console.log('ECHO', filePath);
-                    let dest;
-                    if (req.body.bucket == 'visualz-1') {
-                        dest = 'cloud-sets/' + req.body["mid"] + "/" + req.body["set-name"] + "/" + filePath;
-                    } else {
-                        dest = filePath
+
+                    // s3 or base64
+                    let mode = 's3';
+
+                    switch (mode) {
+                        case 's3':
+                            console.log('ECHO', filePath);
+                            let dest;
+                            if (req.body.bucket == 'visualz-1') {
+                                dest = 'cloud-sets/' + req.body["mid"] + "/" + req.body["set-name"] + "/" + filePath;
+                            } else {
+                                dest = filePath
+                            }
+                            sendMp4ToS3('src/assets/' + filePath, dest).then(function (res) {
+                                filePath = res;
+                                callback(null, 'final copy to s3');
+                            }, function (err) {
+                                console.log(err);
+                                return false;
+                            });
+                            break;
+
+                        case 'base64':
+                            console.log('FOXTROT', filePath);
+                            imageToBase64(filePath) // Path to the image
+                                .then((response) => {
+                                    console.log(response); // "cGF0aC90by9maWxlLmpwZw=="
+                                    filePath = 'data:image/jpeg;base64, ' + response;
+                                    callback(null, 'result in base64');
+                                })
+                                .catch((err) => {
+                                    console.log(err);
+                                    return false;
+                                });
+                            break;
                     }
-                    sendMp4ToS3('src/assets/' + filePath, dest).then(function (res) {
-                        filePath = res;
-                        callback(null, 'final copy to s3');
-                    }, function (err) {
-                        console.log(err);
-                        return false;
-                    });
                 }
             ],
                 // optional callback
@@ -134,7 +157,6 @@ let ExtractFrame = (req) => {
                         reject(err);
                         return false;
                     }
-
                     let response = {
                         fileName: filePath
                     }

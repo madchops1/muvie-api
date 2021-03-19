@@ -9,6 +9,9 @@
 
 src/assets/frame_*
 
+#ngrok
+ngrok
+
 # dependencies
 /node_modules
 

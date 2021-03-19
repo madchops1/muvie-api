@@ -25,6 +25,11 @@ export class FanScreenComponent implements OnInit {
 
     torch: any = false;
     intensity: any = 1;
+    
+    blackout: any = false;
+    blackoutColor: any = '#000';
+    crowdScreenBlackout: any = 'none';
+
     crowdScreenBackgroundColor: any = 'transparent';
     crowdScreenTorchDisplay = 'none';
     crowdScreenFunction: any = '';
@@ -66,6 +71,7 @@ export class FanScreenComponent implements OnInit {
     private _getCrowdScreen: Subscription;
     private _ping: Subscription;
     private _reloadCrowdScreen: Subscription;
+    private _remoteScreenRefresh: Subscription;
 
     constructor(private projectService: ProjectService, private utilityService: UtilityService, private route: ActivatedRoute, private router: Router, private socketService: SocketService) {
 
@@ -129,11 +135,20 @@ export class FanScreenComponent implements OnInit {
                     this.torch = data.torch;
                     this.crowdScreenEnabled = true;
                     this.camera = data.camera;
+                    this.blackout = data.blackout;
+
                     if (this.crowdScreenBackgroundColor == '#ffffff') {
                         this.crowdScreenTorchDisplay = 'block';
                     } else {
                         this.crowdScreenTorchDisplay = 'none';
                     }
+
+                    if (this.blackout) {
+                        this.crowdScreenBlackout = 'block';
+                    } else {
+                        this.crowdScreenBlackout = 'none';
+                    }
+
                     //this.camera = data.camera;
                 } else {
                     this.crowdScreenBackgroundColor = '';
@@ -194,7 +209,13 @@ export class FanScreenComponent implements OnInit {
         // get vars and then connect
         this.projectService.getEnvironment().then((res) => {
             this.environmentalVariables = res;
-            this.connectPeer(); // create the peer and wait for a call
+            this.createPeer(); // create the peer and wait for a call
+
+        });
+
+        // Get the refreshSignal
+        this._remoteScreenRefresh = this.socketService.remoteScreenRefresh.subscribe(data => {
+            window.location.reload();
         });
 
     }
@@ -203,8 +224,9 @@ export class FanScreenComponent implements OnInit {
         //let vid: HTMLCanvasElement; // canvas for main three.js preview
         //let vid;
         //vid.play;
-        //vid = document.getElementById('vid');
-        //vid.play();
+        this.video2 = document.getElementById('externalVideo');
+        this.video2.play();
+
         this.started = true;
         let heartbeat: any = document.getElementById('heartbeat');
         heartbeat.onloadeddata = () => {
@@ -455,7 +477,7 @@ export class FanScreenComponent implements OnInit {
         xhr.send(file);
     }
 
-    connectPeer() {
+    createPeer(): any {
 
         this.projectService.getIce(this.environmentalVariables).then((res: any) => {
 
@@ -473,14 +495,19 @@ export class FanScreenComponent implements OnInit {
             // When the peer connection opens get the id
             // - then send the id to the api server ws
             this.peer.on('open', (id) => {
-                console.log('My peer ID is: ' + id);
+                console.log('PEER OPEN', 'PEER ID:', id);
                 this.peerId = id;
+                
+                // send 
                 this.socketService.peerId({ windowId: false, peerId: id, mid: this.mid });
+
+                // call 
+                
             });
 
             // Then await for a call
             this.peer.on('call', (call) => {
-                //console.log('receiving call');
+                console.log('PEER RECIEVING CALL');
                 //if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
                 //    var constraints = { audio: true, video: false };
                 //    navigator.mediaDevices.getUserMedia(constraints).then((stream1) => {
@@ -492,26 +519,22 @@ export class FanScreenComponent implements OnInit {
                     this.video2.srcObject = stream2;
                     this.video2.play();
                 });
-                //});
-                //}
             });
 
             this.peer.on('close', () => {
+                console.log('PEER CLOSE');
                 this.peer = null;
-                this.connectPeer();
+                this.createPeer();
             });
 
             this.peer.on('disconnected', () => {
-                if (this.peer) {
-                    this.peer.reconnect();
-                } else {
-                    this.connectPeer();
-                }
+                console.log('PEER DISCONNECTED');
+                this.createPeer();
             });
 
             this.peer.on('error', (err) => {
                 console.log('PEER ERR', err);
-                this.connectPeer();
+                this.createPeer();
             });
 
         });

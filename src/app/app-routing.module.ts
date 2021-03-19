@@ -64,7 +64,8 @@ const routes: Routes = [
 
     // VISUALZ APP Web & Mobile views for in app functionality.
     { path: 'crowdscreen/:mid', component: FanScreenComponent },
-    { path: 'mobile-video/:mid/:pid/:sid', component: RemoteCamComponent },
+    //{ path: 'mobile-video/:mid/:pid/:sid', component: RemoteCamComponent },
+    { path: 'mobile-video/:mid/:sid', component: RemoteCamComponent },
     { path: 'remote-que/:mid', component: RemoteQueComponent },
     { path: 'laserz/:mid', component: LaserzComponent },
     { path: 'welcome/:v', component: WelcomeComponent },
