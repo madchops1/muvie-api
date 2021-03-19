@@ -681,6 +681,8 @@ io.on('connection', (socket) => {
     let label = socket.handshake.query.label;
     let heartbeatInterval;
 
+    console.log('HANDSHAKE',mid);
+
     heartbeatInterval = setInterval(() => {
         //socket.broadcast.in(String(mid)).emit('heart', { mid: String(mid) });
         //socket.broadcast.in(String(mid)).emit('heart', { mid: String(mid) });
@@ -942,6 +944,16 @@ io.on('connection', (socket) => {
             }
         });
         socket.broadcast.to(String(mid)).emit('getMobileVideoData', match);
+    });
+
+    socket.on("requestMobileVideoPeer", async data => {
+        console.log('server received requestMobileVideoPeer from camera', data, mid);
+        socket.broadcast.to(String(mid)).emit('getMobileVideoPeer', data);
+    });
+
+    socket.on("mobileVideoPeerReady", async data => {
+        console.log('server received mobileVideoPeerReady from visualz', data);
+        socket.broadcast.to(String(mid)).emit('sendMobileVideoPeer', data);
     });
 
     // Get the peer id from the app and set it in the app peer map

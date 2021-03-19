@@ -209,7 +209,7 @@ export class FanScreenComponent implements OnInit {
         // get vars and then connect
         this.projectService.getEnvironment().then((res) => {
             this.environmentalVariables = res;
-            this.connectPeer(); // create the peer and wait for a call
+            this.createPeer(); // create the peer and wait for a call
 
         });
 
@@ -477,7 +477,7 @@ export class FanScreenComponent implements OnInit {
         xhr.send(file);
     }
 
-    connectPeer() {
+    createPeer(): any {
 
         this.projectService.getIce(this.environmentalVariables).then((res: any) => {
 
@@ -524,17 +524,17 @@ export class FanScreenComponent implements OnInit {
             this.peer.on('close', () => {
                 console.log('PEER CLOSE');
                 this.peer = null;
-                this.connectPeer();
+                this.createPeer();
             });
 
             this.peer.on('disconnected', () => {
                 console.log('PEER DISCONNECTED');
-                this.connectPeer();
+                this.createPeer();
             });
 
             this.peer.on('error', (err) => {
                 console.log('PEER ERR', err);
-                this.connectPeer();
+                this.createPeer();
             });
 
         });

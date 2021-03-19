@@ -28,6 +28,7 @@ export class SocketService {
 
     getOnTheAir = this.socket.fromEvent<any>('getOnTheAir');
     getMobileVideoData = this.socket.fromEvent<any>('getMobileVideoData');
+    sendMobileVideoPeer = this.socket.fromEvent<any>('sendMobileVideoPeer');
 
     constructor(private socket: Socket) { }
 
@@ -100,6 +101,11 @@ export class SocketService {
     requestMobileVideoData(data): any {
         console.log('request mobile video data', data);
         this.socket.emit('requestMobileVideoData', data);
+    }
+
+    requestMobileVideoPeer(data): any {
+        console.log('request mobile video peer', data);
+        this.socket.emit('requestMobileVideoPeer', data);
     }
 
     mapModulePeer(data): any {

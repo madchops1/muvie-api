@@ -50,7 +50,7 @@ export class RemoteScreenComponent implements OnInit {
 
         this.projectService.getEnvironment().then((res) => {
             this.environmentalVariables = res;
-            this.connectPeer(); // create the peer and wait for a call
+            this.createPeer(); // create the peer and wait for a call
         });
 
         // Get the refreshSignal
@@ -69,7 +69,7 @@ export class RemoteScreenComponent implements OnInit {
         this.video.play();
 
     }
-    connectPeer() {
+    createPeer() {
         this.projectService.getIce(this.environmentalVariables).then((res: any) => {
             this.peer = new Peer({
                 secure: true,
@@ -114,17 +114,17 @@ export class RemoteScreenComponent implements OnInit {
             this.peer.on('close', () => {
                 console.log('PEER CLOSE');
                 this.peer = null;
-                this.connectPeer();
+                this.createPeer();
             });
 
             this.peer.on('disconnected', () => {
                 console.log('PEER DISCONNECTED');
-                this.connectPeer();
+                this.createPeer();
             });
 
             this.peer.on('error', (err) => {
                 console.log('PEER ERR', err);
-                this.connectPeer();
+                this.createPeer();
             });
         });
 

@@ -21,8 +21,8 @@ export class RemoteCamComponent implements OnInit {
     mobile: any = true; // start true on purpose
     currentRoute: any = '';
     mid: any = '';
-    pid: any = '';
-    sid: any = '';
+    pid: any = ''; // Peer id to call
+    clipId: any = '';
     started: any = false;
     msg: any = '';
     track: any = false;
@@ -32,7 +32,7 @@ export class RemoteCamComponent implements OnInit {
     torch: any = false;
     facingTorch: any = false;
     peer: any = false;
-    peerId: any = false;
+    peerId: any = false; // This peer id
 
     facingMode: any = 'environment';
 
@@ -42,6 +42,7 @@ export class RemoteCamComponent implements OnInit {
     private _getOnTheAir: Subscription;
     private _ping: Subscription;
     private _getMobileVideoData: Subscription;
+    private _sendMobileVideoPeer: Subscription;
 
     constructor(private projectService: ProjectService, private utilityService: UtilityService, private route: ActivatedRoute, private router: Router, private socketService: SocketService) {
 
@@ -50,9 +51,9 @@ export class RemoteCamComponent implements OnInit {
             if (val instanceof NavigationEnd) {
                 this.currentRoute = val.url;
                 let routeArray = this.currentRoute.split("/");
-                this.mid = routeArray[routeArray.length - 3];
-                this.pid = routeArray[routeArray.length - 2];
-                this.sid = routeArray[routeArray.length - 1];
+                this.mid = routeArray[routeArray.length - 2];
+                //this.pid = routeArray[routeArray.length - 2];
+                this.clipId = routeArray[routeArray.length - 1];
 
                 console.log('mid', this.mid);
             }
@@ -79,23 +80,42 @@ export class RemoteCamComponent implements OnInit {
             this.socketService.pong();
         });
 
-        this._getOnTheAir = this.socketService.getOnTheAir.subscribe((data) => {
-            console.log('getOnTheAirData', data);
-            if (data.peerId == this.peerId) {
-                this.onTheAir = true;
-            } else {
-                this.onTheAir = false;
-            }
+        //this._
+
+        // this._getOnTheAir = this.socketService.getOnTheAir.subscribe((data) => {
+        //     console.log('getOnTheAirData', data);
+        //     if (data.peerId == this.peerId) {
+        //         this.onTheAir = true;
+        //     } else {
+        //         this.onTheAir = false;
+        //     }
+        // });
+
+        // this._getMobileVideoData = this.socketService.getMobileVideoData.subscribe((data) => {
+        //     console.log('getMobileVideoData', data);
+        //     if (data) {
+        //         this.pid = data;
+        //     }
+        // });
+
+
+        // Tell Visualz a camera is ready for clip
+        this.socketService.requestMobileVideoPeer({ clipId: this.clipId });
+
+        // Receive the visualz app peer id to call
+        this._sendMobileVideoPeer = this.socketService.sendMobileVideoPeer
+        .subscribe((data) => {
+            console.log('PEER TO CALL', data);
+            this.callPeer(data.peerId)
+            //     console.log('getMobileVideoData', data);
+            //     if (data) {
+            //         this.pid = data;
+            //     }
+            // });
         });
 
-        this._getMobileVideoData = this.socketService.getMobileVideoData.subscribe((data) => {
-            console.log('getMobileVideoData', data);
-            if (data) {
-                this.pid = data;
-            }
-        });
-
-        this.socketService.requestMobileVideoData({ opid: this.pid });
+        
+        // this.socketService.requestMobileVideoData({ opid: this.pid });
 
         this.projectService.getEnvironment().then((res) => {
             this.environmentalVariables = res;
@@ -105,17 +125,36 @@ export class RemoteCamComponent implements OnInit {
         });
     }
 
+    // callPeer(id) {
+    //     return new Promise((resolve, reject) => {
+    //         let call = this.peer.call(id, this.stream);
+
+    //         call.on('stream', function (stream) {
+    //             this.liveStreamStatus = true;
+    //             console.log('this is the remote mobile camera stream', stream);
+    //             // `stream` is the MediaStream of the remote peer.
+    //             // Here you'd add it to an HTML video/canvas element.
+    //         });
+    //         resolve(true);
+    //     });
+    // }
+
     callPeer(id) {
         return new Promise((resolve, reject) => {
-            let call = this.peer.call(id, this.stream);
-
-            call.on('stream', function (stream) {
-                this.liveStreamStatus = true;
-                console.log('this is the remote windows stream', stream);
-                // `stream` is the MediaStream of the remote peer.
-                // Here you'd add it to an HTML video/canvas element.
-            });
-            resolve();
+            //console.log('CALL PEER', this.calling, this.callCue);
+            
+                this.createPeer().then(() => {
+                    
+                    let call = this.peer.call(id, this.stream);
+                    //console.log('CALL CUE LENGTH', this.callCue.length);
+                    call.on('stream', function (stream) {
+                        this.liveStreamStatus = true;
+                        //console.log('this is the remote mobile camera stream', stream);
+                        // `stream` is the MediaStream of the remote peer.
+                        // Here you'd add it to an HTML video/canvas element.
+                    });
+                    resolve(true);
+                });
         });
     }
 
@@ -138,27 +177,27 @@ export class RemoteCamComponent implements OnInit {
                     }
                 });
 
-                //this.peer = new Peer({});
-
                 this.peer.on('open', (id) => {
                     console.log('My peer ID is: ' + id);
                     this.peerId = id;
-                    this.socketService.mapModulePeer({ pid: this.peerId, sid: this.sid });
+                    this.socketService.mapModulePeer({ pid: this.peerId, sid: this.clipId });
                     resolve(id);
                 });
 
                 this.peer.on('close', () => {
-                    //this.peer = null;
-                    this.peerId = false;
+                    console.log('PEER CLOSE');
+                    this.peer = null;
+                    this.createPeer();
                 });
-
+    
                 this.peer.on('disconnected', () => {
-                    this.peer.reconnect();
+                    console.log('PEER DISCONNECTED');
+                    this.createPeer();
                 });
-
+    
                 this.peer.on('error', (err) => {
                     console.log('PEER ERR', err);
-                    this.peerId = false;
+                    this.createPeer();
                 });
             });
         });
@@ -212,15 +251,15 @@ export class RemoteCamComponent implements OnInit {
                         this.video.srcObject = this.stream; // = window.URL.createObjectURL(stream);
 
                         //
-                        //if (!this.liveStreamStatus) {
-                        this.createPeer().then(() => {
+                        // //if (!this.liveStreamStatus) {
+                        // this.createPeer().then(() => {
 
-                            this.callPeer(this.pid);
+                        //     this.callPeer(this.pid);
 
-                        }, (err) => {
-                            console.log('err', err);
-                        });
-                        //}
+                        // }, (err) => {
+                        //     console.log('err', err);
+                        // });
+                        // //}
 
 
 
@@ -281,7 +320,7 @@ export class RemoteCamComponent implements OnInit {
         return new Promise((resolve, reject) => {
 
             if (!this.mobile) {
-                resolve();
+                resolve(true);
                 return;
             }
 
