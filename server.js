@@ -1050,7 +1050,6 @@ io.on('connection', (socket) => {
         io.in(String(mid)).emit('makeV2Complete', makeVideo);
     });
 
-
 });
 
 // Generic error handler used by all endpoints.
