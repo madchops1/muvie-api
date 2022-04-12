@@ -1,6 +1,6 @@
 <div class="content-wrapper normal">
     <h1 class="center">
-        Download VISUALZ v2.1.8<br>
+        Download VISUALZ v2.1.9<br>
         Free for Non-Commercial Use
     </h1>
 
@@ -8,9 +8,9 @@
 
     <div class="bordered">
         <img class="mac" src="../../assets/images/macos.png" />
-        <a href="https://github.com/madchops1/visualz-releases/releases/download/v2.1.8/Visualz-2.1.8.dmg"
+        <a href="https://github.com/madchops1/visualz-releases/releases/download/v2.1.9/Visualz-2.1.9.dmg"
             target="_blank" mat-raised-button (click)="downloadMac()" class="pink button">
-            Download For Mac
+            Download for Mac
         </a>
         <p class="center">
             By downloading you accept the License Agreement
@@ -49,9 +49,9 @@
 
     <div class="bordered">
         <img class="windows" src="../../assets/images/windows.png" />
-        <a href="https://github.com/madchops1/visualz-releases/releases/download/v2.1.8/Visualz-Setup-2.1.8.exe"
+        <a href="https://github.com/madchops1/visualz-releases/releases/download/9/Visualz-Setup-2.1.9.exe"
             mat-raised-button class="pink button" target="_blank" (click)="downloadWindows()">
-            Download Windows
+            Download for Windows
         </a>
         <p class="center">
             By downloading you accept the License Agreement
@@ -103,13 +103,17 @@
             <div class="header">
                 <span class="name">NON-COMMERCIAL</span>
                 <span class="desc">For personal use or learning. Not for paying projects.</span>
-                <span class="price">FREE</span>
+                <span class="price"> NO ADS, NO WATERMARK, &amp; FREE</span>
             </div>
             <ul class="features">
                 <li>Compose sets &amp; tracks of visual media.</li>
                 <li>Manual &amp; automated audio reactive scene transitioning.</li>
+                <li>*New enhanced scene transitioning and control.</li>
                 <li>Audio analysis and beat detection.</li>
                 <li>Visual effects.</li>
+                <li>*Lots of new FX.</li>
+                <li>*New audio reactive visualizers.</li>
+                <li>Fractals</li>
                 <li>Audio reactive visual effects.</li>
                 <li>Remote Streaming / Stream to browser (watermarked).</li>
                 <li>OBS &amp; Zoom integration.</li>
@@ -207,17 +211,17 @@
 
             <!-- PROD COMMERCIAL LICENSE -->
             <div [hidden]="testMode === true">
-                <button color="primary" class="pink" id="checkout-button-price_1IUyyVKBQoT2WTQqKkm8wq1S" role="link"
+                <button class="pink" id="checkout-button-price_1IUyyVKBQoT2WTQqKkm8wq1S" role="link"
                     mat-raised-button>
-                    Buy Commercial License Special
+                    Buy Commercial License
                 </button>
             </div>
 
             <!-- TEST COMMERCIAL LICENSE SPECIAL -->
             <div [hidden]="testMode === false">
-                <button color="primary" class="pink" id="checkout-button-plan_HCHlDgrJZXt7r0" role="link"
+                <button class="pink" id="checkout-button-plan_HCHlDgrJZXt7r0" role="link"
                     mat-raised-button>
-                    TEST Buy Commercial License Special
+                    TEST Buy Commercial License
                 </button>
             </div>
 
@@ -237,14 +241,11 @@
 
         <div class='clearfix'></div>
 
-        <br><br>
-        <a class="button" style="float:right;" class="pink" target="_blank" href="https://github.com/madchops1/visualz-releases/releases"
+        <br><br><br>
+        <a class="button center" style="margin: 20px auto -50px; display: block; width: 50%;" class="" target="_blank" href="https://github.com/madchops1/visualz-releases/releases"
             role="link" mat-raised-button>
             Older Versions
         </a>
-
-
-        <div class='clearfix'></div>
 
 
     </div>

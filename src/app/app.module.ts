@@ -59,6 +59,9 @@ import { ExamplesComponent } from './examples/examples.component';
 import { MarketPlaceSuccessComponent } from './market-place-success/market-place-success.component';
 import { UiComponent } from './ui/ui.component';
 import { VizuwearComponent } from './vizuwear/vizuwear.component';
+import { CollaboratorsComponent } from './collaborators/collaborators.component';
+import { MusiciansComponent } from './musicians/musicians.component';
+import { ContactComponent } from './contact/contact.component';
 
 const config: SocketIoConfig = { url: environment.ioUrl, options: { autoConnect: false } };
 
@@ -107,7 +110,10 @@ const config: SocketIoConfig = { url: environment.ioUrl, options: { autoConnect:
         ExamplesComponent,
         MarketPlaceSuccessComponent,
         UiComponent,
-        VizuwearComponent
+        VizuwearComponent,
+        CollaboratorsComponent,
+        MusiciansComponent,
+        ContactComponent
     ],
     imports: [
         BrowserModule,

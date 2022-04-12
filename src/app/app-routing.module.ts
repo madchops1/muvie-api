@@ -38,15 +38,18 @@ import { AccountComponent } from './account/account.component';
 import { TutorialsComponent } from './tutorials/tutorials.component';
 //import { MarketPlaceSuccessComponent } from './market-place-success/market-place-success.component';
 import { UiComponent } from './ui/ui.component';
+import { ContactComponent } from './contact/contact.component';
 
 const routes: Routes = [
 
     // VISUALZ Website pages
     { path: '', component: VisualzComponent },
     { path: 'support', component: SupportComponent },
+    { path: 'contact', component: ContactComponent },
     { path: 'about', component: AboutComponent },
     { path: 'prices', component: BuyComponent },
-    { path: 'start-here', component: HowComponent },
+    //{ path: 'start-here', component: HowComponent },
+    { path: 'start-here', component: UserGuideComponent },
     { path: 'terms-conditions', component: TermsComponent },
     { path: 'privacy-policy', component: PrivacyComponent },
     { path: 'update', component: DownloadComponent },

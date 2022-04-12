@@ -26,6 +26,7 @@ const make = require('./api/make');
 const convertToMp4 = require('./api/convertToMp4');
 const extractFrame = require('./api/extractFrame');
 const gifToMp4 = require('./api/gifToMp4');
+const youtubedl = require('youtube-dl-exec');
 
 const handleChargeSucceeded = require('./api/lib/stripe').handleChargeSucceeded;
 const getSubscriptions = require('./api/lib/stripe').getSubscriptions;
@@ -33,8 +34,8 @@ const getTags = require('./api/tags').getTags;
 
 //const authSeat = require('./api/authSeat');
 
-const visualzLatest = '2.1.8';
-const kill = []; // array of versions eg. ['2.0.0']
+const visualzLatest = '2.1.9';
+const kill = []; // array of versions eg. ['2.0.0'] ?? 2.1.7 ??
 const killMsg = 'This version is dead.';
 
 const baseUrl = 'https://visualz-1.s3.us-east-2.amazonaws.com';
@@ -1334,6 +1335,82 @@ app.get('/api/livestream/amihost', async (req, res) => {
 
 });
 
+// You Tube DL
+app.get('/api/youtubedl', async (req, res) => {
+    res.header('Access-Control-Allow-Origin', '*');
+    res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS');
+    res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization, Content-Length, X-Requested-With');
+    console.log('received a get request to youtubedl', req.query);
+    try {
+        let ytid = req.query.ytid;
+        console.log('id', ytid)
+        youtubedl('https://www.youtube.com/watch?v='+ytid, {
+            dumpSingleJson: true,
+            noWarnings: true,
+            noCallHome: true,
+            preferFreeFormats: true,
+            noCheckCertificate: true,
+            youtubeSkipDashManifest: true,
+            referer: 'https://example.com'
+        })
+        .then(output => {
+            let videos = output.formats.filter(format => format.height <=730 && format.fps < 60 && format.ext == 'mp4');
+            if(videos.length) {
+                let video = videos[videos.length-1]
+                console.log(video);
+                res.write(JSON.stringify({ ytid: ytid, url: video.url }));
+            } else {
+                handleError(res, '...', 'nope');
+            }
+            res.end();
+        })
+        
+        
+    }
+    catch (err) {
+        handleError(res, err, 'nope');
+    }
+});
+
+app.get('/api/vimeodl', async (req, res) => {
+    res.header('Access-Control-Allow-Origin', '*');
+    res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS');
+    res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization, Content-Length, X-Requested-With');
+    console.log('received a get request to vimeodl', req.query);
+    try {
+        let vmid = req.query.vmid;
+        console.log('id', vmid)
+        youtubedl('https://www.vimeo.com/'+vmid, {
+            dumpSingleJson: true,
+            noWarnings: true,
+            noCallHome: true,
+            preferFreeFormats: true,
+            noCheckCertificate: true,
+            youtubeSkipDashManifest: true,
+            referer: 'https://example.com'
+        })
+        .then(output => {
+
+            console.log('OUTPUT', output);
+
+            let videos = output.formats.filter(format => format.height <=1090 && format.fps < 60 && format.ext == 'mp4' && format.format_id == 'http-1080p');
+            if(videos.length) {
+                let video = videos[videos.length-1]
+                console.log(video);
+                res.write(JSON.stringify({ vmid: vmid, url: video.url, ...video }));
+            } else {
+                handleError(res, '...', 'nope');
+            }
+            res.end();
+        })
+        
+        
+    }
+    catch (err) {
+        handleError(res, err, 'nope');
+    }
+});
+
 /**
  * Search VJ packs 
  *      - Used on the marketplace page
@@ -1713,14 +1790,15 @@ app.post("/api/startFreeTrial", async function(req, res) {
 // creates a seat by uploading a file to s3
 app.post("/api/createSeat", async function (req, res) {
     let key = req.body.mid; //'27540e6c-3929-4733-bc0b-314f657dec0b';
-    let email = req.body.email.toLowerCase();
+    let originalEmail; // @TO handle weird emails...
+    let email = req.body.email.toLowerCase(); //.toLowerCase();
     let plan = 0;
 
     console.log('key', key);
     console.log('email', email);
 
     if (!key) {
-        alert('No machine id. Please restart the app and try again');
+        console.log('No machine id. Please restart the app and try again');
         handleError(res, 'err', 'no key');
     }
     try {
@@ -1730,18 +1808,18 @@ app.post("/api/createSeat", async function (req, res) {
         stripe.customers.list({ limit: 100, email: email },
             function (err, customers) {
                 if (err) {
-                    //alert('Issue verifying purchase with stripe.')
+                    console('Issue verifying purchase with stripe.', err);
                     handleError(res, err, 'nope');
                 }
 
-                //console.log('CUSTOMERS', customers.data.length, customers.data);
+                console.log('CUSTOMERS', customers.data.length, customers.data);
 
                 for(i=0; i<customers.data.length; i++) {
                     for(j=0; j<customers.data[i].subscriptions.data.length; j++) {
                         if (customers.data[i].subscriptions.data[j].status == 'active') {
                     
                             let nickName = customers.data[i].subscriptions.data[j].plan.nickname;
-                            //console.log('plan', nickName);
+                            console.log('plan', nickName);
 
                             if (nickName.indexOf('Visualz') !== -1 && nickName.indexOf('Educational') !== -1) {
                                 if (plan <= 1) {
@@ -1755,6 +1833,7 @@ app.post("/api/createSeat", async function (req, res) {
                         }
                     }
                 }
+
                 
                 // A customer with a subscription was located
                 if(plan > 0) {
@@ -1822,7 +1901,10 @@ app.post("/api/authSeat", async function (req, res) {
         let key = req.body.mid; //'27540e6c-3929-4733-bc0b-314f657dec0b';
 
         // Check for a keystore
-        await request('https://' + process.env.KEYSTORE + '.s3.us-east-2.amazonaws.com/' + key + '.json', async function (error, response, body) {
+        let url = 'https://' + process.env.KEYSTORE + '.s3.us-east-2.amazonaws.com/' + key + '.json';
+        console.log('ALPHA', url);
+
+        await request(url, async function (error, response, body) {
             if (!error && response.statusCode == 200) {
                 
                 console.log('BODY', JSON.parse(body));

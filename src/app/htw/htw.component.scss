@@ -21,151 +21,227 @@
     button {
         position: absolute;
         opacity: 0.8;
-        transform: scale(0.6);
+        transform: scale(0.4);
         background: #d1f349;
+        font-size:25px;
         //color: #d1f349;
         color: #000;
         //font-size: 0px;
         //content: "";
 
-        &.one {
-            top: 30px;
-            left: -10px;
+        &.one-new {
+            top: 5px;
+            left: -5px;
         }
 
-        &.two {
-            top: 30px;
-            left: 40px;
+        &.two-new {
+            top: 5px;
+            left: 20px;
         }
 
-        &.three {
-            top: 30px;
-            left: 80px;
+        &.three-new {
+            top: 5px;
+            left: 45px;
         }
 
-        &.four {
-            top: 60px;
-            left: 100px;
+        &.four-new {
+            top: 5px;
+            left: 70px;
         }
 
-        &.five {
-            top: 95px;
-            left: 100px;
+        &.five-new {
+            top: 5px;
+            left: 95px;
         }
 
-        &.six {
-            top: 125px;
-            left: 100px;
+        &.six-new {
+            top: 5px;
+            left: 120px;
         }
 
-        &.seven {
-            top: 160px;
-            left: 100px;
+        &.seven-new {
+            top: 5px;
+            left: 145px;
         }
 
-        &.eight {
-            top: 190px;
-            left: 100px;
+        &.eight-new {
+            top: 5px;
+            left: 170px;
         }
 
-        &.nine {
-            top: 35px;
-            left: 125px;
-        }
-
-        &.ten {
-            top: 35px;
-            left: 160px;
-        }
-
-        &.eleven {
-            top: 35px;
+        &.nine-new {
+            top: 5px;
             left: 195px;
         }
 
-        &.twelve {
-            top: 35px;
-            left: 225px;
-        }
-
-        &.thirteen {
-            top: 35px;
-            left: 265px;
-        }
-
-        &.fourteen {
-            top: 25px;
-            left: 620px;
-        }
-
-        &.fifteen {
-            top: 25px;
-            left: 700px;
-        }
-    
-        &.sixteen {
-            top: 180px;
-            left: 380px;
-        }
-
-        &.seventeen {
-            top: 80px;
-            left: 740px;
-        }
-
-        &.eighteen {
-            top: 300px;
-            left: 160px;
-        }
-
-        &.nineteen {
-            top: 300px;
+        &.ten-new {
+            top: 5px;
             left: 220px;
         }
 
-        &.twenty {
-            top: 325px;
-            left: 610px;
+        &.eleven-new {
+            top: -5px;
+            left: 600px;
         }
 
-        &.twentyone {
-            top: 325px;
-            left: 640px;
+        &.twelve-new {
+            top: 10px;
+            left: 600px;
         }
 
-        &.twentytwo {
-            top: 325px;
-            left: 670px;
+        &.thirteen-new {
+            top: 25px;
+            left: 600px;
         }
 
-        &.twentythree {
-            top: 325px;
-            left: 700px;
+        &.fourteen-new {
+            top: 15px;
+            left: 645px;
         }
 
-        &.twentyfour {
-            top: 325px;
-            left: 730px;
+        &.fifteen-new {
+            top: -10px;
+            left: 675px;
+        }
+    
+        &.sixteen-new {
+            top: -10px;
+            left: 695px;
         }
 
-        &.twentyfive {
-            top: 325px;
+        &.seventeen-new {
+            top: -10px;
+            left: 720px;
+        }
+
+        &.eighteen-new {
+            top: -10px;
             left: 760px;
         }
 
-        &.twentysix {
-            top: 370px;
-            left: 360px;
+        &.nineteen-new {
+            top: 15px;
+            left: 730px;
         }
 
-        &.twentyseven {
-            top: 350px;
-            left: 425px;
+        &.twenty-new {
+            top: 50px;
+            left: 95px;
         }
 
-        &.twentyeight {
-            top: 425px;
-            left: 660px;
+        &.twentyone-new {
+            top: 100px;
+            left: 35px;
+        }
+
+        &.twentytwo-new {
+            top: 400px;
+            left: 35px;
+        }
+
+        &.twentythree-new {
+            top: 310px;
+            left: 120px;
+        }
+
+        &.twentyfour-new {
+            top: 310px;
+            left: 180px;
+        }
+
+        &.twentyfive-new {
+            top: 345px;
+            left: 100px;
+        }
+
+        &.twentysix-new {
+            top: 345px;
+            left: 125px;
+        }
+
+        &.twentyseven-new {
+            top: 345px;
+            left: 150px;
+        }
+
+        &.twentyeight-new {
+            top: 345px;
+            left: 175px;
+        }
+
+        &.twentynine-new {
+            top: 345px;
+            left: 198px;
+        }
+
+        &.thirty-new {
+            top: 345px;
+            left: 220px;
+        }
+
+        &.thirtyone-new {
+            top: 345px;
+            left: 240px;
+        }
+
+        &.thirtytwo-new {
+            top: 345px;
+            left: 260px;
+        }
+
+        &.thirtythree-new {
+            top: 390px;
+            left: 115px;
+        }
+
+        &.thirtyfour-new {
+            top: 375px;
+            left: 140px;
+        }
+
+        &.thirtyfive-new {
+            top: 310px;
+            left: 595px;
+        }
+
+        &.thirtysix-new {
+            top: 310px;
+            left: 625px;
+        }
+
+        &.thirtyseven-new {
+            top: 310px;
+            left: 655px;
+        }
+
+        &.thirtyeight-new {
+            top: 345px;
+            left: 625px;
+        }
+
+        &.thirtynine-new {
+            top: 345px;
+            left: 650px;
+        }
+
+        &.forty-new {
+            top: 40px;
+            left: 670px;
+        }
+
+        &.fortyone-new {
+            top: 60px;
+            left: 670px;
+        }
+
+        &.fortytwo-new {
+            top: 60px;
+            left: 760px;
+        }
+
+        &.fortythree-new {
+            top: 100px;
+            left: 740px;
         }
 
         &:hover {

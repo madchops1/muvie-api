@@ -54,10 +54,13 @@ let getFilename = function (url) {
 
 let addAudio = function (videoFile, audioFile) {
     return new Promise(function (resolve, reject) {
-        let outputFile = 'audio_final_' + getFilename(videoFile) + '.mp4';
+        let outputFile = 'visualz_final_' + getFilename(videoFile) + '.mp4';
         ffmpeg()
+            .format('mp4')
+            .videoCodec('libx264')
             .input(videoFile)
             .input(audioFile)
+            .outputOptions('-pix_fmt yuv420p')
             //.complexFilter([
             //    '[1:0] adelay=2728000|2728000 [delayed]',
             //    '[0:1][delayed] amix=inputs=2',

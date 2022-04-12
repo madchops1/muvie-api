@@ -2,6 +2,7 @@
 @import "~@angular/material/prebuilt-themes/pink-bluegrey.css";
 
 $breakpoint-mobile: 768px;
+$breakpoint-xs: 370px;
 
 body {
     font-family: 'Montserrat', sans-serif;
@@ -26,7 +27,7 @@ gridster {
 
 .dark-snackbar {
     background-color: #333333;
-    color: #e91e63;
+    color: #ff0042;
 }
 
 .green-snackbar {
@@ -38,7 +39,7 @@ gridster {
     display: block;
     text-align: center;
     background-color: #333;
-    color: #e91e63;
+    color: #ff0042;
     padding: 10px;
     letter-spacing: 2px;
     font-size: 13px;
@@ -87,29 +88,37 @@ p {
 }
 
 .pink {
-    background-color: #e91e63;
+    background-color: #ff0042;
     color: #fff;
 }
 
 .pink-text {
-    color: #e91e63 !important;
+    color: #ff0042 !important;
 }
 
 .invert {
     max-width: 1000px;
-    display: flex;
-    justify-content: center;
+    /*display: flex;
+    justify-content: center;*/
     margin: 0px auto;
 
     a {
-        justify-content: center;
+        /* justify-content: center; */
+        float: left;
+        width: 200px;
+        display: block;
     }
     
     @media (max-width: $breakpoint-mobile) {
         a {
             margin: 0px auto;
-            width: 200px;
+            width: 100%;
             display: block;
+
+            img {
+                margin: 0px auto;
+                display: block;
+            }
         }
     }
 
@@ -119,7 +128,7 @@ p {
 }
 
 .interactive-wrapper{
-    //background-color: #e91e63;
+    //background-color: #ff0042;
     width: 100%;
     height: 100%;
     display: block;
@@ -140,7 +149,7 @@ p {
     padding-top: 2%;
 
     &.pink {
-        background-color: #e91e63;
+        background-color: #ff0042;
 
         a {
             color: #fff;
@@ -198,9 +207,13 @@ p {
         }
 
         h1 {
-            font-size: 75px;
-            margin: 40px 0 0 0px;
-            //text-shadow: 0 0 10px #ff4c89;
+            font-size: 140px;
+            line-height: 140px;
+            margin: 30px 0 60px 0px;
+            letter-spacing: -8px;
+            color: #333333;
+            text-align: right;
+
 
             @media (max-width: $breakpoint-mobile) {
                 font-size: 50px;
@@ -209,11 +222,12 @@ p {
 
         }
 
-        h2 {
+        ul li {
             text-transform: none;
             text-align: left;
             font-size: 17px;
             line-height: 20px;
+            margin: 0px 0px 13px 0px;
 
             strong {
                 font-weight: bolder;
@@ -235,9 +249,9 @@ p {
     }
 
     button {
-        background-color: #e91e63;
+        background-color: #ff0042;
         color: #fff;
-        margin: 10px;
+        margin: 20px 0 0 20px;
     }
 }
 
@@ -257,11 +271,15 @@ p {
     max-width: 800px;
     margin: 0px auto;
     display: block;
+
+    &.big {
+        max-width: 1000px;
+    }
 }
 
 p {
     a {
-        color: #e91e63;
+        color: #ff0042;
         
     }
 }
@@ -367,10 +385,10 @@ p {
 
         li {
             margin: 80px 40px;
-            font-size: 20px;
-            line-height: 40px;
+            font-size: 15px;
+            line-height: 24px;
             display: block;
-            width: calc(50% - 80px);
+            width: calc(29% - 40px);
             float: left !important;
             height: 300px;
             text-align: center;
@@ -378,7 +396,7 @@ p {
             h1 {
                 line-height: 60px;
                 margin: 0px;
-                font-size: 32px;
+                font-size: 23px;
                 //letter-spacing: -1px;
                 //white-space: nowrap;
             }
@@ -394,7 +412,7 @@ p {
                 margin: 0px auto;
                 width: 140px;
                 height: 130px;
-                color: #e91e63;
+                color: #adff2f;
                 font-size: 140px;
                 margin-bottom: 20px;
             }
@@ -407,9 +425,13 @@ p {
     }
 
     mat-card {
-        width: calc(19% - 65px);
+        width: calc(11% - 53px);
 
         @media (max-width: $breakpoint-mobile) {
+            width: calc(40% - 35px);
+        }
+
+        @media (max-width: $breakpoint-xs) {
             width: calc(100% - 70px);
         }
 
@@ -442,7 +464,7 @@ p {
             margin: 0px auto;
             color: #fff;
             display: block;
-            background-color: #e91e63;
+            background-color: #ff0042;
 
             .mat-button-wrapper {
                 font-size: 11px; 
@@ -466,7 +488,7 @@ p {
 footer{
     color: #ccc;
     text-align: center;
-    padding: 20px 20px 20px 20px;
+    padding: 6px 20px 20px 20px;
     font-size: 10px;
     line-height: 20px;
     background-image: url(https://media3.giphy.com/media/Z4ITmGFsXV19C/giphy.gif?cid=ecf05e4708fb976853e5ae8bf08f47f9d64c57c7f529edee&rid=giphy.gif);
@@ -478,9 +500,30 @@ footer{
     position: relative;
     z-index: 0;
 
+    h2 {
+        color: #fff;
+
+
+        @media (max-width: $breakpoint-mobile) {
+            font-size: 10px;
+        }
+
+
+        @media (max-width: $breakpoint-xs) {
+            font-size: 7px;
+        }
+    }
+
     a { color: #fff; text-decoration: none; }
 
-    
+    .con {
+        margin: -23px;
+        padding: 0px;
+        clear: both;
+        z-index: 2;
+        position: relative;
+    }
+
     .gradient {
         width: 100%;
         position: absolute;
@@ -488,7 +531,7 @@ footer{
         background-image: url(assets/images/footer-bg.png);
         z-index: 1;
         left: 0px;
-        top: 0px;
+        bottom: 0px;
     }
 
     .sec {
@@ -526,7 +569,7 @@ footer{
             display: none;
         }
 
-        a { color: #fff; }
+        a { color: #f5f5f5; }
     }
 
     .links {
@@ -534,7 +577,7 @@ footer{
         z-index: 2;
     
         a {
-            color: #fff;
+            color: #f5f5f5;
             text-decoration: none;
             &:hover {
                 text-decoration: underline;
@@ -545,7 +588,7 @@ footer{
 
 header {
 
-    background-color: #e91e63;
+    background-color: #ff0042;
     padding: 20px;
     position: relative;
     z-index: 1;
@@ -567,16 +610,23 @@ header {
     }
 
     &.white {
-        background-color: #fff;
+        background-color: #f5f5f5;
     }
     
 
     a.logo {
-        color: #fff;
+        color: #f5f5f5;
         text-decoration: none;
         text-transform: uppercase;
         font-size: 40px;
         float: left;
+
+        background-image: url(assets/images/logo_2021.png);
+        background-size: 40px;
+        background-repeat: no-repeat;
+        padding-left: 50px;
+        background-position-y: 4px;
+
 
         span {
             font-size: 16px;
@@ -602,14 +652,14 @@ header {
             color: #333;
             //display: inline-block;
             //text-decoration: none;
-            //font-size: 14px;
+            font-size: 16px;
             //margin: 10px 0px 0px 0px;
             //padding: 20px;
             text-decoration: none;
         }
 
         .mat-raised-button {
-            color: #fff !important; 
+            color: #f5f5f5 !important; 
             padding: 0px 10px;
             margin-left: 10px;
         }
@@ -748,8 +798,8 @@ img {
 
 .download-area {
     float: left;
-    width: calc(50% - 40px);
-    padding-right: 40px;
+    width: calc(50% - 100px);
+    padding-right: 100px;
 
     a {
         font-size: 12px;

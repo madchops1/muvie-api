@@ -1,15 +1,25 @@
-<div class="wrapper pink">
+<div class="wrapper white">
     <div class="main">
         <!-- <h1>Realtime Audio Reactive Experiences</h1> -->
-        <h1>Audio Reactive VJ Software for Streams &amp; Events</h1>
-        <h2>
-            Quickly create and control realtime audio reactive visuals in any OBS/Zoom stream or live event <strong>remotely</strong>
-            or in-person.
-        </h2>
-        <h2>
-            Intended for VJs, DJs, Bands, Artists, Streams, Events, and Venues.
-        </h2>
-        <a routerLink="/download" class="download">GET IT NOW</a><Br>
+        <!-- <h1>Audio Reactive VJ Software for Streams &amp; Events</h1> -->
+        <h1>Audio Reactive Graphics</h1>
+
+        <ul>
+            <li>
+                VISUALZ is your digital visual workstation.
+            </li>
+            <li>
+                Compose and VJ realtime audio reactive graphics.
+            </li>
+            <li>
+                Designed for VJs, DJs, Bands, Artists, Videos, Streams, Concerts/Events, Parties, and Venues.
+            </li>
+            <li>
+                Works great with OBS!
+            </li>
+        </ul>
+        
+        <a routerLink="/download" mat-raised-button class="download">GET IT NOW</a><Br>
         <!-- <a routerLink="/start" class="download">NEW LIVE STREAM TOOL</a><br> -->
     </div>
     <div class='macwrap'>
@@ -44,54 +54,91 @@
 </div> -->
 <!-- 
 <div class="content-wrapper youtube">
-
 </div> -->
-
 
 <div class="content-wrapper dark">
     <div class="content-inner-wrapper">
         <div class="download-area">
 
-            <img src="../../assets/images/icon.ico" class="ico" />
+            <img src="../../assets/images/logo_2021_300.png" class="ico" />
 
             <!-- <div *ngIf="deviceInfo.os == 'Mac' || deviceInfo.os == 'iOS'" class="clearfix"> -->
             <div class="clearfix">
                 <img class="mac" src="../../assets/images/macos.png" />
-                <a href="https://github.com/madchops1/visualz-releases/releases/download/v2.1.8/Visualz-2.1.8.dmg"
+                <a href="https://github.com/madchops1/visualz-releases/releases/download/v2.1.9/Visualz-2.1.9.dmg"
                     target="_blank" mat-raised-button (click)="downloadMac()" class="pink button">
-                    Download Mac
+                    Download for Mac
                 </a>
             </div>
 
             <!-- <div *ngIf="deviceInfo.os != 'Mac' && deviceInfo.os != 'iOS'" class="clearfix"> -->
             <div class="clearfix">
                 <img class="windows" src="../../assets/images/windows.png" />
-                <a href="https://github.com/madchops1/visualz-releases/releases/download/v2.1.8/Visualz-Setup-2.1.8.exe"
+                <a href="https://github.com/madchops1/visualz-releases/releases/download/v2.1.9/Visualz-Setup-2.1.9.exe"
                     target="_blank" mat-raised-button (click)="downloadWindows()" class="pink button">
-                    Download Windows
+                    Download for Windows
                 </a>
             </div>
 
         </div>
         <div class="release-notes">
-            <h1>VISUALZ v2.1.8</h1>
+            <h1>VISUALZ v2.1.9</h1>
 
             <div class="">
 
                 <img src="../../assets/images/macbook.png" style="width: 500px; margin: 0px 0 25px -55px; padding: 0px;" />
-
+<!-- 
                 <iframe style="margin-bottom: 10px;" width="100%" height="240" src="https://www.youtube.com/embed/UyZFcEHbCBM?rel=0&amp;controls=0"
                     frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
-                    allowfullscreen></iframe>
+                    allowfullscreen></iframe> -->
 
+                <!-- 03/29/2022 -->
+                <h2>Update 2.1.9</h2>
+                <ul class='new'>
+                    <li>A year in development version 2.1.9 has the features you've been waiting for.</li>
+                    <li>Enhanced transitions and added multiple transition types and controls.</li>
+                    <li>New bloom/glow fx.</li>
+                    <li>New pixelate fx.</li>
+                    <li>New vignette fx.</li>
+                    <li>New dot screen fx.</li>
+                    <li>New double mirror fx.</li>
+                    <li>New tunneling fx.</li>
+                    <li>New ripple fx.</li>
+                    <li>New shake fx.</li>
+                    <li>New trails fx.</li>
+                    <li>New lightrays fx.</li>
+                    <li>New waveform fx.</li>
+                    <li>Added orbit control.</li>
+                    <li>New image adjustments fx.</li>
+                    <li>Added FXAA Antialiasing.</li>
+                    <li>Uploading sets to the cloud has been reworked.</li>
+                    <li>Better cued process handling and notifications.</li>
+                    <li>Fixed image overlay bug in opened sets.</li>
+                    <li>Imge overlay audio reactive opacity.</li>
+                    <li>Fixed giphy bug.</li>
+                    <li>Fixed imported then replicated track bug.</li>
+                    <li>Random fx is better.</li>
+                    <li>Added universal randomize fx.</li>
+                    <li>Updated vaporwave visualizer.</li>
+                    <li>Updated alphaviz visualizer.</li>
+                    <li>Added basic fractal visualizer.</li>
+                    <li>Audio reacivity level control added per track.</li>
+                    <li>Audio source moved to track preferences.</li>
+                    <li>Added realtime visual updating to the fx controls.</li>
+                    <li>Import videos directly from youtube and vimeo.</li>
+                    <li>Added dark mode.</li>
+                    <li>Added z-axis position for text.</li>
+                    <li>Fixed set opening bugs.</li>
+                </ul>
 
-                <!-- 04/03/2021 -->
+                <!-- 04/03/2021 
                 <h2>Update 2.1.8</h2>
                 <ul class='new'>
                     <li>Bugfixes</li>
                 </ul>
+                -->
 
-                <!-- 03/19/2021 -->
+                <!-- 03/19/2021
                 <h2>Update 2.1.7</h2>
                 <ul class='new'>
                     <li>Batch import media added.</li>
@@ -116,30 +163,35 @@
                     <li>Fixed upload to cloud bugs.</li>
                     <li>Fixed transition on 8x, 16x, 32x, 48x, 64x issue</li>
                     <li>Fixed thumbnail bugs.</li>
-                    <li>Added 7 day free pro tial.</li>
+                    <li>Added 7 day free pro trial.</li>
                     <li>UI/UX overhaul.</li>
                     <li>Added info windows and tooltips.</li>
                 </ul>
+                -->
 
-                <!-- 12/9/20 -->
+                <!-- 12/9/20
                 <h2>System/Website Update</h2>
                 <ul class='new'>
                     <li>Announcing <a href="https://wear.visualzstudio.com" class="pink">VISUALZ WEAR</a>.</li>
                     <li>Login, acount, and subscription management enabled on www.visualzstudio.com</li>
                 </ul>
+                -->
 
-                <!-- 8/28/20 -->
+                <!-- 8/28/20
                 <h2>Update 2.1.6</h2>
                 <ul class='new'>
                     <li>Bugfixes across the board! Several official curated Burning Man Kindling projects have
                         recommended VISUALZ to the livestream artists performing during the event :) THANKS!</li>
                 </ul>
-                <!-- 7/17/20 -->
+                -->
+
+                <!-- 7/17/20
                 <h2>Update 2.1.5</h2>
                 <ul class='new'>
                     <li>Added dedicated Peer to Peer Servers for streaming to the browser, better integrating with OBS
                         and livestreaming functionality.</li>
                 </ul>
+                -->
 
                 <!-- <button>Full History</button>
                 <button>Older Versions</button> -->
@@ -317,7 +369,7 @@
                     music in realtime.
                 </p>
                 <p>
-                    Immediately make your event or live stream a better experience.
+                    Immediately make your music, event, or live stream a visual experience.
                 </p>
             </div>
         </div>
@@ -418,7 +470,7 @@
 </header>
 
 <div class="content-wrapper dark">
-    <div class="content-inner-wrapper">
+    <div class="content-inner-wrapper big">
         <ul class="big">
             <!-- <li>
                 <mat-icon aria-hidden="false" aria-label="Audio-Reactive">equalizer</mat-icon>
@@ -437,6 +489,13 @@
                 <h1>Effects</h1>
                 The gamut of effects you'd expect, with some special sauce.
             </li>
+            <li>
+                <mat-icon aria-hidden="false" aria-label="Effects">grid_on</mat-icon>
+                <h1>MIDI Support.</h1>
+                Connect your midi controller to trigger tracks and more.
+            </li>
+            
+
             <li>
                 <mat-icon aria-hidden="false" aria-label="Gif/Image Search">image_search</mat-icon>
                 <h1>Gif/Image Search</h1>
@@ -471,7 +530,7 @@
             </li>
             <li>
                 <mat-icon aria-hidden="false" aria-label="Mobile Video">featured_video</mat-icon>
-                <h1>Projection Mapping/Masking</h1>
+                <h1>Projection Mapping</h1>
                 Mask out what you don't want to easily map projections to targets.
             </li>
             <li>
@@ -516,7 +575,7 @@
 </header>
 <div class="content-wrapper white">
     <div class="content-inner-wrapper">
-
+        <h4 class="center">Hover over the image below to discover various features and funtionality.</h4>
         <div class="big-only">
             <app-htw
                 style="margin:120px auto; background: #333; border-radius: 5px; display: block; box-shadow:0px 10px 60px 0px #aaa;">
@@ -525,7 +584,7 @@
         <h2 class="center" style="line-height: 40px;">
             Ready to learn more?
             <br>
-            <a routerLink="/how-it-works">Start Here</a>.
+            <a mat-raised-button routerLink="/start-here">Start Here</a>
         </h2>
 
 
@@ -616,59 +675,29 @@
 
 <!-- Partners -->
 <header class="skew">
-    <h2>PARTNERS</h2>
+    <h2>EVENTS / COLLABORATORS</h2>
 </header>
+
 <div class="content-wrapper dark small-bottom collab">
     <div class="">
         <div class="invert">
-            <a href='https://www.opendoors.la/' target="_blank">
-                <img src="../../assets/images/opendoors.png" />
-            </a>
-            <a href='https://www.jnktn.tv/' target="_blank">
-                <img src="../../assets/images/jnktntv.png" />
-            </a>
-            <a href='https://www.youtube.com/channel/UCk7yZcoQFKGUWnyvF219LLw' target="_blank">
-                <img src="../../assets/images/kaizen.png" />
-            </a>
+            <app-collaborators>
+                
+            </app-collaborators>
         </div>
     </div>
 </div>
 
 <!-- Collaborators -->
 <header class="skew">
-    <h2>Collaborators</h2>
+    <h2>MUSICIANS</h2>
 </header>
+
 <div class="content-wrapper dark small-bottom collab">
     <div class="">
-        <mat-card class="example-card" *ngFor="let item of collaborators">
-            <mat-card-header>
-                <mat-card-title>{{item.name}}</mat-card-title>
-                <mat-card-subtitle>
-                    {{item.type}}
-                    <br>
-                    {{item.location}}
-                </mat-card-subtitle>
-            </mat-card-header>
-            <img mat-card-image src="{{item.image}}" alt="{{item.name}}">
-            <mat-card-actions>
-                <a href="{{item.link}}" target="_blank" mat-button>More Info</a>
-            </mat-card-actions>
-        </mat-card>
+        <app-musicians>
 
-        <div class="clearfix"></div>
-
-        <h2 class="collab">
-            Interested in collaborating?
-        </h2>
-        <p class="center">
-            The Visualz Team can and wants to do remote realtime visuals for your live streams.
-        </p>
-        <p class="center">
-            Once live events are possible again we'd love to do live and remote visuals for those as well.
-        </p>
-        <p class="center">
-            Contact VISUALZAPP.CONTACT@GMAIL.COM to setup a demo or just talk about your visual needs as an artist.
-        </p>
+        </app-musicians>
     </div>
 </div>
 
