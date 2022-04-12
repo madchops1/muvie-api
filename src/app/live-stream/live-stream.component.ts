@@ -2543,7 +2543,7 @@ export class LiveStreamComponent implements OnInit {
                     //s.ellipse(s.width / 2, s.height / 2, ellipseWidth, ellipseWidth);
                     //s.stroke('#ff4081');
                     s.noStroke();
-                    s.fill('#ff4081');
+                    s.fill('#ff0042');
                     s.rect(0, s.height - ellipseWidth, s.width, ellipseWidth);
                     //}
 
@@ -2578,12 +2578,12 @@ export class LiveStreamComponent implements OnInit {
                     // s.noFill();
 
                     // BPM Text
-                    s.fill('#ff4081');
+                    s.fill('#ff0042');
                     s.textSize(11);
                     s.text('~BPM: ' + this.bpm, 70, 13);
 
                     // Volume Level Text
-                    s.fill('#ff4081');
+                    s.fill('#ff0042');
                     s.text('VOL: ' + (Math.round(this.volume * 100) / 100), 146, 13);
                     s.noFill();
 

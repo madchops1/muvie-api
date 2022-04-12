@@ -1,6 +1,6 @@
 {
     "name": "muvie",
-    "version": "2.1.8",
+    "version": "2.1.9",
     "scripts": {
         "ng": "ng",
         "start": "node server.js",
@@ -96,6 +96,7 @@
         "typescript": "~3.2.2",
         "unsplash-js": "^6.0.0",
         "video-stitch": "^1.6.0",
+        "youtube-dl-exec": "^2.0.2",
         "zone.js": "~0.8.26"
     },
     "devDependencies": {
