@@ -1,0 +1,10 @@
+$breakpoint-mobile: 768px;
+$breakpoint-xs: 370px;
+
+.email-component {
+    width: 50vw;
+
+    @media (max-width: $breakpoint-mobile) {
+       width: auto;
+    }
+}

@@ -1,3 +1,15 @@
+
+$breakpoint-mobile: 768px;
+$breakpoint-xs: 370px;
+
+.email-component {
+    width: 50vw;
+
+    @media (max-width: $breakpoint-mobile) {
+       width: auto;
+    }
+}
+
 .download {
     position: relative;
     z-index: 2;
@@ -9,6 +21,13 @@
         background: #fff;
         color: #333;
     }
+
+
+    @media (max-width: $breakpoint-mobile) {
+        margin-bottom: 20px;
+        width: calc(100% - 40px);
+    }
+
 }
 
 .new {

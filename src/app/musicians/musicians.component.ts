@@ -186,8 +186,8 @@ export class MusiciansComponent implements OnInit {
     },
     {
         name: 'Slippin Jimmy',
-        type: 'USA',
-        location: 'Indiana',
+        type: 'DJ',
+        location: 'USA',
         image: '../../assets/images/musicians/evan.jpg',
         link: 'https://www.facebook.com/SlippinJimmysHouse/'
     },

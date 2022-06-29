@@ -1,3 +1,9 @@
+'use strict';
+const fs = require('file-system');
+const aws = require('aws-sdk');
+let S3_BUCKET = 'visualz-1'; //process.env.S3_BUCKET;
+aws.config.region = 'us-east-2';
+
 module.exports.sendFileToS3 = (file, dest) => {
 
         return new Promise(async function (resolve, reject) {
