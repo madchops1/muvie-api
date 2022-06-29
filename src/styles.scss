@@ -170,6 +170,7 @@ p {
 
         @media (max-width: $breakpoint-mobile) {
             float: none;
+            width: 100%;
         }
 
         .macbook {
@@ -180,10 +181,12 @@ p {
 
             @media (max-width: $breakpoint-mobile) {
                 width: 375px;
-                margin-top: 40px;
-                margin-left: 0px;
-                margin-bottom: 40px;
+                margin-top: 0px;
+                margin-left: auto;
+                margin-right: auto;
+                margin-bottom: 30px;
                 float:none;
+                clear: both;
             }
         }
     }
@@ -204,6 +207,7 @@ p {
         @media (max-width: $breakpoint-mobile) {
             width: 100%;
             float: none;
+            padding: 0px 0px;
         }
 
         h1 {
@@ -218,6 +222,10 @@ p {
             @media (max-width: $breakpoint-mobile) {
                 font-size: 50px;
                 line-height: 55px;
+                letter-spacing: 10px;
+                text-align: center;
+                margin: 30px 0 30px 0px;
+
             }
 
         }
@@ -235,7 +243,7 @@ p {
             }
 
             @media (max-width: $breakpoint-mobile) {
-                font-size: 17px;
+                font-size: 15px;
                 
             }
         }
@@ -307,8 +315,8 @@ p {
         overflow: hidden;
 
         @media (max-width: $breakpoint-mobile) {
-            padding: 60px 40px 0px !important;
-            min-height: calc(100vh - 537px) !important;
+            padding: 0px !important;
+            min-height: calc(100vh - 560px) !important;
 
         }
     }
@@ -404,7 +412,7 @@ p {
             @media (max-width: $breakpoint-mobile) {
                 width: 100%;
                 height: auto;
-                margin: 80px 0px;
+                margin: 40px 0px;
             }
 
             mat-icon {
@@ -912,14 +920,14 @@ img {
 
     @media (max-width: $breakpoint-mobile) {
         float: none;
-        width: calc(100% - 80px);
-        padding: 40px 10px;
-        right: -110px;
+        width: calc(100%);
+        padding: 40px 0px;
+        /*right: -110px;*/
         margin-top: -320px;
         text-align: center;
         position: relative;
         z-index: 0;
-        background:rgba(255,255,255,0.75);
+        background:rgba(255,255,255,0.85);
 
     }
 

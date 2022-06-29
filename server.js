@@ -26,6 +26,7 @@ const make = require('./api/make');
 const convertToMp4 = require('./api/convertToMp4');
 const extractFrame = require('./api/extractFrame');
 const gifToMp4 = require('./api/gifToMp4');
+const movToMp4 = require('./api/movToMp4');
 const youtubedl = require('youtube-dl-exec');
 
 const handleChargeSucceeded = require('./api/lib/stripe').handleChargeSucceeded;
@@ -34,7 +35,7 @@ const getTags = require('./api/tags').getTags;
 
 //const authSeat = require('./api/authSeat');
 
-const visualzLatest = '2.1.9';
+const visualzLatest = '2.2.0';
 const kill = []; // array of versions eg. ['2.0.0'] ?? 2.1.7 ??
 const killMsg = 'This version is dead.';
 
@@ -1601,9 +1602,23 @@ app.post("/api/convertToMp4", async function (req, res) {
     }
 });
 
+app.post("/api/movToMp4", async function (req, res) {
+    try {
+        console.log('calling api MovToMp4', req.body);
+        let convertMov = await movToMp4.MovToMp4(req);
+        res.header('Access-Control-Allow-Origin', '*');
+        res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS');
+        res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization, Content-Length, X-Requested-With');
+        res.status(200).json(convertMov);
+        res.end();
+    } catch (err) {
+        handleError(res, err, 'nope');
+    }
+});
+
 app.post("/api/gifToMp4", async function (req, res) {
     try {
-        console.log('calling api gifToMp4', req.body);
+        console.log('calling api GifToMp4', req.body);
         let convertGif = await gifToMp4.GifToMp4(req);
         res.header('Access-Control-Allow-Origin', '*');
         res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS');
@@ -1812,7 +1827,7 @@ app.post("/api/createSeat", async function (req, res) {
                     handleError(res, err, 'nope');
                 }
 
-                console.log('CUSTOMERS', customers.data.length, customers.data);
+                //console.log('CUSTOMERS', customers.data.length, customers.data);
 
                 for(i=0; i<customers.data.length; i++) {
                     for(j=0; j<customers.data[i].subscriptions.data.length; j++) {
@@ -1870,7 +1885,7 @@ app.post("/api/createSeat", async function (req, res) {
 
                 } else {
 
-                    handleError(res, err, 'nope');
+                    handleError(res, 'Could not find a subscription.', 'nope');
                 }
             });
     } catch (err) {
