@@ -22,11 +22,11 @@ const Pexels = require('node-pexels').Client;
 const concat = require('./api/concat');
 const signS3 = require('./api/sign-s3');
 const uploadFile = require('./api/uploadFile');
-const make = require('./api/make');
-const convertToMp4 = require('./api/convertToMp4');
-const extractFrame = require('./api/extractFrame');
-const gifToMp4 = require('./api/gifToMp4');
-const movToMp4 = require('./api/movToMp4');
+//const make = require('./api/make');
+//const convertToMp4 = require('./api/convertToMp4');
+//const extractFrame = require('./api/extractFrame');
+//const gifToMp4 = require('./api/gifToMp4');
+//const movToMp4 = require('./api/movToMp4');
 const youtubedl = require('youtube-dl-exec');
 
 const handleChargeSucceeded = require('./api/lib/stripe').handleChargeSucceeded;
@@ -35,9 +35,9 @@ const getTags = require('./api/tags').getTags;
 
 //const authSeat = require('./api/authSeat');
 
-const visualzLatest = '2.2.2';
+const visualzLatest = '2.2.3';
 const kill = []; // array of versions eg. ['2.0.0'] ?? 2.1.7 ??
-const killMsg = 'This version is dead.';
+const killMsg = 'This version is deprecated.';
 
 const baseUrl = 'https://visualz-1.s3.us-east-2.amazonaws.com';
 
@@ -1023,34 +1023,34 @@ io.on('connection', (socket) => {
         socket.broadcast.to(String(mid)).emit('getCrowdScreenImage', data);
     });
 
-    socket.on("make", async data => {
-        try {
-            console.log('calling api make', data);
-            let req = { fields: false };
-            req.fields = data;
-            let makeVideo = await make.Make(req);
-            socket.emit('made', makeVideo);
-            //res.write(JSON.stringify(makeVideo));
-            //res.end();
-        } catch (err) {
-            console.log(err);
-            //handleError(res, err, 'nope');
-        }
-    });
+    // socket.on("make", async data => {
+    //     try {
+    //         console.log('calling api make', data);
+    //         let req = { fields: false };
+    //         req.fields = data;
+    //         let makeVideo = await make.Make(req);
+    //         socket.emit('made', makeVideo);
+    //         //res.write(JSON.stringify(makeVideo));
+    //         //res.end();
+    //     } catch (err) {
+    //         console.log(err);
+    //         //handleError(res, err, 'nope');
+    //     }
+    // });
 
-    socket.on("makeV2", async data => {
-        console.log('calling api makeV2', data);
-        let makeVideo;
-        // Educational and Commercial licenses
-        if (data.plan == 0) {
-            makeVideo = await make.MakeV2(data);
-        } else {
-            console.log('COMMERCIAL');
-            makeVideo = await make.MakeV2Commercial(data);
-        }
-        console.log('makeV2 Done, mid:', mid);
-        io.in(String(mid)).emit('makeV2Complete', makeVideo);
-    });
+    // socket.on("makeV2", async data => {
+    //     console.log('calling api makeV2', data);
+    //     let makeVideo;
+    //     // Educational and Commercial licenses
+    //     if (data.plan == 0) {
+    //         makeVideo = await make.MakeV2(data);
+    //     } else {
+    //         console.log('COMMERCIAL');
+    //         makeVideo = await make.MakeV2Commercial(data);
+    //     }
+    //     console.log('makeV2 Done, mid:', mid);
+    //     io.in(String(mid)).emit('makeV2Complete', makeVideo);
+    // });
 
 });
 
@@ -1554,80 +1554,84 @@ app.all('*', function (req, res, next) {
 
 //}
 
-// took too long so used socket
-app.post("/api/make", async function (req, res) {
-    try {
-        console.log('calling api make', req.fields);
-        let makeVideo = await make.Make(req);
-        res.header('Access-Control-Allow-Origin', '*');
-        res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS');
-        res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization, Content-Length, X-Requested-With');
-        res.write(JSON.stringify(makeVideo));
-        res.end();
-    } catch (err) {
-        handleError(res, err, 'nope');
-    }
-});
+// // took too long so used socket
+// app.post("/api/make", async function (req, res) {
+//     try {
+//         console.log('calling api make', req.fields);
+//         let makeVideo = await make.Make(req);
+//         res.header('Access-Control-Allow-Origin', '*');
+//         res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS');
+//         res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization, Content-Length, X-Requested-With');
+//         res.write(JSON.stringify(makeVideo));
+//         res.end();
+//     } catch (err) {
+//         handleError(res, err, 'nope');
+//     }
+// });
 
-app.get("/api/concat", function (req, res) {
-    try {
-        let concatVideo = concat.Concat();
-        concatVideo.then(function (result) {
-            console.log(result);
-            res.header('Access-Control-Allow-Origin', '*');
-            res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS');
-            res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization, Content-Length, X-Requested-With');
-            res.status(200).json();
-        },
-            function (err) {
-                console.log(err);
-                handleError(res, err);
-            });
-    } catch (err) {
+// DEPRECATED MOVED INTO APP
+// app.get("/api/concat", function (req, res) {
+//     try {
+//         let concatVideo = concat.Concat();
+//         concatVideo.then(function (result) {
+//             console.log(result);
+//             res.header('Access-Control-Allow-Origin', '*');
+//             res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS');
+//             res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization, Content-Length, X-Requested-With');
+//             res.status(200).json();
+//         },
+//             function (err) {
+//                 console.log(err);
+//                 handleError(res, err);
+//             });
+//     } catch (err) {
 
-    }
-});
+//     }
+// });
 
-app.post("/api/convertToMp4", async function (req, res) {
-    try {
-        console.log('calling api convertToMp4', req.fields);
-        let convertVideo = await convertToMp4.ConvertToMp4(req);
-        res.header('Access-Control-Allow-Origin', '*');
-        res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS');
-        res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization, Content-Length, X-Requested-With');
-        res.write(JSON.stringify(convertVideo));
-        res.end();
-    } catch (err) {
-        handleError(res, err, 'nope');
-    }
-});
+// DEPRECATED MOVED INTO APP
+// app.post("/api/convertToMp4", async function (req, res) {
+//     try {
+//         console.log('calling api convertToMp4', req.fields);
+//         let convertVideo = await convertToMp4.ConvertToMp4(req);
+//         res.header('Access-Control-Allow-Origin', '*');
+//         res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS');
+//         res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization, Content-Length, X-Requested-With');
+//         res.write(JSON.stringify(convertVideo));
+//         res.end();
+//     } catch (err) {
+//         handleError(res, err, 'nope');
+//     }
+// });
 
-app.post("/api/movToMp4", async function (req, res) {
-    try {
-        console.log('calling api MovToMp4', req.body);
-        let convertMov = await movToMp4.MovToMp4(req);
-        res.header('Access-Control-Allow-Origin', '*');
-        res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS');
-        res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization, Content-Length, X-Requested-With');
-        res.status(200).json(convertMov);
-        res.end();
-    } catch (err) {
-        handleError(res, err, 'nope');
-    }
-});
+// DEPRECATED MOVED INTO APP
+// app.post("/api/movToMp4", async function (req, res) {
+//     try {
+//         console.log('calling api MovToMp4', req.body);
+//         let convertMov = await movToMp4.MovToMp4(req);
+//         res.header('Access-Control-Allow-Origin', '*');
+//         res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS');
+//         res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization, Content-Length, X-Requested-With');
+//         res.status(200).json(convertMov);
+//         res.end();
+//     } catch (err) {
+//         handleError(res, err, 'nope');
+//     }
+// });
 
-app.post("/api/gifToMp4", async function (req, res) {
-    try {
-        console.log('calling api GifToMp4', req.body);
-        let convertGif = await gifToMp4.GifToMp4(req);
-        res.header('Access-Control-Allow-Origin', '*');
-        res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS');
-        res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization, Content-Length, X-Requested-With');
-        res.status(200).json(convertGif);
-    } catch (err) {
-        handleError(res, err, 'nope');
-    }
-});
+// DEPRECATED MOVED INTO APP
+// app.post("/api/gifToMp4", async function (req, res) {
+//     try {
+//         console.log('calling api GifToMp4', req.body);
+//         let convertGif = await gifToMp4.GifToMp4(req);
+//         res.header('Access-Control-Allow-Origin', '*');
+//         res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS');
+//         res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization, Content-Length, X-Requested-With');
+//         res.status(200).json(convertGif);
+//     } catch (err) {
+//         handleError(res, err, 'nope');
+//     }
+// });
 
 // Upload base-64 crownd/fan screen base64
 app.post("/api/upload-base-64", async function (req, res) {
@@ -1641,18 +1645,19 @@ app.post("/api/upload-base-64", async function (req, res) {
     }
 });
 
-app.post("/api/extractFrame", async function (req, res) {
-    try {
-        console.log('calling api extractFrame');
-        let getFrame = await extractFrame.ExtractFrame(req);
-        res.header('Access-Control-Allow-Origin', '*');
-        res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS');
-        res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization, Content-Length, X-Requested-With');
-        res.status(200).json(getFrame);
-    } catch (err) {
-        handleError(res, err, 'nope');
-    }
-});
+// DEPRECATED MOVED INTO APP
+// app.post("/api/extractFrame", async function (req, res) {
+//     try {
+//         console.log('calling api extractFrame');
+//         let getFrame = await extractFrame.ExtractFrame(req);
+//         res.header('Access-Control-Allow-Origin', '*');
+//         res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS');
+//         res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization, Content-Length, X-Requested-With');
+//         res.status(200).json(getFrame);
+//     } catch (err) {
+//         handleError(res, err, 'nope');
+//     }
+// });
 
 // app.post("/api/makeVideo", async function (req, res) {
 //     console.log('calling api makeVideo');
@@ -1857,7 +1862,7 @@ app.post("/api/createSeat", async function (req, res) {
                     const params = {
                         Bucket: process.env.KEYSTORE, // pass your bucket name
                         Key: key + '.json', // file will be saved as testBucket/contacts.csv
-                        Body: JSON.stringify({ plan: plan, email: email }, null, 2)
+                        Body: JSON.stringify({ plan: plan, email: email }, null, 2),
                     };
 
                     s3.upload(params, function (s3Err, data) {
