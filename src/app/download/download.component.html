@@ -1,8 +1,24 @@
 <div class="content-wrapper normal">
     <h1 class="center">
         Download VISUALZ v2.2.3<br>
-        Free for Non-Commercial Use
+        Free for Non-Commercial Use<br>
+        🔥 Black Friday Deal - Get VISUALZ 50% Off - That's just $24 🔥<br>
     </h1>
+
+    <div [hidden]="testMode === true">
+        <button class="green" id="checkout-button-price_1IUyyVKBQoT2WTQqKkm8wq1S" role="link"
+            mat-raised-button>
+            Buy Commercial License
+        </button>
+    </div>
+
+    <!-- TEST COMMERCIAL LICENSE SPECIAL -->
+    <div [hidden]="testMode === false">
+        <button class="green" id="checkout-button-plan_HCHlDgrJZXt7r0" role="link"
+            mat-raised-button>
+            TEST Buy Commercial License
+        </button>
+    </div>
 
     <div class="clearfix"></div>
 
@@ -172,7 +188,7 @@
             <div class="header">
                 <span class="name">COMMERCIAL</span>
                 <span class="desc">Fully featured and for use in paying projects, and at venues.</span>
-                <span class="price">$48 yearly</span>
+                <span class="price"><del>$48 yearly</del> $24</span>
             </div>
             <ul class="features">
                 <li>All the non-commercial features plus:</li>
@@ -211,7 +227,7 @@
 
             <!-- PROD COMMERCIAL LICENSE -->
             <div [hidden]="testMode === true">
-                <button class="pink" id="checkout-button-price_1IUyyVKBQoT2WTQqKkm8wq1S" role="link"
+                <button class="green" id="checkout-button-price_1IUyyVKBQoT2WTQqKkm8wq1S" role="link"
                     mat-raised-button>
                     Buy Commercial License
                 </button>
@@ -219,7 +235,7 @@
 
             <!-- TEST COMMERCIAL LICENSE SPECIAL -->
             <div [hidden]="testMode === false">
-                <button class="pink" id="checkout-button-plan_HCHlDgrJZXt7r0" role="link"
+                <button class="green" id="checkout-button-plan_HCHlDgrJZXt7r0" role="link"
                     mat-raised-button>
                     TEST Buy Commercial License
                 </button>

@@ -21,6 +21,7 @@ export class DownloadComponent implements OnInit {
 
     ngOnInit() {
 
+        // PROD
         this.stripeScriptProd = this.sanitizer.bypassSecurityTrustHtml(`
         <script>
                 var stripe = Stripe('pk_live_ZPeiS3btumpDQ4L0NgtsynHI');
@@ -51,12 +52,12 @@ export class DownloadComponent implements OnInit {
                 // });
 
                 /* normal price: checkout-button-price_1IUyyVKBQoT2WTQqKkm8wq1S */
-                var checkoutButtonCommercialProd = document.getElementById('checkout-button-price_1IUyyVKBQoT2WTQqKkm8wq1S');
+                var checkoutButtonCommercialProd = document.getElementById('checkout-button-price_1M7LooKBQoT2WTQq91kFgJWs');
                 checkoutButtonCommercialProd.addEventListener('click', function () {
                     // When the customer clicks on the button, redirect
                     // them to Checkout.
                     stripe.redirectToCheckout({
-                    items: [{plan: 'price_1IUyyVKBQoT2WTQqKkm8wq1S', quantity: 1}],
+                    items: [{plan: 'price_1M7LooKBQoT2WTQq91kFgJWs', quantity: 1}],
 
                     // Do not rely on the redirect to the successUrl for fulfilling
                     // purchases, customers may not always reach the success_url after
@@ -78,6 +79,7 @@ export class DownloadComponent implements OnInit {
             </script>
         `);
 
+        // TEST
         this.stripeScriptTest = this.sanitizer.bypassSecurityTrustHtml(`
             <script>
                 var stripe = Stripe('pk_test_JxsCHvXtYWoMblng27w9oah5');

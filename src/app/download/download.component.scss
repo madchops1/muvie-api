@@ -10,9 +10,10 @@ $breakpoint-mobile: 768px;
     }
 }
 
-button.pink {
-    width: calc(100% - 40px);
-    margin: 20px 20px;
+button.pink, button.green {
+    margin: 20px auto;
+    width: 50%;
+    display: block;
     
 }
 
