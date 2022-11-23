@@ -76,6 +76,30 @@ export class DownloadComponent implements OnInit {
                     }
                     });
                 });
+                var checkoutButtonCommercialProd2 = document.getElementById('checkout-button-2-price_1M7LooKBQoT2WTQq91kFgJWs');
+                checkoutButtonCommercialProd2.addEventListener('click', function () {
+                    // When the customer clicks on the button, redirect
+                    // them to Checkout.
+                    stripe.redirectToCheckout({
+                    items: [{plan: 'price_1M7LooKBQoT2WTQq91kFgJWs', quantity: 1}],
+
+                    // Do not rely on the redirect to the successUrl for fulfilling
+                    // purchases, customers may not always reach the success_url after
+                    // a successful payment.
+                    // Instead use one of the strategies described in
+                    // https://stripe.com/docs/payments/checkout/fulfillment
+                    successUrl: 'https://www.visualzstudio.com/success',
+                    cancelUrl: 'https://www.visualzstudio.com/canceled',
+                    })
+                    .then(function (result) {
+                    if (result.error) {
+                        // If redirectToCheckout fails due to a browser or network
+                        // error, display the localized error message to your customer.
+                        var displayError = document.getElementById('error-message');
+                        displayError.textContent = result.error.message;
+                    }
+                    });
+                });
             </script>
         `);
 
