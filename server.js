@@ -35,7 +35,7 @@ const getTags = require('./api/tags').getTags;
 
 //const authSeat = require('./api/authSeat');
 
-const visualzLatest = '2.2.3';
+const visualzLatest = '2.2.4';
 const kill = []; // array of versions eg. ['2.0.0'] ?? 2.1.7 ??
 const killMsg = 'This version is deprecated.';
 
@@ -230,389 +230,389 @@ var server = app.listen(process.env.PORT || 8080, function () {
  * 
  * 
  */
-//const { Client } = require('pg');
-const { Sequelize, DataTypes, Model } = require('sequelize');
+// //const { Client } = require('pg');
+// const { Sequelize, DataTypes, Model } = require('sequelize');
 
-const sequelize = new Sequelize(process.env.DB_URI, {
-    dialectOptions: {
-        ssl: {
-            require: true,
-            rejectUnauthorized: false,
-        },
-        keepAlive: true,
-    },
-    ssl: true,
-    logging: false
-});
+// const sequelize = new Sequelize(process.env.DB_URI, {
+//     dialectOptions: {
+//         ssl: {
+//             require: true,
+//             rejectUnauthorized: false,
+//         },
+//         keepAlive: true,
+//     },
+//     ssl: true,
+//     logging: false
+// });
 
-dbConnect();
+// dbConnect();
 
-async function dbConnect() {
-    try {
-        await sequelize.authenticate();
-        console.log('Connection has been established successfully.');
-    } catch (error) {
-        console.error('Unable to connect to the database:', error);
-    }
-};
+// async function dbConnect() {
+//     try {
+//         await sequelize.authenticate();
+//         console.log('Connection has been established successfully.');
+//     } catch (error) {
+//         console.error('Unable to connect to the database:', error);
+//     }
+// };
 
-// Models
-//const marketplaceSet = require('./api/marketplaceSet');
-class Set extends Model { }
-class SetRawFile extends Model { }
-class PackPurchase extends Model { }
-class Tag extends Model { }
-class SetTag extends Model { }
-class ArtistTypeTag extends Model { }
-class Artist extends Model { }
-class ArtistTag extends Model { }
+// // Models
+// //const marketplaceSet = require('./api/marketplaceSet');
+// class Set extends Model { }
+// class SetRawFile extends Model { }
+// class PackPurchase extends Model { }
+// class Tag extends Model { }
+// class SetTag extends Model { }
+// class ArtistTypeTag extends Model { }
+// class Artist extends Model { }
+// class ArtistTag extends Model { }
 
-Artist.init({
-    id: {
-        type: DataTypes.INTEGER,
-        autoIncrement: true,
-        primaryKey: true
-    },
-    email: {
-        type: DataTypes.STRING
-    },
-    name: {
-        type: DataTypes.STRING
-    },
-    active: {
-        type: DataTypes.BOOLEAN,
-        allowNull: false,
-        defaultValue: true
-    },
-    authzero: {
-        type: DataTypes.BOOLEAN,
-        allowNull: false,
-        defaultValue: false
-    },
-    approved: {
-        type: DataTypes.BOOLEAN,
-        allowNull: false,
-        defaultValue: false
-    },
-    createdAt: {
-        type: DataTypes.DATE,
-        allowNull: false,
-        defaultValue: sequelize.literal('NOW()')
-    },
-    updatedAt: {
-        type: DataTypes.DATE,
-        allowNull: false,
-        defaultValue: sequelize.literal('NOW()')
-    }
-}, {
-    sequelize,
-    modelName: 'Artist',
-    tableName: 'artists'
-});
+// Artist.init({
+//     id: {
+//         type: DataTypes.INTEGER,
+//         autoIncrement: true,
+//         primaryKey: true
+//     },
+//     email: {
+//         type: DataTypes.STRING
+//     },
+//     name: {
+//         type: DataTypes.STRING
+//     },
+//     active: {
+//         type: DataTypes.BOOLEAN,
+//         allowNull: false,
+//         defaultValue: true
+//     },
+//     authzero: {
+//         type: DataTypes.BOOLEAN,
+//         allowNull: false,
+//         defaultValue: false
+//     },
+//     approved: {
+//         type: DataTypes.BOOLEAN,
+//         allowNull: false,
+//         defaultValue: false
+//     },
+//     createdAt: {
+//         type: DataTypes.DATE,
+//         allowNull: false,
+//         defaultValue: sequelize.literal('NOW()')
+//     },
+//     updatedAt: {
+//         type: DataTypes.DATE,
+//         allowNull: false,
+//         defaultValue: sequelize.literal('NOW()')
+//     }
+// }, {
+//     sequelize,
+//     modelName: 'Artist',
+//     tableName: 'artists'
+// });
 
-Set.init({
-    // Model attributes are defined here
-    id: {
-        type: DataTypes.INTEGER,
-        autoIncrement: true,
-        primaryKey: true
-    },
-    ArtistId: {
-        type: DataTypes.INTEGER,
-        references: {
-            model: Artist,
-            key: 'id'
-        }
-    },
-    name: {
-        type: DataTypes.STRING
-    },
-    description: {
-        type: DataTypes.STRING
-    },
-    price: {
-        type: DataTypes.DECIMAL(10, 2)
-    },
-    coverImage: {
-        type: DataTypes.STRING
-    },
-    setFile: {
-        type: DataTypes.STRING
-    },
-    stripeId: {
-        type: DataTypes.STRING
-    },
-    active: {
-        type: DataTypes.BOOLEAN,
-        allowNull: false,
-        defaultValue: true
-    },
-    published: {
-        type: DataTypes.BOOLEAN,
-        allowNull: false,
-        defaultValue: true
-    },
-    approved: {
-        type: DataTypes.BOOLEAN,
-        allowNull: false,
-        defaultValue: false
-    },
-    createdAt: {
-        type: DataTypes.DATE,
-        allowNull: false,
-        defaultValue: sequelize.literal('NOW()')
-    },
-    updatedAt: {
-        type: DataTypes.DATE,
-        allowNull: false,
-        defaultValue: sequelize.literal('NOW()')
-    }
-}, {
-    // Other model options go here
-    sequelize, // We need to pass the connection instance
-    modelName: 'Set', // We need to choose the model name
-    tableName: 'sets'
-});
+// Set.init({
+//     // Model attributes are defined here
+//     id: {
+//         type: DataTypes.INTEGER,
+//         autoIncrement: true,
+//         primaryKey: true
+//     },
+//     ArtistId: {
+//         type: DataTypes.INTEGER,
+//         references: {
+//             model: Artist,
+//             key: 'id'
+//         }
+//     },
+//     name: {
+//         type: DataTypes.STRING
+//     },
+//     description: {
+//         type: DataTypes.STRING
+//     },
+//     price: {
+//         type: DataTypes.DECIMAL(10, 2)
+//     },
+//     coverImage: {
+//         type: DataTypes.STRING
+//     },
+//     setFile: {
+//         type: DataTypes.STRING
+//     },
+//     stripeId: {
+//         type: DataTypes.STRING
+//     },
+//     active: {
+//         type: DataTypes.BOOLEAN,
+//         allowNull: false,
+//         defaultValue: true
+//     },
+//     published: {
+//         type: DataTypes.BOOLEAN,
+//         allowNull: false,
+//         defaultValue: true
+//     },
+//     approved: {
+//         type: DataTypes.BOOLEAN,
+//         allowNull: false,
+//         defaultValue: false
+//     },
+//     createdAt: {
+//         type: DataTypes.DATE,
+//         allowNull: false,
+//         defaultValue: sequelize.literal('NOW()')
+//     },
+//     updatedAt: {
+//         type: DataTypes.DATE,
+//         allowNull: false,
+//         defaultValue: sequelize.literal('NOW()')
+//     }
+// }, {
+//     // Other model options go here
+//     sequelize, // We need to pass the connection instance
+//     modelName: 'Set', // We need to choose the model name
+//     tableName: 'sets'
+// });
 
-SetRawFile.init({
-    id: {
-        type: DataTypes.INTEGER,
-        autoIncrement: true,
-        primaryKey: true
-    },
-    SetId: {
-        type: DataTypes.INTEGER,
-        references: {
-            // This is a reference to another model
-            model: Set,
-            key: 'id'
-        }
-    },
-    file: {
-        type: DataTypes.STRING
-    },
-    active: {
-        type: DataTypes.BOOLEAN,
-        allowNull: false,
-        defaultValue: true
-    },
-    createdAt: {
-        type: DataTypes.DATE,
-        allowNull: false,
-        defaultValue: sequelize.literal('NOW()')
-    },
-    updatedAt: {
-        type: DataTypes.DATE,
-        allowNull: false,
-        defaultValue: sequelize.literal('NOW()')
-    }
-}, {
-    sequelize,
-    modelName: 'SetRawFile',
-    tableName: 'setrawfiles'
-});
+// SetRawFile.init({
+//     id: {
+//         type: DataTypes.INTEGER,
+//         autoIncrement: true,
+//         primaryKey: true
+//     },
+//     SetId: {
+//         type: DataTypes.INTEGER,
+//         references: {
+//             // This is a reference to another model
+//             model: Set,
+//             key: 'id'
+//         }
+//     },
+//     file: {
+//         type: DataTypes.STRING
+//     },
+//     active: {
+//         type: DataTypes.BOOLEAN,
+//         allowNull: false,
+//         defaultValue: true
+//     },
+//     createdAt: {
+//         type: DataTypes.DATE,
+//         allowNull: false,
+//         defaultValue: sequelize.literal('NOW()')
+//     },
+//     updatedAt: {
+//         type: DataTypes.DATE,
+//         allowNull: false,
+//         defaultValue: sequelize.literal('NOW()')
+//     }
+// }, {
+//     sequelize,
+//     modelName: 'SetRawFile',
+//     tableName: 'setrawfiles'
+// });
 
-PackPurchase.init({
-    id: {
-        type: DataTypes.INTEGER,
-        autoIncrement: true,
-        primaryKey: true
-    },
-    SetId: {
-        type: DataTypes.INTEGER,
-        references: {
-            // This is a reference to another model
-            model: Set,
-            key: 'id'
-        }
-    },
-    email: {
-        type: DataTypes.STRING
-    },
-    // ArtistId: {
-    //     type: DataTypes.INTEGER,
-    //     references: {
-    //         // This is a reference to another model
-    //         model: Artist,
-    //         key: 'id'
-    //     }
-    // },
-    price: {
-        type: DataTypes.DECIMAL(10, 2)
-    },
-    stripeId: {
-        type: DataTypes.STRING
-    },
-    active: {
-        type: DataTypes.BOOLEAN,
-        allowNull: false,
-        defaultValue: true
-    },
-    createdAt: {
-        type: DataTypes.DATE,
-        allowNull: false,
-        defaultValue: sequelize.literal('NOW()')
-    },
-    updatedAt: {
-        type: DataTypes.DATE,
-        allowNull: false,
-        defaultValue: sequelize.literal('NOW()')
-    }
-}, {
-    sequelize,
-    modelName: 'PackPurchase',
-    tableName: 'packpurchases'
-});
+// PackPurchase.init({
+//     id: {
+//         type: DataTypes.INTEGER,
+//         autoIncrement: true,
+//         primaryKey: true
+//     },
+//     SetId: {
+//         type: DataTypes.INTEGER,
+//         references: {
+//             // This is a reference to another model
+//             model: Set,
+//             key: 'id'
+//         }
+//     },
+//     email: {
+//         type: DataTypes.STRING
+//     },
+//     // ArtistId: {
+//     //     type: DataTypes.INTEGER,
+//     //     references: {
+//     //         // This is a reference to another model
+//     //         model: Artist,
+//     //         key: 'id'
+//     //     }
+//     // },
+//     price: {
+//         type: DataTypes.DECIMAL(10, 2)
+//     },
+//     stripeId: {
+//         type: DataTypes.STRING
+//     },
+//     active: {
+//         type: DataTypes.BOOLEAN,
+//         allowNull: false,
+//         defaultValue: true
+//     },
+//     createdAt: {
+//         type: DataTypes.DATE,
+//         allowNull: false,
+//         defaultValue: sequelize.literal('NOW()')
+//     },
+//     updatedAt: {
+//         type: DataTypes.DATE,
+//         allowNull: false,
+//         defaultValue: sequelize.literal('NOW()')
+//     }
+// }, {
+//     sequelize,
+//     modelName: 'PackPurchase',
+//     tableName: 'packpurchases'
+// });
 
-Tag.init({
-    id: {
-        type: DataTypes.INTEGER,
-        autoIncrement: true,
-        primaryKey: true
-    },
-    name: {
-        type: DataTypes.STRING
-    },
-    active: {
-        type: DataTypes.BOOLEAN,
-        allowNull: false,
-        defaultValue: true
-    },
-    createdAt: {
-        type: DataTypes.DATE,
-        allowNull: false,
-        defaultValue: sequelize.literal('NOW()')
-    },
-    updatedAt: {
-        type: DataTypes.DATE,
-        allowNull: false,
-        defaultValue: sequelize.literal('NOW()')
-    }
-}, {
-    sequelize,
-    modelName: 'Tag',
-    tableName: 'tags'
-});
+// Tag.init({
+//     id: {
+//         type: DataTypes.INTEGER,
+//         autoIncrement: true,
+//         primaryKey: true
+//     },
+//     name: {
+//         type: DataTypes.STRING
+//     },
+//     active: {
+//         type: DataTypes.BOOLEAN,
+//         allowNull: false,
+//         defaultValue: true
+//     },
+//     createdAt: {
+//         type: DataTypes.DATE,
+//         allowNull: false,
+//         defaultValue: sequelize.literal('NOW()')
+//     },
+//     updatedAt: {
+//         type: DataTypes.DATE,
+//         allowNull: false,
+//         defaultValue: sequelize.literal('NOW()')
+//     }
+// }, {
+//     sequelize,
+//     modelName: 'Tag',
+//     tableName: 'tags'
+// });
 
-ArtistTypeTag.init({
-    id: {
-        type: DataTypes.INTEGER,
-        autoIncrement: true,
-        primaryKey: true
-    },
-    name: {
-        type: DataTypes.STRING
-    },
-    active: {
-        type: DataTypes.BOOLEAN,
-        allowNull: false,
-        defaultValue: true
-    },
-    createdAt: {
-        type: DataTypes.DATE,
-        allowNull: false,
-        defaultValue: sequelize.literal('NOW()')
-    },
-    updatedAt: {
-        type: DataTypes.DATE,
-        allowNull: false,
-        defaultValue: sequelize.literal('NOW()')
-    }
-}, {
-    sequelize,
-    modelName: 'ArtistTypeTag',
-    tableName: 'artisttypetags'
-});
+// ArtistTypeTag.init({
+//     id: {
+//         type: DataTypes.INTEGER,
+//         autoIncrement: true,
+//         primaryKey: true
+//     },
+//     name: {
+//         type: DataTypes.STRING
+//     },
+//     active: {
+//         type: DataTypes.BOOLEAN,
+//         allowNull: false,
+//         defaultValue: true
+//     },
+//     createdAt: {
+//         type: DataTypes.DATE,
+//         allowNull: false,
+//         defaultValue: sequelize.literal('NOW()')
+//     },
+//     updatedAt: {
+//         type: DataTypes.DATE,
+//         allowNull: false,
+//         defaultValue: sequelize.literal('NOW()')
+//     }
+// }, {
+//     sequelize,
+//     modelName: 'ArtistTypeTag',
+//     tableName: 'artisttypetags'
+// });
 
-SetTag.init({
-    SetId: {
-        type: DataTypes.INTEGER,
-        references: {
-            model: Set,
-            key: 'id'
-        }
-    },
-    TagId: {
-        type: DataTypes.INTEGER,
-        references: {
-            model: Tag,
-            key: 'id'
-        }
-    },
-    createdAt: {
-        type: DataTypes.DATE,
-        allowNull: false,
-        defaultValue: sequelize.literal('NOW()')
-    },
-    updatedAt: {
-        type: DataTypes.DATE,
-        allowNull: false,
-        defaultValue: sequelize.literal('NOW()')
-    }
-}, {
-    sequelize,
-    modelName: 'SetTag',
-    tableName: 'settags'
-});
+// SetTag.init({
+//     SetId: {
+//         type: DataTypes.INTEGER,
+//         references: {
+//             model: Set,
+//             key: 'id'
+//         }
+//     },
+//     TagId: {
+//         type: DataTypes.INTEGER,
+//         references: {
+//             model: Tag,
+//             key: 'id'
+//         }
+//     },
+//     createdAt: {
+//         type: DataTypes.DATE,
+//         allowNull: false,
+//         defaultValue: sequelize.literal('NOW()')
+//     },
+//     updatedAt: {
+//         type: DataTypes.DATE,
+//         allowNull: false,
+//         defaultValue: sequelize.literal('NOW()')
+//     }
+// }, {
+//     sequelize,
+//     modelName: 'SetTag',
+//     tableName: 'settags'
+// });
 
-ArtistTag.init({
-    ArtistTypeTagId: {
-        type: DataTypes.INTEGER,
-        references: {
-            model: ArtistTypeTag,
-            key: 'id'
-        }
-    },
-    ArtistId: {
-        type: DataTypes.INTEGER,
-        references: {
-            model: Artist,
-            key: 'id'
-        }
-    },
-    createdAt: {
-        type: DataTypes.DATE,
-        allowNull: false,
-        defaultValue: sequelize.literal('NOW()')
-    },
-    updatedAt: {
-        type: DataTypes.DATE,
-        allowNull: false,
-        defaultValue: sequelize.literal('NOW()')
-    }
-}, {
-    sequelize,
-    modelName: 'ArtistTag',
-    tableName: 'artisttags'
-});
+// ArtistTag.init({
+//     ArtistTypeTagId: {
+//         type: DataTypes.INTEGER,
+//         references: {
+//             model: ArtistTypeTag,
+//             key: 'id'
+//         }
+//     },
+//     ArtistId: {
+//         type: DataTypes.INTEGER,
+//         references: {
+//             model: Artist,
+//             key: 'id'
+//         }
+//     },
+//     createdAt: {
+//         type: DataTypes.DATE,
+//         allowNull: false,
+//         defaultValue: sequelize.literal('NOW()')
+//     },
+//     updatedAt: {
+//         type: DataTypes.DATE,
+//         allowNull: false,
+//         defaultValue: sequelize.literal('NOW()')
+//     }
+// }, {
+//     sequelize,
+//     modelName: 'ArtistTag',
+//     tableName: 'artisttags'
+// });
 
 
-// Sync 
-//syncModels({ force: false }); // dev - creates the tables, dropping them first
-//syncModels({ alter: true }); // dev - make necessary schema changes match the model
-syncModels(); // production
+// // Sync 
+// //syncModels({ force: false }); // dev - creates the tables, dropping them first
+// //syncModels({ alter: true }); // dev - make necessary schema changes match the model
+// syncModels(); // production
 
-// Model Associations
-Set.hasMany(SetRawFile);
-SetRawFile.belongsTo(Set);
+// // Model Associations
+// Set.hasMany(SetRawFile);
+// SetRawFile.belongsTo(Set);
 
-PackPurchase.belongsTo(Set); // User's get a pack purchase for each pack they own
-//PackPurchase.belongsTo(Artist);
-Set.hasMany(PackPurchase);
+// PackPurchase.belongsTo(Set); // User's get a pack purchase for each pack they own
+// //PackPurchase.belongsTo(Artist);
+// Set.hasMany(PackPurchase);
 
-Set.belongsToMany(Tag, { through: SetTag });
-Tag.belongsToMany(Set, { through: SetTag });
+// Set.belongsToMany(Tag, { through: SetTag });
+// Tag.belongsToMany(Set, { through: SetTag });
 
-Artist.hasMany(Set);
-Set.belongsTo(Artist);
+// Artist.hasMany(Set);
+// Set.belongsTo(Artist);
 
-ArtistTypeTag.belongsToMany(Artist, { through: ArtistTag });
-Artist.belongsToMany(ArtistTypeTag, { through: ArtistTag });
+// ArtistTypeTag.belongsToMany(Artist, { through: ArtistTag });
+// Artist.belongsToMany(ArtistTypeTag, { through: ArtistTag });
 
-async function syncModels() {
-    await sequelize.sync({ alter: true }); // NEVER FORCE only ALTER on prod{ force: true } or { alter: true }
-    console.log("All models were synchronized successfully.");
-}
+// async function syncModels() {
+//     await sequelize.sync({ alter: true }); // NEVER FORCE only ALTER on prod{ force: true } or { alter: true }
+//     console.log("All models were synchronized successfully.");
+// }
 
 // const client = new Client({
 //     connectionString: process.env.DATABASE_URL,
@@ -1448,68 +1448,68 @@ app.get("/api/sets", async function (req, res) {
     });
 });
 
-/**
- * Get Set Tags
- *      - Used on the marketplace page
- */
-app.get("/api/sets/tags", async function (req, res) {
-    res.header('Access-Control-Allow-Origin', '*');
-    res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS');
-    res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization, Content-Length, X-Requested-With');
-    console.log('received a get request to search', req.query);
-    Tag.findAll({
-        where: {
-            active: true
-        }
-    }).then((res2) => {
-        res.write(JSON.stringify(res2));
-        res.end();
-    }, (err) => {
-        handleError(res, err, 'nope');
-    });
-});
+// /**
+//  * Get Set Tags
+//  *      - Used on the marketplace page
+//  */
+// app.get("/api/sets/tags", async function (req, res) {
+//     res.header('Access-Control-Allow-Origin', '*');
+//     res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS');
+//     res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization, Content-Length, X-Requested-With');
+//     console.log('received a get request to search', req.query);
+//     Tag.findAll({
+//         where: {
+//             active: true
+//         }
+//     }).then((res2) => {
+//         res.write(JSON.stringify(res2));
+//         res.end();
+//     }, (err) => {
+//         handleError(res, err, 'nope');
+//     });
+// });
 
-/**
- * Get Artists
- *      - Used on the marketplace page
- */
-app.get("/api/artists", async function (req, res) {
-    res.header('Access-Control-Allow-Origin', '*');
-    res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS');
-    res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization, Content-Length, X-Requested-With');
-    console.log('received a get request to search', req.query);
-    Artist.findAll({
-        where: {
-            active: true
-        }
-    }).then((res2) => {
-        res.write(JSON.stringify(res2));
-        res.end();
-    }, (err) => {
-        handleError(res, err, 'nope');
-    });
-});
+// /**
+//  * Get Artists
+//  *      - Used on the marketplace page
+//  */
+// app.get("/api/artists", async function (req, res) {
+//     res.header('Access-Control-Allow-Origin', '*');
+//     res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS');
+//     res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization, Content-Length, X-Requested-With');
+//     console.log('received a get request to search', req.query);
+//     Artist.findAll({
+//         where: {
+//             active: true
+//         }
+//     }).then((res2) => {
+//         res.write(JSON.stringify(res2));
+//         res.end();
+//     }, (err) => {
+//         handleError(res, err, 'nope');
+//     });
+// });
 
-/**
- * Get Set Tags
- *      - Used on the marketplace page
- */
-app.get("/api/artists/tags", async function (req, res) {
-    res.header('Access-Control-Allow-Origin', '*');
-    res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS');
-    res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization, Content-Length, X-Requested-With');
-    console.log('received a get request to search', req.query);
-    ArtistTypeTag.findAll({
-        where: {
-            active: true
-        }
-    }).then((res2) => {
-        res.write(JSON.stringify(res2));
-        res.end();
-    }, (err) => {
-        handleError(res, err, 'nope');
-    });
-});
+// /**
+//  * Get Set Tags
+//  *      - Used on the marketplace page
+//  */
+// app.get("/api/artists/tags", async function (req, res) {
+//     res.header('Access-Control-Allow-Origin', '*');
+//     res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS');
+//     res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization, Content-Length, X-Requested-With');
+//     console.log('received a get request to search', req.query);
+//     ArtistTypeTag.findAll({
+//         where: {
+//             active: true
+//         }
+//     }).then((res2) => {
+//         res.write(JSON.stringify(res2));
+//         res.end();
+//     }, (err) => {
+//         handleError(res, err, 'nope');
+//     });
+// });
 
 // Website Entrypoint
 app.get("*", (req, res) => {
