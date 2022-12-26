@@ -47,7 +47,7 @@
         "body-parser": "^1.18.3",
         "core-js": "^2.5.4",
         "dotenv": "^7.0.0",
-        "express": "^4.16.4",
+        "express": "^4.17.3",
         "express-formidable": "^1.2.0",
         "express-sslify": "^1.2.0",
         "ffmpeg": "0.0.4",
