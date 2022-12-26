@@ -138,6 +138,14 @@ mat-grid-tile {
 .features li{
 	margin: 0 35px;
 	padding: 20px 15px;
+
+    strong {
+        font-weight: bold;
+        color:greenyellow;
+        background: #333;
+        padding:5px;
+        border-radius:20px;
+    }
 	//width: 200px;
 }
 
