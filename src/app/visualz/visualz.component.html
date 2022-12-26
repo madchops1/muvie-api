@@ -65,7 +65,7 @@
             <!-- <div *ngIf="deviceInfo.os == 'Mac' || deviceInfo.os == 'iOS'" class="clearfix"> -->
             <div class="clearfix">
                 <img class="mac" src="../../assets/images/macos.png" />
-                <a href="https://github.com/madchops1/visualz-releases/releases/download/v2.2.3/Visualz-2.2.3-x64.dmg"
+                <a href="https://github.com/madchops1/visualz-releases/releases/download/v2.2.4/Visualz-2.2.4-x64.dmg"
                     target="_blank" mat-raised-button (click)="downloadMac()" class="pink button">
                     Download for Mac
                 </a>
@@ -74,7 +74,7 @@
             <!-- <div *ngIf="deviceInfo.os != 'Mac' && deviceInfo.os != 'iOS'" class="clearfix"> -->
             <div class="clearfix">
                 <img class="windows" src="../../assets/images/windows.png" />
-                <a href="https://github.com/madchops1/visualz-releases/releases/download/v2.2.3/Visualz-Setup-2.2.3.exe"
+                <a href="https://github.com/madchops1/visualz-releases/releases/download/v2.2.4/Visualz-Setup-2.2.4.exe"
                     target="_blank" mat-raised-button (click)="downloadWindows()" class="pink button">
                     Download for Windows
                 </a>
@@ -82,7 +82,7 @@
 
         </div>
         <div class="release-notes">
-            <h1>VISUALZ v2.2.3</h1>
+            <h1>VISUALZ v2.2.4</h1>
 
             <div class="">
 
@@ -92,8 +92,28 @@
                     frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
                     allowfullscreen></iframe> -->
 
+                
+
+                <!-- 12/25/2022 -->
+                <h2>NEW Update 2.2.4</h2>
+                <ul class='new'>
+                    <li>🔥 Improved threading and cpu optimization.</li>
+                    <li>🔥 Streams to external windows and browser in the background or while minimized.</li>
+                    <li>🔥 Added desktop and window capture sources.</li>
+                    <li>🪩 Added mirror fx beat toggle feature.</li>
+                    <li>Added video file probe.</li>
+                    <li>Added video file opimization.</li>
+                    <li>Improved video encoding across the board.</li>
+                    <li>Smoother track to track transitioning.</li>
+                    <li>😎 User Request: Random order option.</li>
+                    <li>🫠 User Request: Auto go to next track option.</li>
+                    <li>Fixed undo.</li>
+                    <li>Undo now works for effects changes.</li>
+                    <li>🪲 Other bugfixes.</li>
+                </ul>    
+
                 <!-- 10/22/2022 -->
-                <h2>NEW Update 2.2.3</h2>
+                <h2>Previous Update 2.2.3</h2>
                 <ul class='new'>
                     <li>Open set enhancements.</li>
                     <li>Bugfixes.</li>
@@ -135,7 +155,7 @@
                     <li>Bugfix for .jpeg media scenes.</li>
                 </ul>
 
-                <!-- 03/29/2022 -->
+                <!-- 03/29/2022
                 <h2>Previous Update 2.1.9</h2>
                 <ul class='new'>
                     <li>A year in development version 2.1.9 has the features you've been waiting for.</li>
@@ -173,6 +193,7 @@
                     <li>Added z-axis position for text.</li>
                     <li>Fixed set opening bugs.</li>
                 </ul>
+                -->
 
                 <!-- 04/03/2021 
                 <h2>Update 2.1.8</h2>
@@ -525,12 +546,17 @@
                 <mat-icon aria-hidden="false" aria-label="Create Video Fast">view_module</mat-icon>
                 <h1>Create Visuals Fast</h1>
                 <strong>Quickly</strong> drag &amp; drop to <strong>compose</strong> visual sets of tracks with videos,
-                other media, cameras, effects and more.
+                media, cameras, video sources, effects and more.
             </li>
             <li>
                 <mat-icon aria-hidden="false" aria-label="Effects">flash_on</mat-icon>
                 <h1>Effects</h1>
-                The gamut of effects you'd expect, with some special sauce.
+                The gamut of effects you'd expect, with audio-reactive properties, and some special sauce.
+            </li>
+            <li>
+                <mat-icon aria-hidden="false" aria-label="Effects">switch_access_shortcut</mat-icon>
+                <h1>Auto Audio Reactive Transitioning</h1>
+                Under the hood is a realtime audio analyzer that transitions your composition to the music.
             </li>
             <li>
                 <mat-icon aria-hidden="false" aria-label="Effects">grid_on</mat-icon>
@@ -567,19 +593,29 @@
                 Use mobile devices as remote cameras to achieve multiple video streams and angles.
             </li>
             <li>
-                <mat-icon aria-hidden="false" aria-label="Mobile Video">add_to_queue</mat-icon>
+                <mat-icon aria-hidden="false" aria-label="Multiple Displays">add_to_queue</mat-icon>
                 <h1>Multiple Displays</h1>
-                Easily create windows for multiple display support.
+                Stream to external windows and multiple displays.
             </li>
             <li>
-                <mat-icon aria-hidden="false" aria-label="Mobile Video">featured_video</mat-icon>
+                <mat-icon aria-hidden="false" aria-label="Display/Window Capture">install_desktop</mat-icon>
+                <h1>Display+Window Capture</h1>
+                Capture content from other display and window sources to use in VISUALZ.
+            </li>
+            <li>
+                <mat-icon aria-hidden="false" aria-label="Recored Video + Music">movie</mat-icon>
+                <h1>Record Video+Music</h1>
+                Quickly create audio reactive music videos.
+            </li>
+            <li>
+                <mat-icon aria-hidden="false" aria-label="Projection Mapping">featured_video</mat-icon>
                 <h1>Projection Mapping</h1>
                 Mask out what you don't want to easily map projections to targets.
             </li>
             <li>
                 <mat-icon aria-hidden="false" aria-label="Remote Control">settings_remote</mat-icon>
                 <h1>Remote Control</h1>
-                Que tracks from your mobile device with the remote control. Its super jiffy.
+                Que tracks from your mobile device with the remote control.
             </li>
             <li>
                 <mat-icon aria-hidden="false" aria-label="Remote Screen">open_in_browser</mat-icon>
@@ -624,8 +660,16 @@
                 style="margin:120px auto; background: #333; border-radius: 5px; display: block; box-shadow:0px 10px 60px 0px #aaa;">
             </app-htw>
         </div>
+        
+
         <h2 class="center" style="line-height: 40px;">
-            Ready to learn more?
+            Ready to be a VJ?
+            <br>
+            <a class="green" mat-raised-button routerLink="/download">Get It Now</a>
+        </h2>
+
+        <h2 class="center" style="line-height: 40px;">
+            Want to learn more?
             <br>
             <a mat-raised-button routerLink="/start-here">Start Here</a>
         </h2>
@@ -719,6 +763,11 @@
 <!-- Partners -->
 <header class="skew">
     <h2>EVENTS / COLLABORATORS</h2>
+    <h3>
+        We also do concert lighting and visuals.
+        <br />
+        <button class="green" mat-button routerLink="/contact">Contact Us</button>
+    </h3>
 </header>
 
 <div class="content-wrapper dark small-bottom collab">
@@ -733,7 +782,12 @@
 
 <!-- Collaborators -->
 <header class="skew">
-    <h2>MUSICIANS</h2>
+    <h2>Artists</h2>
+    <h3>
+        We produce graphics and videos for artists.
+        <br />
+        <button class="green" mat-button routerLink="/contact">Contact Us</button>
+    </h3>
 </header>
 
 <div class="content-wrapper dark small-bottom collab">
