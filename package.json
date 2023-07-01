@@ -1,6 +1,6 @@
 {
     "name": "muvie",
-    "version": "2.2.5",
+    "version": "2.2.6",
     "scripts": {
         "ng": "ng",
         "start": "node server.js",
@@ -87,6 +87,7 @@
         "rxjs-compat": "^6.5.3",
         "sequelize": "^6.3.5",
         "socket.io": "^2.2.0",
+        "squarespace-node-api": "^2.0.0",
         "stats-js": "^1.0.1",
         "stripe": "^8.45.0",
         "three": "^0.71.0",

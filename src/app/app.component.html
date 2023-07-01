@@ -1,8 +1,8 @@
-<button *ngIf="!interactive" class="menu" mat-button (click)="toggleMenu()">
+<!-- <button *ngIf="!interactive" class="menu" mat-button (click)="toggleMenu()">
     <mat-icon aria-label="Menu">menu</mat-icon>
-</button>
+</button> -->
 
-<div *ngIf="menu && !interactive" class="mobile-menu">
+<!-- <div *ngIf="menu && !interactive" class="mobile-menu">
     <button mat-button routerLink="/">HOME</button>
     <button mat-button routerLink="/download">GET IT NOW</button>
     <button mat-button>
@@ -10,30 +10,25 @@
             EXAMPLES
         </a>
     </button>
-    <!-- <button mat-button routerLink="https://graphics.visualzstudio.com">GRAPHICS</button> -->
-    <!-- <button mat-button><a href="https://gear.visualzstudio.com">GEAR</a></button> -->
-
+    
     <button mat-button [matMenuTriggerFor]="menu1">LEARN</button>
     <mat-menu #menu1="matMenu">
-        <!-- <button mat-menu-item routerLink="/start-here">START HERE</button> -->
         <button mat-menu-item routerLink="/user-guide">USER GUIDE</button>
         <button mat-menu-item><a class="button-link"
                 href="https://www.youtube.com/channel/UC1v_B6CFVv1ZiCveAdkIGeQ">YOUTUBE
                 CHANNEL</a></button>
-        <!-- <button mat-menu-item routerLink="/resources">RESOURCES</button> -->
         <button mat-menu-item routerLink="/support">COMMUNITY</button>
     </mat-menu>
     
     <button mat-button routerLink="/about">ABOUT</button>
-</div>
+</div> -->
 
-<div *ngIf="!interactive" class="msg">
-    <a routerLink="/download">🔥 v2.2.5 RELEASED - 50% Off Deal Still Going But Ends Soon. - That's just $24 🔥</a>
-</div>
+<!-- <div *ngIf="!interactive" class="msg">
+    <a routerLink="/download">🔥 NEW VERSION RELEASED - 50% Off Deal Still Going But Ends Soon. - That's just $24 🔥</a>
+</div> -->
 <header *ngIf="!interactive">
-    <a routerLink="/" class="logo">VISUALZ</a>
-    <div class="nav">
-
+    <a href="http://visualzstudio.com" class="logo">VISUALZ</a>
+    <!-- <div class="nav">
         <button mat-button routerLink="/">HOME</button>        
         <button mat-button routerLink="/download">GET IT NOW</button>
         <button mat-button>
@@ -41,29 +36,19 @@
                 EXAMPLES
             </a>
         </button>
-        <!-- <button mat-button routerLink="https://graphics.visualzstudio.com">GRAPHICS</button> -->
-        <!-- <button mat-button><a href="https://gear.visualzstudio.com">GEAR</a></button> -->
-
         <button mat-button [matMenuTriggerFor]="menu">LEARN</button>
         <mat-menu #menu="matMenu">
-            <!-- <button mat-menu-item routerLink="/start-here">START HERE</button> -->
             <button mat-menu-item routerLink="/user-guide">USER GUIDE</button>
             <button mat-menu-item>
                 <a class="button-link" target="_blank" href="https://www.youtube.com/channel/UC1v_B6CFVv1ZiCveAdkIGeQ">
                     YOUTUBE CHANNEL
                 </a>
             </button>
-            <!-- <button mat-menu-item routerLink="/resources">RESOURCES</button> -->
             <button mat-menu-item routerLink="/support">COMMUNITY</button>
         </mat-menu>
 
         <button mat-button routerLink="/about">ABOUT</button>
         <button mat-button routerLink="/contact">CONTACT</button>
-
-        <!-- <button mat-button routerLink="/download">GET IT NOW</button> -->
-        <!-- <button mat-button routerLink="/examples">EXAMPLES</button> -->
-        <!-- <button mat-button><a href="https://vjpacks.visualzstudio.com">VJ PACKS</a></button> -->
-
         <button mat-raised-button class="btn btn-primary btn-margin" *ngIf="!auth.loggedIn" (click)="auth.login()">
             LOG IN
         </button>
@@ -74,20 +59,13 @@
             <button mat-menu-item routerLink="/account">ACCOUNT</button>
             <button mat-menu-item (click)="auth.logout()">LOGOUT</button>
         </mat-menu>
-
-        <!-- 
-        <button mat-mini-fab routerLink="/cart" aria-label="Shopping Cart" matBadge="{{cart.products.length}}"
-            matBadgePosition="before" matBadgeColor="accent">
-            <mat-icon>shopping_cart</mat-icon>
-        </button> 
-        -->
-    </div>
+    </div> -->
 
     <div class="clearfix"></div>
 </header>
 
 <router-outlet></router-outlet>
-
+<!-- 
 <footer *ngIf=" !interactive">
 
     <div class="con">
@@ -117,25 +95,14 @@
     </div>
 
     <div class="links">
-        <!-- <a routerLink="/about">About</a> &nbsp;&nbsp;|&nbsp;&nbsp; -->
-        <!-- <a routerLink="/events">Events</a> &nbsp;&nbsp;|&nbsp;&nbsp; -->
         <a routerLink="/">HOME</a> &nbsp;&nbsp;|&nbsp;&nbsp;
         <a routerLink="/download">GET IT NOW</a> &nbsp;&nbsp;|&nbsp;&nbsp;
         <a target="_blank" href="https://linktr.ee/visualzapp">EXAMPLES</a> &nbsp;&nbsp;|&nbsp;&nbsp;
         
-        <!-- <a routerLink="/examples">EXAMPLES</a> &nbsp;&nbsp;|&nbsp;&nbsp; -->
-        <!-- <a href="https://vjpacks.visualzstudio.com">VJ PACKS</a>&nbsp;&nbsp;|&nbsp;&nbsp; -->
-        <!-- <a href="https://gear.visualzstudio.com">GEAR</a>&nbsp;&nbsp;|&nbsp;&nbsp; -->
-        <!-- <a href="https://gear.visualzstudio.com">GRAPHICS</a>&nbsp;&nbsp;|&nbsp;&nbsp; -->
         <a routerLink="/start-here">LEARN</a> &nbsp;&nbsp;|&nbsp;&nbsp;
         <a routerLink="/about">ABOUT</a> &nbsp;&nbsp;|&nbsp;&nbsp;
         <a routerLink="/contact">CONTACT</a>
         <br>
-
-        <!-- <a routerLink="/investors">INVESTORS</a> &nbsp;&nbsp;|&nbsp;&nbsp;
-        <a routerLink="/brand-partnerships">BRAND PARTNERSHIPS</a> &nbsp;&nbsp;|&nbsp;&nbsp;
-        <a routerLink="/press-kit">PRESS KIT</a>
-        <br> -->
 
         <a routerLink="/terms-conditions">TERMS &amp; CONDITIONS</a> &nbsp;&nbsp;|&nbsp;&nbsp;
         <a routerLink="/privacy-policy">PRIVACY POLICY</a>
@@ -148,10 +115,10 @@
         <a href="https://twitter.com/visualzapp" target="_blank">TWITTER</a>
         <br>
 
-        v2.2.5 By <a href="https://www.instagram.com/vj_karl/" target="_blank">Karl John Steltenpohl</a>
+        v2.2.6 By <a href="https://www.instagram.com/vj_karl/" target="_blank">Karl John Steltenpohl</a>
     </div>
 
     <div class="gradient">
         &nbsp;
     </div>
-</footer>
+</footer> -->

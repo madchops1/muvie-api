@@ -35,7 +35,7 @@ const getTags = require('./api/tags').getTags;
 
 //const authSeat = require('./api/authSeat');
 
-const visualzLatest = '2.2.5';
+const visualzLatest = '2.2.6';
 const kill = []; // array of versions eg. ['2.0.0'] ?? 2.1.7 ??
 const killMsg = 'This version is deprecated.';
 

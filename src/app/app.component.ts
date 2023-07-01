@@ -32,17 +32,17 @@ export class AppComponent {
                 window.scrollTo(0, 0);
                 this.menu = false;
 
+                // This is a mode for pages that are used by the VISUALZ application
                 if (
                     this.currentRoute.includes('welcome') ||
-                    this.currentRoute.includes('crowdscreen') ||
-                    this.currentRoute.includes('crowdcam') ||
+                    this.currentRoute.includes('crowdscreen') || // FanCam/Crowdscreen
+                    this.currentRoute.includes('crowdcam') || 
                     this.currentRoute.includes('laserz') ||
                     this.currentRoute.includes('mobile-video') ||
                     this.currentRoute.includes('remote-que') ||
                     this.currentRoute.includes('remote-screen') ||
                     this.currentRoute.includes('live/')
                 )
-                // This is a mode for pages that are used by the VISUALZ application
                 {
                     this.interactive = true;
                 }
