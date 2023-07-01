@@ -43,27 +43,31 @@ import { ContactComponent } from './contact/contact.component';
 const routes: Routes = [
 
     // VISUALZ Website pages
-    { path: '', component: VisualzComponent },
-    { path: 'support', component: SupportComponent },
-    { path: 'contact', component: ContactComponent },
-    { path: 'about', component: AboutComponent },
-    { path: 'prices', component: BuyComponent },
-    //{ path: 'start-here', component: HowComponent },
-    { path: 'start-here', component: UserGuideComponent },
-    { path: 'terms-conditions', component: TermsComponent },
-    { path: 'privacy-policy', component: PrivacyComponent },
-    { path: 'update', component: DownloadComponent },
-    { path: 'book', component: BookComponent },
-    { path: 'resources', component: ResourcesComponent },
-    { path: 'tutorials', component: TutorialsComponent },
-    { path: 'video-library', component: VideoLibraryComponent },
-    { path: 'user-guide', component: UserGuideComponent },
-    { path: 'calendar', component: CalendarComponent },
+    {
+        path: '',
+        component: AccountComponent,
+        canActivate: [AuthGuard]
+    },
+    // { path: 'support', component: SupportComponent },
+    // { path: 'contact', component: ContactComponent },
+    // { path: 'about', component: AboutComponent },
+    // { path: 'prices', component: BuyComponent },
+    // //{ path: 'start-here', component: HowComponent },
+    // { path: 'start-here', component: UserGuideComponent },
+    // { path: 'terms-conditions', component: TermsComponent },
+    // { path: 'privacy-policy', component: PrivacyComponent },
+    // { path: 'update', component: DownloadComponent },
+    // { path: 'book', component: BookComponent },
+    // { path: 'resources', component: ResourcesComponent },
+    // { path: 'tutorials', component: TutorialsComponent },
+    // { path: 'video-library', component: VideoLibraryComponent },
+    // { path: 'user-guide', component: UserGuideComponent },
+    // { path: 'calendar', component: CalendarComponent },
 
     // Download and App Subscription Checkout
     { path: 'success', component: SuccessComponent },
     { path: 'canceled', component: CanceledComponent },
-    { path: 'download', component: DownloadComponent },
+    //{ path: 'download', component: DownloadComponent },
 
     // VISUALZ APP Web & Mobile views for in app functionality.
     { path: 'crowdscreen/:mid', component: FanScreenComponent },
