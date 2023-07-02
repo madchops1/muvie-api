@@ -110,7 +110,7 @@ const routes: Routes = [
     }
     //,
     // {
-    //     path: 'profile',
+    //     path: 'profile',ƒt
     //     component: ProfileComponent,
     //     canActivate: [AuthGuard]
     // }
