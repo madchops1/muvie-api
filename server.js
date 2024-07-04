@@ -27,7 +27,7 @@ const uploadFile = require('./api/uploadFile');
 //const extractFrame = require('./api/extractFrame');
 //const gifToMp4 = require('./api/gifToMp4');
 //const movToMp4 = require('./api/movToMp4');
-const youtubedl = require('youtube-dl-exec');
+//const youtubedl = require('youtube-dl-exec');
 
 const handleChargeSucceeded = require('./api/lib/stripe').handleChargeSucceeded;
 const getSubscriptions = require('./api/lib/stripe').getSubscriptions;
@@ -1341,75 +1341,75 @@ app.get('/api/youtubedl', async (req, res) => {
     res.header('Access-Control-Allow-Origin', '*');
     res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS');
     res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization, Content-Length, X-Requested-With');
-    console.log('received a get request to youtubedl', req.query);
-    try {
-        let ytid = req.query.ytid;
-        console.log('id', ytid)
-        youtubedl('https://www.youtube.com/watch?v='+ytid, {
-            dumpSingleJson: true,
-            noWarnings: true,
-            noCallHome: true,
-            preferFreeFormats: true,
-            noCheckCertificate: true,
-            youtubeSkipDashManifest: true,
-            referer: 'https://example.com'
-        })
-        .then(output => {
-            let videos = output.formats.filter(format => format.height <=730 && format.fps < 60 && format.ext == 'mp4');
-            if(videos.length) {
-                let video = videos[videos.length-1]
-                console.log(video);
-                res.write(JSON.stringify({ ytid: ytid, url: video.url }));
-            } else {
-                handleError(res, '...', 'nope');
-            }
-            res.end();
-        })
+    // console.log('received a get request to youtubedl', req.query);
+    // try {
+    //     let ytid = req.query.ytid;
+    //     console.log('id', ytid)
+    //     youtubedl('https://www.youtube.com/watch?v='+ytid, {
+    //         dumpSingleJson: true,
+    //         noWarnings: true,
+    //         noCallHome: true,
+    //         preferFreeFormats: true,
+    //         noCheckCertificate: true,
+    //         youtubeSkipDashManifest: true,
+    //         referer: 'https://example.com'
+    //     })
+    //     .then(output => {
+    //         let videos = output.formats.filter(format => format.height <=730 && format.fps < 60 && format.ext == 'mp4');
+    //         if(videos.length) {
+    //             let video = videos[videos.length-1]
+    //             console.log(video);
+    //             res.write(JSON.stringify({ ytid: ytid, url: video.url }));
+    //         } else {
+    //             handleError(res, '...', 'nope');
+    //         }
+    //         res.end();
+    //     })
         
         
-    }
-    catch (err) {
+    // }
+    // catch (err) {
         handleError(res, err, 'nope');
-    }
+    //}
 });
 
 app.get('/api/vimeodl', async (req, res) => {
     res.header('Access-Control-Allow-Origin', '*');
     res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS');
     res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization, Content-Length, X-Requested-With');
-    console.log('received a get request to vimeodl', req.query);
-    try {
-        let vmid = req.query.vmid;
-        console.log('id', vmid)
-        youtubedl('https://www.vimeo.com/'+vmid, {
-            dumpSingleJson: true,
-            noWarnings: true,
-            noCallHome: true,
-            preferFreeFormats: true,
-            noCheckCertificate: true,
-            youtubeSkipDashManifest: true,
-            referer: 'https://example.com'
-        })
-        .then(output => {
+    // console.log('received a get request to vimeodl', req.query);
+    // try {
+    //     let vmid = req.query.vmid;
+    //     console.log('id', vmid)
+    //     youtubedl('https://www.vimeo.com/'+vmid, {
+    //         dumpSingleJson: true,
+    //         noWarnings: true,
+    //         noCallHome: true,
+    //         preferFreeFormats: true,
+    //         noCheckCertificate: true,
+    //         youtubeSkipDashManifest: true,
+    //         referer: 'https://example.com'
+    //     })
+    //     .then(output => {
 
-            console.log('OUTPUT', output);
+    //         console.log('OUTPUT', output);
 
-            let videos = output.formats.filter(format => format.height <=1090 && format.fps < 60 && format.ext == 'mp4' && format.format_id == 'http-1080p');
-            if(videos.length) {
-                let video = videos[videos.length-1]
-                console.log(video);
-                res.write(JSON.stringify({ vmid: vmid, url: video.url, ...video }));
-            } else {
-                handleError(res, '...', 'nope');
-            }
-            res.end();
-        })
+    //         let videos = output.formats.filter(format => format.height <=1090 && format.fps < 60 && format.ext == 'mp4' && format.format_id == 'http-1080p');
+    //         if(videos.length) {
+    //             let video = videos[videos.length-1]
+    //             console.log(video);
+    //             res.write(JSON.stringify({ vmid: vmid, url: video.url, ...video }));
+    //         } else {
+    //             handleError(res, '...', 'nope');
+    //         }
+    //         res.end();
+    //     })
         
         
-    }
-    catch (err) {
+    // }
+    // catch (err) {
         handleError(res, err, 'nope');
-    }
+    //}
 });
 
 /**

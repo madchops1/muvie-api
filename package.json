@@ -1,6 +1,6 @@
 {
     "name": "muvie",
-    "version": "2.2.7",
+    "version": "2.2.8",
     "scripts": {
         "ng": "ng",
         "start": "node server.js",
@@ -11,9 +11,6 @@
         "heroku-postbuild": "ng build --prod"
     },
     "private": true,
-    "engines": {
-        "node": "14.15.4"
-    },
     "dependencies": {
         "@angular/animations": "^7.2.13",
         "@angular/cdk": "^7.3.7",
@@ -96,7 +93,6 @@
         "typescript": "~3.2.2",
         "unsplash-js": "^6.0.0",
         "video-stitch": "^1.6.0",
-        "youtube-dl-exec": "^2.0.2",
         "zone.js": "~0.8.26"
     },
     "devDependencies": {
