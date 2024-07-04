@@ -96,10 +96,6 @@
         "typescript": "~3.2.2",
         "unsplash-js": "^6.0.0",
         "video-stitch": "^1.6.0",
-<<<<<<< HEAD
-=======
-        "youtube-dl-exec": "^3.0.6",
->>>>>>> master
         "zone.js": "~0.8.26"
     },
     "devDependencies": {
