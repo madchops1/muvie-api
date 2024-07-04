@@ -11,6 +11,9 @@
         "heroku-postbuild": "ng build --prod"
     },
     "private": true,
+    "engines": {
+        "node": "14.17.3"
+    },
     "dependencies": {
         "@angular/animations": "^7.2.13",
         "@angular/cdk": "^7.3.7",
@@ -93,6 +96,10 @@
         "typescript": "~3.2.2",
         "unsplash-js": "^6.0.0",
         "video-stitch": "^1.6.0",
+<<<<<<< HEAD
+=======
+        "youtube-dl-exec": "^3.0.6",
+>>>>>>> master
         "zone.js": "~0.8.26"
     },
     "devDependencies": {
