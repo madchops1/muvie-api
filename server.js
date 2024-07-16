@@ -1814,8 +1814,8 @@ app.post("/api/createSeat", async function (req, res) {
     let email = req.body.email.toLowerCase(); //.toLowerCase();
     let plan = 0;
 
-    console.log('key', key);
-    console.log('email', email);
+    //console.log('key', key);
+    //console.log('email', email);
 
     if (!key) {
         console.log('No machine id. Please restart the app and try again');
@@ -1825,74 +1825,90 @@ app.post("/api/createSeat", async function (req, res) {
 
         //console.log('request', req);
         // check stripe for payment
-        stripe.customers.list({ limit: 100, email: email },
-            function (err, customers) {
-                if (err) {
-                    console('Issue verifying purchase with stripe.', err);
-                    handleError(res, err, 'nope');
-                }
-
-                //console.log('CUSTOMERS', customers.data.length, customers.data);
-
-                for(i=0; i<customers.data.length; i++) {
-                    for(j=0; j<customers.data[i].subscriptions.data.length; j++) {
-                        if (customers.data[i].subscriptions.data[j].status == 'active') {
+        let customers = await stripe.customers.list({ limit: 100, email: email });
+        
+        for(let i=0; i<customers.data.length; i++) {
                     
-                            let nickName = customers.data[i].subscriptions.data[j].plan.nickname;
-                            console.log('plan', nickName);
+            //console.log('CUSTOMER', i ,customers.data[i]);
 
-                            if (nickName.indexOf('Visualz') !== -1 && nickName.indexOf('Educational') !== -1) {
-                                if (plan <= 1) {
-                                    plan = 1;
-                                }
-                            }
+            let custId = customers.data[i].id;
+            let lifeTimePrice = 149;
 
-                            if (nickName.indexOf('Visualz') !== -1 && nickName.indexOf('Commercial') !== -1) {
-                                plan = 2;
-                            }
+            const paymentIntent = await stripe.paymentIntents.search({
+                query: 'status:\'succeeded\' AND customer:\'' + custId + '\' AND amount:\'' + lifeTimePrice + '\'',
+            });
+
+            //console.log('PAYMENT INTENT', paymentIntent);
+            
+            const subscriptions = await stripe.subscriptions.list({
+                limit: 100,
+                customer: custId
+            });
+
+            //console.log('SUBSCRIPTIONS', subscriptions);
+            
+            for(let k=0; k<paymentIntent.data.length; k++) { 
+                plan = 2;
+            }
+
+            for(let j=0; j<subscriptions.data.length; j++) {
+                if (subscriptions.data[j].status == 'active') {
+            
+                    let nickName = subscriptions.data[j].plan.nickname;
+                    console.log('plan', nickName);
+
+                    if (nickName.indexOf('Visualz') !== -1 && nickName.indexOf('Educational') !== -1) {
+                        if (plan <= 1) {
+                            plan = 1;
                         }
                     }
+
+                    if (nickName.indexOf('Visualz') !== -1 && nickName.indexOf('Commercial') !== -1) {
+                        plan = 2;
+                    }
                 }
+            }
+        }
 
-                
-                // A customer with a subscription was located
-                if(plan > 0) {
+        
+        // A customer with a subscription was located
+        if(plan > 0) {
 
-                    // create the key
-                    const params = {
-                        Bucket: process.env.KEYSTORE, // pass your bucket name
-                        Key: key + '.json', // file will be saved as testBucket/contacts.csv
-                        Body: JSON.stringify({ plan: plan, email: email }, null, 2),
-                    };
+            // create the key
+            const params = {
+                Bucket: process.env.KEYSTORE, // pass your bucket name
+                Key: key + '.json', // file will be saved as testBucket/contacts.csv
+                Body: JSON.stringify({ plan: plan, email: email }, null, 2),
+            };
 
-                    s3.upload(params, function (s3Err, data) {
-                        if (s3Err) throw s3Err
-                        console.log(`File uploaded successfully at ${data.Location}`)
+            s3.upload(params, function (s3Err, data) {
+                if (s3Err) throw s3Err
+                console.log(`File uploaded successfully at ${data.Location}`)
 
-                        request('https://' + process.env.KEYSTORE + '.s3.us-east-2.amazonaws.com/' + key + '.json', function (error, response, body) {
-                            if (!error && response.statusCode == 200) {
-                                console.log('success', body);
-                                res.header('Access-Control-Allow-Origin', '*');
-                                res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS');
-                                res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization, Content-Length, X-Requested-With');
-                                res.status(200).json(JSON.parse(body));
-                            } else {
-                                res.header('Access-Control-Allow-Origin', '*');
-                                res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS');
-                                res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization, Content-Length, X-Requested-With');
-                                res.status(200).json({ plan: 0, email: '', s3Error: error });
-                            }
-                        });
+                request('https://' + process.env.KEYSTORE + '.s3.us-east-2.amazonaws.com/' + key + '.json', function (error, response, body) {
+                    if (!error && response.statusCode == 200) {
+                        console.log('success', body);
+                        res.header('Access-Control-Allow-Origin', '*');
+                        res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS');
+                        res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization, Content-Length, X-Requested-With');
+                        res.status(200).json(JSON.parse(body));
+                    } else {
+                        res.header('Access-Control-Allow-Origin', '*');
+                        res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS');
+                        res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization, Content-Length, X-Requested-With');
+                        res.status(200).json({ plan: 0, email: '', s3Error: error });
+                    }
+                });
 
-                        //res.write(JSON.stringify(params));
-                        //res.end();
-                    });
-
-                } else {
-
-                    handleError(res, 'Could not find a subscription.', 'nope');
-                }
+                //res.write(JSON.stringify(params));
+                //res.end();
             });
+
+        } else {
+
+            handleError(res, 'Could not find a subscription.', 'nope');
+        }
+                
     } catch (err) {
         handleError(res, err, 'nope');
     }
@@ -1922,59 +1938,74 @@ app.post("/api/authSeat", async function (req, res) {
 
         // Check for a keystore
         let url = 'https://' + process.env.KEYSTORE + '.s3.us-east-2.amazonaws.com/' + key + '.json';
-        console.log('ALPHA', url);
+        //console.log('ALPHA', url);
 
         await request(url, async function (error, response, body) {
             if (!error && response.statusCode == 200) {
                 
-                console.log('BODY', JSON.parse(body));
+                //console.log('BODY', JSON.parse(body));
                 let json = JSON.parse(body);
+                //console.log('JSON', json);
 
                 try {
 
-                    // check stripe for payment
-                    stripe.customers.list({ limit: 100, email: json.email },
-                        function (err, customers) {
-                            if (err) {
-                                //alert('Issue verifying purchase with stripe.')
-                                handleError(res, err, 'nope');
-                            }
-            
-                            //console.log('CUSTOMERS', customers.data.length, customers.data);
-            
-                            for(i=0; i<customers.data.length; i++) {
-                                for(j=0; j<customers.data[i].subscriptions.data.length; j++) {
-                                    if (customers.data[i].subscriptions.data[j].status == 'active') {
+
+                    let customers = await stripe.customers.list({ limit: 100, email: json.email });
+        
+                    for(let i=0; i<customers.data.length; i++) {
                                 
-                                        let nickName = customers.data[i].subscriptions.data[j].plan.nickname;
-                                        //console.log('plan', nickName);
-            
-                                        if (nickName.indexOf('Visualz') !== -1 && nickName.indexOf('Educational') !== -1) {
-                                            if (plan <= 1) {
-                                                plan = 1;
-                                            }
-                                        }
-            
-                                        if (nickName.indexOf('Visualz') !== -1 && nickName.indexOf('Commercial') !== -1) {
-                                            plan = 2;
-                                        }
+                        //console.log('CUSTOMER', i ,customers.data[i]);
+
+                        let custId = customers.data[i].id;
+                        let lifeTimePrice = 149;
+
+                        const paymentIntent = await stripe.paymentIntents.search({
+                            query: 'status:\'succeeded\' AND customer:\'' + custId + '\' AND amount:\'' + lifeTimePrice + '\'',
+                        });
+
+                        //console.log('PAYMENT INTENT', paymentIntent);
+                        
+                        const subscriptions = await stripe.subscriptions.list({
+                            limit: 100,
+                            customer: custId
+                        });
+
+                        //console.log('SUBSCRIPTIONS', subscriptions);
+                        
+                        for(let k=0; k<paymentIntent.data.length; k++) { 
+                            plan = 2;
+                        }
+
+                        for(let j=0; j<subscriptions.data.length; j++) {
+                            if (subscriptions.data[j].status == 'active') {
+                        
+                                let nickName = subscriptions.data[j].plan.nickname;
+                                console.log('plan', nickName);
+
+                                if (nickName.indexOf('Visualz') !== -1 && nickName.indexOf('Educational') !== -1) {
+                                    if (plan <= 1) {
+                                        plan = 1;
                                     }
                                 }
+
+                                if (nickName.indexOf('Visualz') !== -1 && nickName.indexOf('Commercial') !== -1) {
+                                    plan = 2;
+                                }
                             }
-                            
-                            // A customer with a subscription was located
-                            if(plan > 0) {
-                                res.header('Access-Control-Allow-Origin', '*');
-                                res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS');
-                                res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization, Content-Length, X-Requested-With');
-                                res.status(200).json(JSON.parse(body));
-                            } else {
-                                res.header('Access-Control-Allow-Origin', '*');
-                                res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS');
-                                res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization, Content-Length, X-Requested-With');
-                                res.status(200).json({ plan: 0, email: '' });
-                            }
-                        });
+                        }
+                    }
+                    // A customer with a subscription was located
+                    if(plan > 0) {
+                        res.header('Access-Control-Allow-Origin', '*');
+                        res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS');
+                        res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization, Content-Length, X-Requested-With');
+                        res.status(200).json(JSON.parse(body));
+                    } else {
+                        res.header('Access-Control-Allow-Origin', '*');
+                        res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS');
+                        res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization, Content-Length, X-Requested-With');
+                        res.status(200).json({ plan: 0, email: '' });
+                    }
                 } catch (err) {
                     handleError(res, err, 'nope');
                 }
