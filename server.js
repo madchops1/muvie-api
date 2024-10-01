@@ -1832,13 +1832,13 @@ app.post("/api/createSeat", async function (req, res) {
             //console.log('CUSTOMER', i ,customers.data[i]);
 
             let custId = customers.data[i].id;
-            let lifeTimePrice = 149;
+            let lifeTimePrice = 14900;
 
             const paymentIntent = await stripe.paymentIntents.search({
-                query: 'status:\'succeeded\' AND customer:\'' + custId + '\' AND amount:\'' + lifeTimePrice + '\'',
+                query: 'status:"succeeded" AND customer:"' + custId + '" AND amount:"' + lifeTimePrice + '"',
             });
 
-            //console.log('PAYMENT INTENT', paymentIntent);
+            //console.log('PAYMENT INTENT', custId, paymentIntent, paymentIntent.data);
             
             const subscriptions = await stripe.subscriptions.list({
                 limit: 100,
@@ -1957,10 +1957,10 @@ app.post("/api/authSeat", async function (req, res) {
                         //console.log('CUSTOMER', i ,customers.data[i]);
 
                         let custId = customers.data[i].id;
-                        let lifeTimePrice = 149;
+                        let lifeTimePrice = 14900;
 
                         const paymentIntent = await stripe.paymentIntents.search({
-                            query: 'status:\'succeeded\' AND customer:\'' + custId + '\' AND amount:\'' + lifeTimePrice + '\'',
+                            query: 'status:"succeeded" AND customer:"' + custId + '" AND amount:"' + lifeTimePrice + '"',
                         });
 
                         //console.log('PAYMENT INTENT', paymentIntent);
