@@ -85,7 +85,7 @@
         "request-promise-native": "^1.0.9",
         "rxjs": "~6.3.3",
         "rxjs-compat": "^6.5.3",
-        "sequelize": "^6.3.5",
+        "sequelize": "^6.29.0",
         "socket.io": "^2.2.0",
         "squarespace-node-api": "^2.0.0",
         "stats-js": "^1.0.1",
