@@ -1985,48 +1985,78 @@ app.post("/api/authSeat", async function (req, res) {
 
                     let customers = await stripe.customers.list({ limit: 100, email: json.email });
         
-                    for(let i=0; i<customers.data.length; i++) {
-                                
-                        //console.log('CUSTOMER', i ,customers.data[i]);
+                    for (let i = 0; i < customers.data.length; i++) {
+                        console.log('CUSTOMER', i, customers.data[i]);
 
                         let custId = customers.data[i].id;
-                        let lifeTimePrice = 14900;
 
-                        const paymentIntent = await stripe.paymentIntents.search({
-                            query: 'status:"succeeded" AND customer:"' + custId + '" AND amount:"' + lifeTimePrice + '"',
-                        });
-
-                        //console.log('PAYMENT INTENT', paymentIntent);
-                        
-                        const subscriptions = await stripe.subscriptions.list({
-                            limit: 100,
-                            customer: custId
-                        });
-
-                        //console.log('SUBSCRIPTIONS', subscriptions);
-                        
-                        for(let k=0; k<paymentIntent.data.length; k++) { 
-                            plan = 2;
+                        // 1) Check Checkout Sessions line items for the one-time price
+                        try {
+                            const sessions = await stripe.checkout.sessions.list({ limit: 100, customer: custId });
+                            for (let s = 0; s < sessions.data.length; s++) {
+                                const session = sessions.data[s];
+                                try {
+                                    const lineItems = await stripe.checkout.sessions.listLineItems(session.id, { limit: 100 });
+                                    for (let li = 0; li < lineItems.data.length; li++) {
+                                        const price = lineItems.data[li].price;
+                                        if (price && price.id === ONE_TIME_PRICE_ID) {
+                                            plan = 2;
+                                            break;
+                                        }
+                                    }
+                                } catch (err) {
+                                    console.log('Error listing line items for session', session.id, err);
+                                }
+                                if (plan === 2) break;
+                            }
+                        } catch (err) {
+                            console.log('Error listing checkout sessions for customer', custId, err);
                         }
 
-                        for(let j=0; j<subscriptions.data.length; j++) {
-                            if (subscriptions.data[j].status == 'active') {
-                        
-                                let nickName = subscriptions.data[j].plan.nickname;
-                                console.log('plan', nickName);
+                        if (plan === 2) break;
 
-                                if (nickName.indexOf('Visualz') !== -1 && nickName.indexOf('Educational') !== -1) {
-                                    if (plan <= 1) {
-                                        plan = 1;
+                        // 2) Check subscriptions for the commercial product (or nicknames as fallback)
+                        const subscriptions = await stripe.subscriptions.list({ limit: 100, customer: custId });
+                        for (let j = 0; j < subscriptions.data.length; j++) {
+                            const sub = subscriptions.data[j];
+                            if (sub.status === 'active') {
+                                // Check items for product id
+                                if (sub.items && sub.items.data) {
+                                    for (let m = 0; m < sub.items.data.length; m++) {
+                                        const itemPrice = sub.items.data[m].price;
+                                        if (itemPrice) {
+                                            if (itemPrice.product && String(itemPrice.product) === COMMERCIAL_PRODUCT_ID) {
+                                                plan = 2;
+                                                break;
+                                            }
+                                            // also check price id just in case
+                                            if (itemPrice.id && String(itemPrice.id) === ONE_TIME_PRICE_ID) {
+                                                plan = 2;
+                                                break;
+                                            }
+                                        }
                                     }
                                 }
 
-                                if (nickName.indexOf('Visualz') !== -1 && nickName.indexOf('Commercial') !== -1) {
-                                    plan = 2;
+                                // fallback: check plan nickname for legacy records
+                                try {
+                                    let nickName = sub.plan && sub.plan.nickname ? sub.plan.nickname : '';
+                                    if (nickName.indexOf('Visualz') !== -1 && nickName.indexOf('Educational') !== -1) {
+                                        if (plan <= 1) plan = 1;
+                                    }
+                                    if (nickName.indexOf('Visualz') !== -1 && nickName.indexOf('Commercial') !== -1) {
+                                        plan = 2;
+                                    }
+                                } catch (err) {
+                                    // ignore
                                 }
                             }
+                            if (plan === 2) break;
                         }
+
+                        if (plan === 2) break;
                     }
+
                     // A customer with a subscription was located
                     if(plan > 0) {
                         res.header('Access-Control-Allow-Origin', '*');
