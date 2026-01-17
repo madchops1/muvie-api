@@ -41,6 +41,9 @@ const killMsg = 'This version is deprecated.';
 
 const baseUrl = 'https://visualz-1.s3.us-east-2.amazonaws.com';
 
+const ONE_TIME_PRICE_ID = 'price_1NOFyAKBQoT2WTQqI6oHjHT1';
+const COMMERCIAL_PRODUCT_ID = 'prod_H5V7L32AiefrvZ';
+
 // video library holder
 const videoLibrary = [
     // Beeple
@@ -1828,8 +1831,7 @@ app.post("/api/createSeat", async function (req, res) {
         let customers = await stripe.customers.list({ limit: 100, email: email });
         console.log('CUSTOMER COUNT', customers.data.length);
         // constants for checks
-        const ONE_TIME_PRICE_ID = 'price_1NOFyAKBQoT2WTQqI6oHjHT1';
-        const COMMERCIAL_PRODUCT_ID = 'prod_H5V7L32AiefrvZ';
+        
 
         for (let i = 0; i < customers.data.length; i++) {
             console.log('CUSTOMER', i, customers.data[i]);
